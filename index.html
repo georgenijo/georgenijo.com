@@ -4,596 +4,854 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>George Nijo</title>
-<meta name="description" content="George Nijo — software engineer building infrastructure for AI agents. Boot up GEORGE OS to explore.">
+<meta name="description" content="George Nijo — software engineer building infrastructure for AI agents. ssh in and look around.">
 <meta property="og:title" content="George Nijo">
-<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. Boot up GEORGE OS.">
+<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
 <meta property="og:url" content="https://georgenijo.com">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#14110C">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314110C'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23FFB454' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#16121f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316121f'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23ff79c6' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <style>
-  :root {
-    --ground: #14110C;
-    --surface: #1E1913;
-    --surface-2: #262017;
-    --line: #3A3226;
-    --text: #EDE4D3;
-    --dim: #9C9078;
-    --amber: #FFB454;
-    --amber-soft: rgba(255, 180, 84, 0.14);
-    --teal: #7FD1C5;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
-    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* ── Concept 5 · ssh georgenijo.com ─────────────────────────────
+     A browser simulation of a Charm (Bubbletea/Wish) SSH portfolio.
+     Single deliberate visual world: dark charmed terminal.
+     Palette: ink #141021 · panel #1c1631 · fg #eae4f6
+              charm pink #ff6ac1 · charm purple #7d56f4 · lav #b7a4f7
+  ──────────────────────────────────────────────────────────────── */
+  :root{
+    --bg:#141021;
+    --bg2:#1c1631;
+    --line:#2c2347;
+    --fg:#eae4f6;
+    --dim:#9187ad;
+    --faint:#5c527d;
+    --pink:#ff6ac1;
+    --purple:#7d56f4;
+    --lav:#b7a4f7;
+    --green:#9ef29b;
+    --cyan:#7ee0e6;
+    --selbg:rgba(255,106,193,.07);
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono","Cascadia Mono",monospace;
   }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    background: var(--ground);
-    color: var(--text);
-    font-family: var(--mono);
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--mono);
+    font-size:14px;
+    line-height:1.55;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
   }
-  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
-  a { color: var(--amber); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  @media (max-width:600px){ body{font-size:13px;} }
 
-  /* ---------- boot ---------- */
-  #boot {
-    position: fixed; inset: 0; z-index: 900;
-    background: var(--ground);
-    padding: clamp(16px, 5vw, 56px);
-    font-size: 13px; line-height: 1.9;
-    color: var(--dim);
-    cursor: pointer;
-  }
-  #boot .ok { color: var(--teal); }
-  #boot .amber { color: var(--amber); }
-  #boot .skip {
-    position: absolute; bottom: 20px; right: 24px;
-    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  #boot.done { transition: opacity 0.5s ease; opacity: 0; pointer-events: none; }
-
-  /* ---------- desktop ---------- */
-  #desktop { position: fixed; inset: 0; }
-  #wallpaper { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-  #menubar {
-    position: absolute; top: 0; left: 0; right: 0; height: 30px;
-    display: flex; align-items: center; gap: 20px;
-    padding: 0 14px;
-    background: rgba(20, 17, 12, 0.82);
-    border-bottom: 1px solid var(--line);
-    font-size: 12px;
-    z-index: 500;
-    backdrop-filter: blur(6px);
-  }
-  #menubar .brand { color: var(--amber); font-weight: 700; letter-spacing: 0.1em; }
-  #menubar .status { color: var(--dim); }
-  #menubar .status .live { color: var(--teal); }
-  #menubar .clock { margin-left: auto; color: var(--dim); font-variant-numeric: tabular-nums; }
-
-  /* ---------- dock ---------- */
-  #dock {
-    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 6px;
-    padding: 6px;
-    background: rgba(30, 25, 19, 0.85);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    z-index: 500;
-    backdrop-filter: blur(6px);
-  }
-  #dock button {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 8px 12px 6px;
-    border-radius: 7px;
-    color: var(--dim);
-    font-size: 10px; letter-spacing: 0.06em;
-    transition: background 0.15s, color 0.15s, transform 0.15s;
-  }
-  #dock button:hover { background: var(--amber-soft); color: var(--text); transform: translateY(-2px); }
-  #dock button .glyph { font-size: 17px; line-height: 1; color: var(--amber); font-weight: 700; }
-  #dock button.open::after {
-    content: ""; width: 4px; height: 4px; border-radius: 50%;
-    background: var(--teal); margin-top: 1px;
-  }
-  #dock button::after { content: ""; width: 4px; height: 4px; margin-top: 1px; }
-
-  /* ---------- windows ---------- */
-  .window {
-    position: absolute;
-    min-width: 300px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .window.open { display: flex; }
-  .window.focused { border-color: #57492F; }
-  .titlebar {
-    display: flex; align-items: center; gap: 10px;
-    height: 34px; padding: 0 12px;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--line);
-    cursor: grab; user-select: none;
-    font-size: 12px; color: var(--dim);
-  }
-  .window.focused .titlebar { color: var(--text); }
-  .titlebar:active { cursor: grabbing; }
-  .titlebar .dot {
-    width: 11px; height: 11px; border-radius: 50%;
-    border: 1px solid var(--line);
-    background: var(--ground);
-    padding: 0; flex: none;
-  }
-  .titlebar .dot:hover { background: var(--amber); border-color: var(--amber); }
-  .titlebar .title { letter-spacing: 0.08em; text-transform: uppercase; }
-  .win-body {
-    padding: 18px 20px;
-    overflow-y: auto;
-    font-family: var(--sans);
-    font-size: 14px; line-height: 1.65;
-  }
-  .win-body h2 {
-    font-family: var(--mono);
-    font-size: 20px; margin: 0 0 4px;
-    letter-spacing: -0.01em; text-wrap: balance;
-  }
-  .win-body p { margin: 0.6em 0; max-width: 52ch; }
-  .win-body .dim { color: var(--dim); }
-  .label {
-    font-family: var(--mono);
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--amber); margin: 1.4em 0 0.4em;
+  .term{
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(125,86,244,.10), transparent 60%),
+      var(--bg);
   }
 
-  /* projects */
-  #win-projects .win-body { padding: 8px; }
-  .proj {
-    display: block;
-    padding: 12px 14px;
-    border-radius: 6px;
-    color: inherit;
-  }
-  .proj:hover { background: var(--amber-soft); text-decoration: none; }
-  .proj .head { display: flex; align-items: baseline; gap: 10px; font-family: var(--mono); }
-  .proj .name { color: var(--amber); font-weight: 700; font-size: 13.5px; }
-  .proj .lang { color: var(--dim); font-size: 11px; }
-  .proj .desc { color: var(--text); font-size: 13px; margin-top: 3px; line-height: 1.5; }
+  /* ── focus ── */
+  :focus{outline:none;}
+  :focus-visible{outline:2px solid var(--pink);outline-offset:2px;border-radius:4px;}
 
-  /* terminal */
-  #win-terminal .win-body {
-    font-family: var(--mono);
-    font-size: 12.5px; line-height: 1.75;
-    padding: 12px 14px;
-    background: var(--ground);
-    cursor: text;
+  /* ── boot / ssh sequence ── */
+  .boot{
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:clamp(14px,3vw,32px);
   }
-  #term-out .cmd-echo { color: var(--dim); }
-  #term-out .ok { color: var(--teal); }
-  #term-out .amber { color: var(--amber); }
-  #term-out div { white-space: pre-wrap; word-break: break-word; }
-  #term-line { display: flex; gap: 8px; }
-  #term-line .prompt { color: var(--teal); flex: none; }
-  #term-input {
-    flex: 1; background: none; border: none; outline: none;
-    color: var(--text); font: inherit; padding: 0; caret-color: var(--amber);
+  .boot pre{
+    margin:0;
+    font-family:inherit;
+    font-size:inherit;
+    white-space:pre-wrap;
+    word-break:break-word;
   }
+  .b-dim{color:var(--dim);}
+  .b-ok{color:var(--green);}
+  .b-key{color:var(--cyan);}
+  .b-cmd{color:var(--fg);}
+  .prompt-sig{color:var(--pink);}
+  .cur{
+    display:inline-block;width:.62em;height:1.1em;
+    background:var(--pink);vertical-align:-.18em;
+    animation:blink 1.06s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
 
-  /* mobile: windows become sheets */
-  @media (max-width: 640px) {
-    .window {
-      left: 4px !important; right: 4px !important;
-      top: 38px !important; bottom: 76px !important;
-      width: auto !important; height: auto !important;
-      min-width: 0;
-    }
-    .titlebar { cursor: default; }
-    #menubar .status { display: none; }
+  .motd{margin-top:14px;}
+  .ascii{
+    margin:0;
+    font-family:inherit;
+    font-size:clamp(5px,2.15vw,13px);
+    line-height:1.18;
+    white-space:pre;
+    font-weight:700;
+    background:linear-gradient(100deg,var(--pink) 5%,var(--lav) 55%,var(--purple) 95%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
   }
+  .motd-tag{color:var(--dim);margin-top:8px;}
+  .motd-tag .dot{color:var(--faint);}
 
-  @media (prefers-reduced-motion: reduce) {
-    #dock button, #boot.done { transition: none; }
+  /* ── TUI app frame ── */
+  .app{flex:1;min-height:0;display:flex;flex-direction:column;}
+  .app[hidden]{display:none;}
+
+  header.bar{
+    flex:none;
+    display:flex;align-items:center;gap:10px;
+    padding:10px clamp(12px,3vw,24px);
+    background:linear-gradient(90deg,rgba(255,106,193,.16),rgba(125,86,244,.16) 62%,rgba(125,86,244,.05));
+    border-bottom:1px solid var(--line);
+    min-height:46px;
+  }
+  .chip{
+    flex:none;
+    font-weight:700;letter-spacing:.08em;font-size:.86em;
+    color:#1a1030;
+    background:linear-gradient(120deg,var(--pink),var(--purple));
+    padding:3px 11px;border-radius:7px;
+    white-space:nowrap;
+  }
+  .crumb{
+    color:var(--dim);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    min-width:0;flex:1;
+  }
+  .crumb b{color:var(--lav);font-weight:400;}
+  .conn{
+    flex:none;color:var(--faint);font-size:.82em;white-space:nowrap;
+  }
+  @media (max-width:560px){ .conn{display:none;} }
+  .backbtn{
+    flex:none;
+    font:inherit;font-size:.86em;
+    color:var(--lav);
+    background:rgba(125,86,244,.14);
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:3px 10px;
+    cursor:pointer;
+  }
+  .backbtn:hover{border-color:var(--purple);color:var(--fg);}
+
+  main.content{
+    flex:1;min-height:0;
+    overflow-y:auto;overflow-x:hidden;
+    padding:clamp(12px,2.5vw,26px) clamp(12px,3vw,28px);
+    scrollbar-width:thin;
+    scrollbar-color:var(--line) transparent;
+  }
+  .reveal{animation:fadeUp .18s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  .vtitle{color:var(--pink);font-weight:700;margin:0 0 2px;}
+  .vsub{color:var(--faint);margin:0 0 14px;font-size:.9em;}
+
+  /* ── rows (Bubbletea list items) ── */
+  .rows{display:flex;flex-direction:column;gap:2px;max-width:640px;}
+  .row{
+    display:flex;align-items:baseline;gap:0;
+    width:100%;
+    font:inherit;text-align:left;text-decoration:none;
+    color:var(--dim);
+    background:none;border:none;
+    border-left:2px solid transparent;
+    padding:7px 12px 7px 14px;
+    min-height:42px;
+    cursor:pointer;
+    border-radius:0 6px 6px 0;
+  }
+  .row .tx{display:flex;flex-direction:column;min-width:0;}
+  .row .t{color:var(--fg);}
+  .row .d{color:var(--faint);font-size:.86em;}
+  .row .aux{margin-left:auto;flex:none;color:var(--faint);font-size:.82em;padding-left:12px;}
+  .row:hover{background:rgba(255,255,255,.025);}
+  .row.sel{
+    border-left-color:var(--pink);
+    background:var(--selbg);
+  }
+  .row.sel .t{color:var(--pink);font-weight:700;}
+  .row.sel .d{color:var(--lav);}
+  .row.sel .aux{color:var(--lav);}
+  .row.act .t::before{content:"→ ";color:var(--faint);}
+  .row.act.sel .t::before{color:var(--pink);}
+
+  /* ── panes (detail boxes) ── */
+  .pane{
+    max-width:640px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--bg2);
+    padding:16px 18px;
+    margin:0 0 16px;
+  }
+  .pane p{margin:0 0 10px;max-width:58ch;}
+  .pane p:last-child{margin-bottom:0;}
+  .pane .hl{color:var(--pink);}
+  .pane .hp{color:var(--lav);}
+  .pane .dim{color:var(--dim);}
+  .kv{display:flex;gap:10px;margin:2px 0;}
+  .kv .k{color:var(--faint);flex:none;min-width:7ch;}
+  .badge{
+    display:inline-block;font-size:.78em;
+    color:var(--cyan);border:1px solid rgba(126,224,230,.35);
+    border-radius:5px;padding:0 7px;vertical-align:1px;
+  }
+  .spin-line{color:var(--dim);margin-top:12px;}
+  .spin{color:var(--pink);display:inline-block;min-width:1ch;}
+
+  /* ── filter ── */
+  .filterbar{
+    display:flex;align-items:center;gap:8px;
+    max-width:640px;
+    margin:0 0 10px;
+    padding:5px 12px;
+    border:1px solid var(--purple);
+    border-radius:8px;
+    background:var(--bg2);
+  }
+  .filterbar .sig{color:var(--pink);font-weight:700;}
+  .filterbar input{
+    flex:1;min-width:0;
+    font:inherit;color:var(--fg);
+    background:none;border:none;outline:none;
+  }
+  .nores{color:var(--faint);padding:10px 14px;}
+
+  /* ── status bar ── */
+  footer.status{
+    flex:none;
+    display:flex;align-items:center;gap:14px;
+    flex-wrap:wrap;
+    padding:8px clamp(12px,3vw,24px);
+    border-top:1px solid var(--line);
+    background:rgba(28,22,49,.65);
+    color:var(--faint);
+    font-size:.84em;
+    min-height:38px;
+  }
+  .hint{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  kbd{
+    font:inherit;
+    color:var(--lav);
+    background:rgba(125,86,244,.13);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:0 6px;
+  }
+  button.hint{
+    background:none;border:none;cursor:pointer;
+    font:inherit;color:var(--faint);padding:2px;
+  }
+  button.hint:hover kbd{border-color:var(--pink);color:var(--pink);}
+
+  /* ── closed / reconnect ── */
+  .closed{padding:clamp(16px,4vw,36px);}
+  .closed p{margin:0 0 6px;color:var(--dim);}
+  .closed .msg{color:var(--fg);}
+  .reconnect{
+    margin-top:18px;
+    font:inherit;
+    color:var(--pink);
+    background:rgba(255,106,193,.08);
+    border:1px solid var(--pink);
+    border-radius:8px;
+    padding:9px 16px;
+    cursor:pointer;
+  }
+  .reconnect:hover{background:rgba(255,106,193,.16);}
+
+  @media (prefers-reduced-motion: reduce){
+    .cur{animation:none;}
+    .reveal{animation:none;}
   }
 </style>
 
-<div id="boot" aria-label="Boot sequence, click to skip">
-  <div id="boot-lines"></div>
-  <div class="skip">click anywhere to skip</div>
-</div>
+<div class="term" id="term">
+  <div class="boot" id="boot" aria-live="polite"><pre id="bootpre"></pre></div>
 
-<div id="desktop">
-  <canvas id="wallpaper" aria-hidden="true"></canvas>
-
-  <div id="menubar">
-    <span class="brand">GEORGE OS</span>
-    <span class="status">mesh: <span class="live">online</span></span>
-    <span class="status">agents: <span class="live">4 idle</span></span>
-    <span class="clock" id="clock">--:--</span>
-  </div>
-
-  <div class="window" id="win-about" style="width: 460px; height: 420px;">
-    <div class="titlebar" data-win="win-about">
-      <button class="dot" data-close="win-about" aria-label="Close about window"></button>
-      <span class="title">about.md</span>
-    </div>
-    <div class="win-body">
-      <h2>George Nijo</h2>
-      <p class="dim">Software engineer · Boston</p>
-      <p>I build infrastructure for AI agents — LLM routers, MCP brokers,
-      multi-session control planes — and the tooling around a very
-      overengineered personal mesh and homelab.</p>
-      <p>Sometimes I take a break and build an iOS film camera or a
-      star map generator instead.</p>
-      <div class="label">Currently</div>
-      <p>Building <strong>AgentOS</strong> — a subscription-powered personal +
-      home agent operating system.</p>
-      <div class="label">Elsewhere</div>
-      <p>
-        <a href="https://github.com/georgenijo" target="_blank" rel="noopener">github.com/georgenijo</a><br>
-        <a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a>
-      </p>
-    </div>
-  </div>
-
-  <div class="window" id="win-projects" style="width: 560px; height: 480px;">
-    <div class="titlebar" data-win="win-projects">
-      <button class="dot" data-close="win-projects" aria-label="Close projects window"></button>
-      <span class="title">projects/</span>
-    </div>
-    <div class="win-body" id="proj-list"></div>
-  </div>
-
-  <div class="window" id="win-terminal" style="width: 620px; height: 400px;">
-    <div class="titlebar" data-win="win-terminal">
-      <button class="dot" data-close="win-terminal" aria-label="Close terminal window"></button>
-      <span class="title">terminal — zsh</span>
-    </div>
-    <div class="win-body" id="term-body">
-      <div id="term-out"></div>
-      <div id="term-line">
-        <span class="prompt">george@os ~ %</span>
-        <input id="term-input" autocomplete="off" spellcheck="false" aria-label="Terminal input">
-      </div>
-    </div>
-  </div>
-
-  <div id="dock">
-    <button data-open="win-about"><span class="glyph">◉</span>about</button>
-    <button data-open="win-projects"><span class="glyph">▤</span>projects</button>
-    <button data-open="win-terminal"><span class="glyph">›_</span>terminal</button>
+  <div class="app" id="app" hidden>
+    <header class="bar">
+      <button class="backbtn" id="hdrback" hidden aria-label="Back">‹ back</button>
+      <span class="chip">GEORGE&nbsp;NIJO</span>
+      <span class="crumb" id="crumb">~</span>
+      <span class="conn" id="conn">ssh · ed25519 · 24ms</span>
+    </header>
+    <main class="content" id="content" tabindex="-1"></main>
+    <footer class="status" id="status"></footer>
   </div>
 </div>
 
 <script>
-(function () {
+(function(){
   "use strict";
-  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var mobile = matchMedia("(max-width: 640px)").matches;
+  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- data ---------- */
+  /* ───────────────────────── content ───────────────────────── */
+
+  var GH = "https://github.com/georgenijo";
+
   var PROJECTS = [
-    { name: "nadirclaw", lang: "Python", desc: "Open-source LLM router & cost optimizer. Simple prompts go to cheap/local models, complex ones to premium — a drop-in OpenAI-compatible proxy." },
-    { name: "ghosthands", lang: "Python", desc: "Free, local computer-use for macOS. A small MLX model drives native apps via the Accessibility tree, then replays flows with no model." },
-    { name: "usher", lang: "Go", desc: "The MCP broker — one front desk every agent talks to. Route, trim, arbitrate, gate, audit." },
-    { name: "hangar", lang: "Rust", desc: "Multi-session control plane for Claude Code, Codex, and other coding agents." },
-    { name: "omen", lang: "Rust", desc: "Code intelligence for AI agents — complexity, hotspots, and tech-debt analysis over MCP." },
-    { name: "hermes-agent", lang: "Python", desc: "The agent that grows with you." },
-    { name: "fleetmap", lang: "Swift/Go", desc: "Relationship-aware macOS process & connection monitor — processes sized by RAM, colored by CPU, wired by their live sockets." },
-    { name: "gauge", lang: "Swift", desc: "Minimal Claude-only macOS menu bar usage app." },
-    { name: "aperture", lang: "Swift", desc: "iOS film camera app with vintage film emulation." },
-    { name: "star-maker", lang: "Python", desc: "Astronomically accurate, print-quality star map poster generator." }
+    {name:"nadirclaw",   lang:"Python",     tag:"LLM router & cost optimizer",
+     desc:"Routes every prompt to the cheapest model that can actually handle it. Scores request complexity, tracks per-provider spend in real time, and fails over cleanly when a provider rate-limits."},
+    {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
+     desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine."},
+    {name:"usher",       lang:"Go",         tag:"MCP broker",
+     desc:"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
+    {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
+     desc:"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
+    {name:"omen",        lang:"Rust",       tag:"Code intel for AI agents",
+     desc:"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
+    {name:"hermes-agent",lang:"Python",     tag:"Errand-running personal agent",
+     desc:"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
+    {name:"fleetmap",    lang:"TypeScript", tag:"Live map of running agents",
+     desc:"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
+    {name:"gauge",       lang:"Go",         tag:"Eval harness for agent stacks",
+     desc:"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
+    {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
+     desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."},
+    {name:"star-maker",  lang:"Python",     tag:"Constellations from your data",
+     desc:"Turns any dataset into a navigable night sky. Mostly an excuse to draw stars with math."}
   ];
 
-  var list = document.getElementById("proj-list");
-  PROJECTS.forEach(function (p) {
-    var a = document.createElement("a");
-    a.className = "proj";
-    a.href = "https://github.com/georgenijo/" + p.name;
-    a.target = "_blank";
-    a.rel = "noopener";
-    var head = document.createElement("div");
-    head.className = "head";
-    var nm = document.createElement("span");
-    nm.className = "name";
-    nm.textContent = p.name;
-    var lg = document.createElement("span");
-    lg.className = "lang";
-    lg.textContent = p.lang;
-    head.appendChild(nm); head.appendChild(lg);
-    var d = document.createElement("div");
-    d.className = "desc";
-    d.textContent = p.desc;
-    a.appendChild(head); a.appendChild(d);
-    list.appendChild(a);
-  });
-
-  /* ---------- boot ---------- */
-  var BOOT = [
-    ["GEORGE OS v2.0 — bios 07.02.2026", ""],
-    ["cpu: caffeine, 8 cores", ""],
-    ["mounting /dev/agents ............ ", "ok"],
-    ["starting nadirclaw router ....... ", "ok"],
-    ["usher: brokering mcp tools ...... ", "ok"],
-    ["ghosthands: hands ready ......... ", "ok"],
-    ["hermes: waking .................. ", "ok"],
-    ["mesh: 12 nodes reachable ........ ", "ok"],
-    ["", ""],
-    ["welcome, guest.", "amber"]
+  var MENU = [
+    {id:"about",    t:"about",    d:"who's at the keyboard"},
+    {id:"projects", t:"projects", d:"ten repos, four languages"},
+    {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
+    {id:"contact",  t:"contact",  d:"say hello"},
+    {id:"coffee",   t:"coffee",   d:"order a cup over ssh"}
   ];
-  var boot = document.getElementById("boot");
-  var bootLines = document.getElementById("boot-lines");
-  var bootTimers = [];
-  var booted = false;
 
-  function endBoot() {
-    if (booted) return;
-    booted = true;
-    bootTimers.forEach(clearTimeout);
-    boot.classList.add("done");
-    setTimeout(function () { boot.remove(); }, 600);
-    openWin("win-about");
-    if (!mobile) openWin("win-terminal");
+  /* ───────────────────────── boot sequence ───────────────────────── */
+
+  var bootPre  = document.getElementById("bootpre");
+  var bootWrap = document.getElementById("boot");
+  var appEl    = document.getElementById("app");
+  var booting  = false, bootSkip = false;
+
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  var BOOT_LINES = [
+    {h:'<span class="b-dim">Resolving georgenijo.com… 172.104.209.31</span>', w:340},
+    {h:'<span class="b-dim">Connecting to georgenijo.com port 22.</span>', w:220},
+    {h:'<span class="b-dim">Remote protocol version 2.0, remote software version</span> <span class="b-key">charmed-wish_1.4</span>', w:260},
+    {h:'<span class="b-dim">Host key:</span> <span class="b-key">ssh-ed25519 SHA256:gN1jo+chArm5/BbLtA…</span> <span class="b-ok">✓ known</span>', w:300},
+    {h:'<span class="b-ok">Authenticated to georgenijo.com (via publickey).</span>', w:380}
+  ];
+
+  var ASCII =
+"  ██████╗ ███████╗ ██████╗ ██████╗  ██████╗ ███████╗\n" +
+" ██╔════╝ ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝\n" +
+" ██║  ███╗█████╗  ██║   ██║██████╔╝██║  ███╗█████╗  \n" +
+" ██║   ██║██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  \n" +
+" ╚██████╔╝███████╗╚██████╔╝██║  ██║╚██████╔╝███████╗\n" +
+"  ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝";
+
+  function motdHTML(){
+    return '<div class="motd">' +
+      '<pre class="ascii">' + esc(ASCII) + "</pre>" +
+      '<div class="motd-tag">software engineer <span class="dot">·</span> boston <span class="dot">·</span> agent infrastructure</div>' +
+      '<div class="motd-tag b-dim">Last login: Tue Jun 30 21:07:12 2026 from 10.0.0.42</div>' +
+      "</div>";
   }
 
-  if (reduced) {
-    endBoot();
-  } else {
-    BOOT.forEach(function (line, i) {
-      bootTimers.push(setTimeout(function () {
-        var div = document.createElement("div");
-        div.textContent = line[0];
-        if (line[1] === "ok") {
-          var ok = document.createElement("span");
-          ok.className = "ok";
-          ok.textContent = "[ ok ]";
-          div.appendChild(ok);
-        }
-        if (line[1] === "amber") div.className = "amber";
-        bootLines.appendChild(div);
-      }, 120 + i * 230));
-    });
-    bootTimers.push(setTimeout(endBoot, 120 + BOOT.length * 230 + 700));
-    boot.addEventListener("click", endBoot);
-    addEventListener("keydown", function once(e) {
-      if (!booted) endBoot();
-      removeEventListener("keydown", once);
-    });
-  }
-
-  /* ---------- windows ---------- */
-  var z = 100;
-  var wins = Array.prototype.slice.call(document.querySelectorAll(".window"));
-
-  function focusWin(el) {
-    wins.forEach(function (w) { w.classList.remove("focused"); });
-    el.classList.add("focused");
-    el.style.zIndex = ++z;
-  }
-
-  function openWin(id) {
-    var el = document.getElementById(id);
-    if (!el.classList.contains("open")) {
-      el.classList.add("open");
-      if (!el.dataset.placed && !mobile) {
-        var i = wins.indexOf(el);
-        var w = el.offsetWidth, h = el.offsetHeight;
-        el.style.left = Math.max(8, (innerWidth - w) / 2 + (i - 1) * 60) + "px";
-        el.style.top = Math.max(38, (innerHeight - h) / 2 + (i - 1) * 36 - 20) + "px";
-        el.dataset.placed = "1";
-      }
-    }
-    focusWin(el);
-    syncDock();
-    if (id === "win-terminal" && !mobile) termInput.focus();
-  }
-
-  function closeWin(id) {
-    document.getElementById(id).classList.remove("open");
-    syncDock();
-  }
-
-  function syncDock() {
-    document.querySelectorAll("#dock button").forEach(function (b) {
-      b.classList.toggle("open",
-        document.getElementById(b.dataset.open).classList.contains("open"));
+  function sleep(ms){
+    return new Promise(function(res){
+      if (bootSkip || RM) return res();
+      setTimeout(res, ms);
     });
   }
 
-  document.querySelectorAll("#dock button").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var el = document.getElementById(b.dataset.open);
-      if (el.classList.contains("open") && el.classList.contains("focused")) {
-        closeWin(b.dataset.open);
-      } else {
-        openWin(b.dataset.open);
-      }
-    });
-  });
+  function runBoot(){
+    booting = true; bootSkip = false;
+    appEl.hidden = true; bootWrap.hidden = false;
+    bootPre.innerHTML = "";
 
-  document.querySelectorAll(".titlebar .dot").forEach(function (d) {
-    d.addEventListener("click", function (e) {
-      e.stopPropagation();
-      closeWin(d.dataset.close);
-    });
-  });
+    var CMD = "ssh georgenijo.com";
+    var html = '<span class="prompt-sig">➜ ~ $</span> ';
+    bootPre.innerHTML = html + '<span class="cur"></span>';
 
-  wins.forEach(function (w) {
-    w.addEventListener("pointerdown", function () { focusWin(w); });
-  });
+    var p = Promise.resolve();
 
-  /* drag */
-  document.querySelectorAll(".titlebar").forEach(function (bar) {
-    bar.addEventListener("pointerdown", function (e) {
-      if (mobile || e.target.classList.contains("dot")) return;
-      var win = document.getElementById(bar.dataset.win);
-      var startX = e.clientX, startY = e.clientY;
-      var origX = win.offsetLeft, origY = win.offsetTop;
-      focusWin(win);
-      bar.setPointerCapture(e.pointerId);
-      function move(ev) {
-        var x = origX + ev.clientX - startX;
-        var y = origY + ev.clientY - startY;
-        x = Math.min(Math.max(x, 8 - win.offsetWidth + 80), innerWidth - 80);
-        y = Math.min(Math.max(y, 30), innerHeight - 60);
-        win.style.left = x + "px";
-        win.style.top = y + "px";
-      }
-      function up() {
-        bar.removeEventListener("pointermove", move);
-        bar.removeEventListener("pointerup", up);
-      }
-      bar.addEventListener("pointermove", move);
-      bar.addEventListener("pointerup", up);
-    });
-  });
-
-  /* ---------- terminal ---------- */
-  var termOut = document.getElementById("term-out");
-  var termInput = document.getElementById("term-input");
-  var termBody = document.getElementById("term-body");
-  termBody.addEventListener("click", function () { termInput.focus(); });
-
-  function tprint(text, cls) {
-    var div = document.createElement("div");
-    if (cls) div.className = cls;
-    div.textContent = text;
-    termOut.appendChild(div);
-    termBody.scrollTop = termBody.scrollHeight;
-  }
-
-  var CMDS = {
-    help: function () {
-      tprint("commands:");
-      tprint("  about        who is this guy");
-      tprint("  ls           list projects");
-      tprint("  open <name>  open a project on github");
-      tprint("  contact      how to reach me");
-      tprint("  clear        clear screen");
-    },
-    about: function () {
-      tprint("George Nijo — software engineer, Boston.", "amber");
-      tprint("Builds agent infrastructure: routers, brokers, control planes.");
-      tprint("Currently building AgentOS.");
-    },
-    ls: function () {
-      PROJECTS.forEach(function (p) {
-        tprint("  " + p.name.padEnd(14) + " " + p.lang.toLowerCase());
+    // type the command character by character
+    CMD.split("").forEach(function(ch, i){
+      p = p.then(function(){
+        return sleep(34 + (ch === " " ? 60 : 0)).then(function(){
+          html = '<span class="prompt-sig">➜ ~ $</span> <span class="b-cmd">' + esc(CMD.slice(0, i + 1)) + "</span>";
+          bootPre.innerHTML = html + '<span class="cur"></span>';
+        });
       });
-    },
-    whoami: function () { tprint("guest — but the mesh sees everything.", "amber"); },
-    contact: function () {
-      tprint("github: https://github.com/georgenijo");
-      tprint("email:  george.nijo8@gmail.com");
-    },
-    clear: function () { termOut.textContent = ""; },
-    sudo: function () { tprint("nice try.", "amber"); }
+    });
+
+    p = p.then(function(){ return sleep(320); });
+
+    BOOT_LINES.forEach(function(line){
+      p = p.then(function(){
+        return sleep(line.w).then(function(){
+          html += "\n" + line.h;
+          bootPre.innerHTML = html + '\n<span class="cur"></span>';
+          bootWrap.scrollTop = bootWrap.scrollHeight;
+        });
+      });
+    });
+
+    p = p.then(function(){ return sleep(300); })
+     .then(function(){
+        bootPre.innerHTML = html + motdHTML();
+        bootWrap.scrollTop = bootWrap.scrollHeight;
+        return sleep(1000);
+      })
+     .then(function(){
+        booting = false;
+        bootWrap.hidden = true;
+        appEl.hidden = false;
+        go("menu");
+      });
+  }
+
+  function skipBoot(){ bootSkip = true; }
+
+  /* ───────────────────────── TUI state ───────────────────────── */
+
+  var contentEl = document.getElementById("content");
+  var crumbEl   = document.getElementById("crumb");
+  var statusEl  = document.getElementById("status");
+  var hdrBack   = document.getElementById("hdrback");
+
+  var ST = {
+    view: "menu",
+    proj: null,
+    coffeeTried: false,
+    filterOn: false,
+    filterText: "",
+    cursors: {},          // remembered cursor per view id
+    rows: [],             // current row descriptors {el, act, href}
+    cursor: 0
   };
 
-  termInput.addEventListener("keydown", function (e) {
-    if (e.key !== "Enter") return;
-    var raw = termInput.value.trim();
-    termInput.value = "";
-    tprint("george@os ~ % " + raw, "cmd-echo");
-    if (!raw) return;
-    var parts = raw.split(/\s+/);
-    var cmd = parts[0].toLowerCase();
-    if (cmd === "open" && parts[1]) {
-      var hit = PROJECTS.filter(function (p) { return p.name === parts[1].toLowerCase(); })[0];
-      if (hit) {
-        tprint("opening github.com/georgenijo/" + hit.name + " ...", "ok");
-        window.open("https://github.com/georgenijo/" + hit.name, "_blank", "noopener");
-      } else {
-        tprint("open: no project named '" + parts[1] + "' — try 'ls'");
-      }
-    } else if (CMDS[cmd]) {
-      CMDS[cmd]();
+  var PARENT = {about:"menu", projects:"menu", now:"menu", contact:"menu",
+                coffee:"menu", project:"projects", menu:null, closed:null};
+
+  var spinTimer = null;
+
+  function go(view, opts){
+    opts = opts || {};
+    // remember cursor for the view we're leaving
+    ST.cursors[viewKey()] = ST.cursor;
+    ST.view = view;
+    if ("proj" in opts) ST.proj = opts.proj;
+    ST.filterOn = false; ST.filterText = "";
+    if (view !== "coffee") ST.coffeeTried = false;
+    render();
+  }
+
+  function viewKey(){ return ST.view === "project" ? "project:" + (ST.proj||"") : ST.view; }
+
+  function back(){
+    if (ST.filterOn){ closeFilter(); return; }
+    var p = PARENT[ST.view];
+    if (p) go(p);
+  }
+
+  function quit(){
+    ST.cursors = {};
+    ST.view = "closed";
+    render();
+  }
+
+  /* ───────────────────────── rendering ───────────────────────── */
+
+  function h(tag, cls, htmlStr){
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (htmlStr != null) el.innerHTML = htmlStr;
+    return el;
+  }
+
+  function makeRow(spec, idx){
+    var el;
+    if (spec.href){
+      el = h("a", "row");
+      el.href = spec.href;
+      el.target = "_blank";
+      el.rel = "noopener";
     } else {
-      tprint("zsh: command not found: " + cmd + "  (try 'help')");
+      el = h("button", "row");
+      el.type = "button";
     }
-    termBody.scrollTop = termBody.scrollHeight;
-  });
-  tprint("GEORGE OS terminal — type 'help' to start.", "amber");
-
-  /* ---------- clock ---------- */
-  var clock = document.getElementById("clock");
-  function tick() {
-    var d = new Date();
-    clock.textContent = d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
-      "  " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    if (spec.act) el.classList.add("act");
+    var inner = '<span class="tx"><span class="t">' + spec.t + "</span>";
+    if (spec.d) inner += '<span class="d">' + spec.d + "</span>";
+    inner += "</span>";
+    if (spec.aux) inner += '<span class="aux">' + spec.aux + "</span>";
+    el.innerHTML = inner;
+    el.addEventListener("click", function(){
+      ST.cursor = idx; paintCursor();
+      if (!spec.href && spec.on) spec.on();
+    });
+    el.addEventListener("mouseenter", function(){ ST.cursor = idx; paintCursor(); });
+    el.addEventListener("focus", function(){ ST.cursor = idx; paintCursor(); });
+    return el;
   }
-  tick();
-  setInterval(tick, 15000);
 
-  /* ---------- wallpaper: constellation mesh ---------- */
-  var canvas = document.getElementById("wallpaper");
-  var ctx = canvas.getContext("2d");
-  var stars = [];
-  var mouse = { x: -9999, y: -9999 };
-  var dpr = Math.min(devicePixelRatio || 1, 2);
-
-  function resize() {
-    canvas.width = innerWidth * dpr;
-    canvas.height = innerHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var count = Math.floor(innerWidth * innerHeight / 14000);
-    stars = [];
-    for (var i = 0; i < count; i++) {
-      stars.push({
-        x: Math.random() * innerWidth,
-        y: Math.random() * innerHeight,
-        r: Math.random() * 1.3 + 0.3,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12,
-        tw: Math.random() * Math.PI * 2
-      });
-    }
+  function paintCursor(){
+    ST.rows.forEach(function(r, i){
+      r.el.classList.toggle("sel", i === ST.cursor);
+    });
+    var cur = ST.rows[ST.cursor];
+    if (cur && cur.el.scrollIntoView) cur.el.scrollIntoView({block:"nearest"});
   }
-  resize();
-  addEventListener("resize", resize);
-  addEventListener("pointermove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; });
 
-  var t = 0;
-  function frame() {
-    t += 0.016;
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
-    for (var i = 0; i < stars.length; i++) {
-      var s = stars[i];
-      s.x += s.vx; s.y += s.vy;
-      if (s.x < 0) s.x = innerWidth; if (s.x > innerWidth) s.x = 0;
-      if (s.y < 0) s.y = innerHeight; if (s.y > innerHeight) s.y = 0;
-      var a = 0.25 + 0.2 * Math.sin(t * 1.4 + s.tw);
-      ctx.fillStyle = "rgba(237, 228, 211, " + a.toFixed(3) + ")";
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-      /* constellation lines near cursor */
-      var dx = s.x - mouse.x, dy = s.y - mouse.y;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 160) {
-        ctx.strokeStyle = "rgba(255, 180, 84, " + (0.35 * (1 - dist / 160)).toFixed(3) + ")";
-        ctx.lineWidth = 0.7;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.stroke();
+  function setStatus(hints){
+    statusEl.innerHTML = "";
+    hints.forEach(function(hnt){
+      if (hnt.on){
+        var b = h("button", "hint");
+        b.type = "button";
+        b.innerHTML = "<kbd>" + hnt.k + "</kbd> " + hnt.l;
+        b.addEventListener("click", hnt.on);
+        statusEl.appendChild(b);
+      } else {
+        statusEl.appendChild(h("span", "hint", "<kbd>" + hnt.k + "</kbd> " + hnt.l));
       }
-    }
-    if (!reduced) requestAnimationFrame(frame);
+    });
   }
-  if (reduced) { frame(); } else { requestAnimationFrame(frame); }
 
-  if (mobile) openWin("win-about");
-  syncDock();
+  function stdHints(list, filterable){
+    var hints = [];
+    if (list) hints.push({k:"↑/↓", l:"navigate"}, {k:"enter", l:"select"});
+    if (filterable) hints.push({k:"/", l:"filter", on:function(){ openFilter(); }});
+    if (PARENT[ST.view]) hints.push({k:"esc", l:"back", on:back});
+    hints.push({k:"q", l:"quit", on:quit});
+    return hints;
+  }
+
+  function frame(crumb, backable){
+    crumbEl.innerHTML = crumb;
+    hdrBack.hidden = !backable;
+    contentEl.innerHTML = "";
+    ST.rows = [];
+    var wrap = h("div", "reveal");
+    contentEl.appendChild(wrap);
+    return wrap;
+  }
+
+  function addRows(wrap, specs, restoreKey){
+    var box = h("div", "rows");
+    specs.forEach(function(s){
+      var idx = ST.rows.length;
+      var el = makeRow(s, idx);
+      ST.rows.push({el:el, on:s.on, href:s.href});
+      box.appendChild(el);
+    });
+    wrap.appendChild(box);
+    var saved = ST.cursors[restoreKey];
+    ST.cursor = (typeof saved === "number" && saved < ST.rows.length) ? saved : 0;
+    paintCursor();
+  }
+
+  function clearSpinner(){
+    if (spinTimer){ clearInterval(spinTimer); spinTimer = null; }
+  }
+
+  /* ── views ── */
+
+  function render(){
+    clearSpinner();
+    contentEl.scrollTop = 0;
+    switch (ST.view){
+      case "menu":     return vMenu();
+      case "about":    return vAbout();
+      case "projects": return vProjects();
+      case "project":  return vProject();
+      case "now":      return vNow();
+      case "contact":  return vContact();
+      case "coffee":   return vCoffee();
+      case "closed":   return vClosed();
+    }
+  }
+
+  function vMenu(){
+    var w = frame("<b>georgenijo.com</b> ~", false);
+    w.appendChild(h("p", "vtitle", "hi, i'm george."));
+    w.appendChild(h("p", "vsub", "software engineer · boston · pick a door"));
+    addRows(w, MENU.map(function(m){
+      return {t:m.t, d:m.d, on:function(){ go(m.id); }};
+    }), "menu");
+    setStatus(stdHints(true));
+  }
+
+  function vAbout(){
+    var w = frame("<b>~</b> / about", true);
+    w.appendChild(h("p", "vtitle", "about"));
+    w.appendChild(h("p", "vsub", "whoami"));
+    var pane = h("div", "pane",
+      '<p><span class="hl">George Nijo</span> — software engineer in <span class="hp">Boston</span>.</p>' +
+      '<p>I build infrastructure for AI agents: <span class="hp">LLM routers</span>, <span class="hp">MCP brokers</span>, and <span class="hp">agent control planes</span> — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>' +
+      '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>' +
+      '<p class="dim">Python · Go · Rust · just enough Swift</p>');
+    w.appendChild(pane);
+    addRows(w, [
+      {t:"see the projects", act:true, on:function(){ go("projects"); }},
+      {t:"← back", on:back}
+    ], "about");
+    setStatus(stdHints(false));
+  }
+
+  function filteredProjects(){
+    var q = ST.filterText.trim().toLowerCase();
+    if (!q) return PROJECTS;
+    return PROJECTS.filter(function(p){
+      return (p.name + " " + p.tag + " " + p.lang).toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function vProjects(){
+    var w = frame("<b>~</b> / projects", true);
+    w.appendChild(h("p", "vtitle", "projects"));
+    w.appendChild(h("p", "vsub", PROJECTS.length + " items · enter for details"));
+
+    if (ST.filterOn){
+      var fb = h("div", "filterbar", '<span class="sig">/</span>');
+      var inp = document.createElement("input");
+      inp.id = "flt";
+      inp.value = ST.filterText;
+      inp.placeholder = "filter projects…";
+      inp.setAttribute("aria-label", "Filter projects");
+      inp.addEventListener("input", function(){
+        ST.filterText = inp.value;
+        rebuildProjectRows(w);
+      });
+      fb.appendChild(inp);
+      w.appendChild(fb);
+    }
+
+    var host = h("div");
+    host.id = "projrows";
+    w.appendChild(host);
+    rebuildProjectRows(w);
+
+    if (ST.filterOn){
+      var el = document.getElementById("flt");
+      if (el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+    }
+    setStatus(stdHints(true, true));
+  }
+
+  function rebuildProjectRows(){
+    var host = document.getElementById("projrows");
+    if (!host) return;
+    host.innerHTML = "";
+    ST.rows = [];
+    var list = filteredProjects();
+    if (!list.length){
+      host.appendChild(h("div", "nores", "nothing matches “" + ST.filterText.replace(/</g,"&lt;") + "” — esc to clear"));
+      return;
+    }
+    var box = h("div", "rows");
+    list.forEach(function(p){
+      var idx = ST.rows.length;
+      var spec = {
+        t: p.name, d: p.tag, aux: p.lang,
+        on: function(){ go("project", {proj: p.name}); }
+      };
+      var el = makeRow(spec, idx);
+      ST.rows.push({el:el, on:spec.on});
+      box.appendChild(el);
+    });
+    host.appendChild(box);
+    var saved = ST.cursors["projects"];
+    ST.cursor = (!ST.filterText && typeof saved === "number" && saved < ST.rows.length) ? saved : 0;
+    paintCursor();
+  }
+
+  function vProject(){
+    var p = null;
+    PROJECTS.forEach(function(x){ if (x.name === ST.proj) p = x; });
+    if (!p) return go("projects");
+    var w = frame("<b>~</b> / projects / " + p.name, true);
+    w.appendChild(h("p", "vtitle", p.name + ' &nbsp;<span class="badge">' + p.lang + "</span>"));
+    w.appendChild(h("p", "vsub", p.tag));
+    w.appendChild(h("div", "pane",
+      "<p>" + p.desc + "</p>" +
+      '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/' + p.name + "</span></div>" +
+      '<div class="kv"><span class="k">lang</span><span class="dim">' + p.lang + "</span></div>"));
+    addRows(w, [
+      {t:"open github.com/georgenijo/" + p.name + " ↗", act:true, href: GH + "/" + p.name},
+      {t:"← back to projects", on:back}
+    ], "project:" + p.name);
+    setStatus(stdHints(false));
+  }
+
+  function vNow(){
+    var w = frame("<b>~</b> / now", true);
+    w.appendChild(h("p", "vtitle", "now"));
+    w.appendChild(h("p", "vsub", "updated june 2026"));
+    var pane = h("div", "pane",
+      '<p>Heads-down on <span class="hl">AgentOS</span> — a personal + home agent operating system. One control plane for the agents that run my code, my inbox, and (eventually) the house.</p>' +
+      '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>' +
+      '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>' +
+      '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>' +
+      '<p class="spin-line"><span class="spin" id="spin">◍</span> agents working…</p>');
+    w.appendChild(pane);
+    addRows(w, [
+      {t:"browse the parts", act:true, on:function(){ go("projects"); }},
+      {t:"← back", on:back}
+    ], "now");
+    setStatus(stdHints(false));
+
+    if (!RM){
+      var frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"], i = 0;
+      var sp = document.getElementById("spin");
+      sp.textContent = frames[0];
+      spinTimer = setInterval(function(){
+        i = (i + 1) % frames.length;
+        sp.textContent = frames[i];
+      }, 90);
+    }
+  }
+
+  function vContact(){
+    var w = frame("<b>~</b> / contact", true);
+    w.appendChild(h("p", "vtitle", "contact"));
+    w.appendChild(h("p", "vsub", "no forms, no funnels — just these two"));
+    addRows(w, [
+      {t:"george.nijo8@gmail.com", d:"email — the reliable channel", aux:"mailto",
+       href:"mailto:george.nijo8@gmail.com"},
+      {t:"github.com/georgenijo", d:"the code lives here", aux:"https", href:GH},
+      {t:"← back", on:back}
+    ], "contact");
+    setStatus(stdHints(false));
+  }
+
+  function vCoffee(){
+    var w = frame("<b>~</b> / coffee", true);
+    w.appendChild(h("p", "vtitle", "coffee"));
+    w.appendChild(h("p", "vsub", "cream & sugar over port 22"));
+    var msg = ST.coffeeTried
+      ? '<p class="hl">order failed: no coffee endpoint on this host.</p><p class="dim">The café is next door — terminal.shop already has coffee-over-ssh covered. This server only pours bytes.</p>'
+      : '<p>You can, famously, buy coffee over SSH.</p><p class="dim">Not here, though. The café is next door; this host serves a portfolio and nothing hot.</p>';
+    w.appendChild(h("div", "pane", msg));
+    addRows(w, [
+      {t: ST.coffeeTried ? "try ordering again (it won't help)" : "place order", act:true,
+       on:function(){ ST.coffeeTried = true; render(); }},
+      {t:"← back", on:back}
+    ], "coffee");
+    setStatus(stdHints(false));
+  }
+
+  function vClosed(){
+    clearSpinner();
+    crumbEl.innerHTML = "";
+    hdrBack.hidden = true;
+    appEl.hidden = true;
+    bootWrap.hidden = false;
+    bootPre.innerHTML = "";
+    bootWrap.innerHTML =
+      '<div class="closed reveal">' +
+      '<p class="msg">Connection to georgenijo.com closed.</p>' +
+      '<p>Thanks for stopping by.</p>' +
+      '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh georgenijo.com  (reconnect)</button>' +
+      "</div>";
+    var b = document.getElementById("reconn");
+    b.addEventListener("click", restart);
+    b.focus();
+  }
+
+  function restart(){
+    bootWrap.innerHTML = "";
+    var pre = document.createElement("pre");
+    pre.id = "bootpre";
+    bootWrap.appendChild(pre);
+    bootPre = pre;
+    ST.view = "menu"; ST.cursors = {};
+    runBoot();
+  }
+
+  /* ───────────────────────── filter helpers ───────────────────────── */
+
+  function openFilter(){
+    if (ST.view !== "projects") return;
+    ST.filterOn = true;
+    render();
+  }
+
+  function closeFilter(){
+    ST.filterOn = false; ST.filterText = "";
+    render();
+  }
+
+  /* ───────────────────────── input ───────────────────────── */
+
+  hdrBack.addEventListener("click", back);
+  bootWrap.addEventListener("click", function(){ if (booting) skipBoot(); });
+
+  window.addEventListener("keydown", function(e){
+    if (booting){
+      if (e.key !== "Shift" && e.key !== "Meta" && e.key !== "Control" && e.key !== "Alt"){
+        skipBoot();
+      }
+      return;
+    }
+
+    // filter input has focus: only intercept Escape / Enter
+    if (e.target && e.target.id === "flt"){
+      if (e.key === "Escape"){ e.preventDefault(); closeFilter(); }
+      else if (e.key === "Enter"){
+        e.preventDefault();
+        e.target.blur();
+        contentEl.focus({preventScroll:true});
+      }
+      return;
+    }
+
+    if (ST.view === "closed"){
+      if (e.key === "Enter" || e.key.toLowerCase() === "r"){ e.preventDefault(); restart(); }
+      return;
+    }
+
+    var k = e.key;
+    if (k === "ArrowDown" || k === "j"){
+      e.preventDefault();
+      if (ST.rows.length){ ST.cursor = Math.min(ST.cursor + 1, ST.rows.length - 1); paintCursor(); }
+    } else if (k === "ArrowUp" || k === "k"){
+      e.preventDefault();
+      if (ST.rows.length){ ST.cursor = Math.max(ST.cursor - 1, 0); paintCursor(); }
+    } else if (k === "Enter"){
+      var r = ST.rows[ST.cursor];
+      if (!r) return;
+      // if the row itself is focused, let the browser handle activation natively
+      if (document.activeElement === r.el) return;
+      e.preventDefault();
+      if (r.href){ r.el.click(); }
+      else if (r.on){ r.on(); }
+    } else if (k === "Escape"){
+      e.preventDefault(); back();
+    } else if (k === "q" && !e.metaKey && !e.ctrlKey && !e.altKey){
+      e.preventDefault(); quit();
+    } else if (k === "/" && (ST.view === "projects")){
+      e.preventDefault(); openFilter();
+    } else if (k === "Home" && ST.rows.length){
+      e.preventDefault(); ST.cursor = 0; paintCursor();
+    } else if (k === "End" && ST.rows.length){
+      e.preventDefault(); ST.cursor = ST.rows.length - 1; paintCursor();
+    }
+  });
+
+  /* ───────────────────────── go ───────────────────────── */
+  runBoot();
 })();
 </script>
 </body>
