@@ -594,11 +594,22 @@
     inner += "</span>";
     if (spec.aux) inner += '<span class="aux">' + spec.aux + "</span>";
     el.innerHTML = inner;
-    el.addEventListener("click", function(){
+    // Hover never moves the selection (CSS :hover styling only).
+    // Wide (split) mode: the first click on a row selects it; a click on the
+    // already-selected row activates it. Narrow mode: a click activates
+    // directly, so mobile users never need to tap twice.
+    var wasSel = false;
+    el.addEventListener("pointerdown", function(){ wasSel = (ST.cursor === idx); });
+    el.addEventListener("click", function(e){
+      var kbClick = (e.detail === 0); // Enter on a focused row, or synthetic click
+      if (wide() && !kbClick && !wasSel){
+        if (spec.href) e.preventDefault();
+        ST.cursor = idx; paintCursor();
+        return;
+      }
       ST.cursor = idx; paintCursor();
       if (!spec.href && spec.on) spec.on();
     });
-    el.addEventListener("mouseenter", function(){ ST.cursor = idx; paintCursor(); });
     el.addEventListener("focus", function(){ ST.cursor = idx; paintCursor(); });
     return el;
   }
