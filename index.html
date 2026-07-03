@@ -9,8 +9,8 @@
 <meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
 <meta property="og:url" content="https://georgenijo.com">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#16121f">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316121f'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23ff79c6' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#141021">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141021'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23ff6ac1' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <style>
@@ -146,12 +146,60 @@
   }
   .backbtn:hover{border-color:var(--purple);color:var(--fg);}
 
+  .split{flex:1;min-height:0;display:flex;}
   main.content{
-    flex:1;min-height:0;
+    flex:1;min-width:0;min-height:0;
     overflow-y:auto;overflow-x:hidden;
     padding:clamp(12px,2.5vw,26px) clamp(12px,3vw,28px);
     scrollbar-width:thin;
     scrollbar-color:var(--line) transparent;
+  }
+
+  /* ── preview pane (wide viewports, Bubbletea master-detail) ── */
+  aside.preview{display:none;}
+  @media (min-width:1000px){
+    .split > main.content{flex:0 0 clamp(340px,36%,440px);border-right:1px solid var(--line);}
+    aside.preview{
+      display:flex;flex-direction:column;
+      flex:1;min-width:0;min-height:0;
+      margin:16px 22px 16px 20px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(28,22,49,.42);
+      overflow:hidden;
+    }
+    .pv-title{
+      flex:none;display:flex;align-items:center;gap:8px;
+      padding:8px 16px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(90deg,rgba(125,86,244,.12),transparent 70%);
+      color:var(--dim);font-size:.85em;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .pv-title .pv-dot{color:var(--pink);font-size:.75em;}
+    .pv-body{
+      flex:1;min-height:0;min-width:0;
+      overflow-y:auto;overflow-x:hidden;
+      padding:16px 20px;
+      scrollbar-width:thin;
+      scrollbar-color:var(--line) transparent;
+    }
+    .pv-body .pane{background:transparent;border:none;border-radius:0;padding:0;margin:0 0 12px;max-width:64ch;}
+    .pv-foot{
+      flex:none;display:flex;gap:18px;
+      padding:7px 16px;
+      border-top:1px solid var(--line);
+      color:var(--faint);font-size:.8em;
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;overflow:hidden;
+    }
+    .pv-foot .up{margin-left:auto;}
+    .pv-list{display:flex;flex-direction:column;gap:4px;max-width:72ch;}
+    .pv-li{display:flex;gap:12px;align-items:baseline;min-width:0;}
+    .pv-li .n{color:var(--lav);flex:none;min-width:13ch;}
+    .pv-li .d2{color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .pv-li .g{margin-left:auto;flex:none;color:var(--faint);font-size:.82em;padding-left:10px;}
+    .pv-note{color:var(--faint);font-size:.84em;margin:12px 0 0;}
   }
   .reveal{animation:fadeUp .18s ease both;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
@@ -289,7 +337,14 @@
       <span class="crumb" id="crumb">~</span>
       <span class="conn" id="conn">ssh · ed25519 · 24ms</span>
     </header>
-    <main class="content" id="content" tabindex="-1"></main>
+    <div class="split">
+      <main class="content" id="content" tabindex="-1"></main>
+      <aside class="preview" id="preview">
+        <div class="pv-title" id="pvtitle"></div>
+        <div class="pv-body" id="pvbody"></div>
+        <div class="pv-foot" id="pvfoot"></div>
+      </aside>
+    </div>
     <footer class="status" id="status"></footer>
   </div>
 </div>
@@ -333,6 +388,41 @@
     {id:"contact",  t:"contact",  d:"say hello"},
     {id:"coffee",   t:"coffee",   d:"order a cup over ssh"}
   ];
+
+  var CONTACT = [
+    {t:"george.nijo8@gmail.com", d:"email — the reliable channel", aux:"mailto",
+     href:"mailto:george.nijo8@gmail.com"},
+    {t:"github.com/georgenijo", d:"the code lives here", aux:"https", href:GH}
+  ];
+
+  var ABOUT_HTML =
+    '<p><span class="hl">George Nijo</span> — software engineer in <span class="hp">Boston</span>.</p>' +
+    '<p>I build infrastructure for AI agents: <span class="hp">LLM routers</span>, <span class="hp">MCP brokers</span>, and <span class="hp">agent control planes</span> — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>' +
+    '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>' +
+    '<p class="dim">Python · Go · Rust · just enough Swift</p>';
+
+  var NOW_HTML =
+    '<p>Heads-down on <span class="hl">AgentOS</span> — a personal + home agent operating system. One control plane for the agents that run my code, my inbox, and (eventually) the house.</p>' +
+    '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>' +
+    '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>' +
+    '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>';
+
+  function coffeeHTML(tried){
+    return tried
+      ? '<p class="hl">order failed: no coffee endpoint on this host.</p><p class="dim">The café is next door — terminal.shop already has coffee-over-ssh covered. This server only pours bytes.</p>'
+      : '<p>You can, famously, buy coffee over SSH.</p><p class="dim">Not here, though. The café is next door; this host serves a portfolio and nothing hot.</p>';
+  }
+
+  function projByName(n){
+    for (var i = 0; i < PROJECTS.length; i++) if (PROJECTS[i].name === n) return PROJECTS[i];
+    return null;
+  }
+
+  function projDetailHTML(p){
+    return "<p>" + p.desc + "</p>" +
+      '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/' + p.name + "</span></div>" +
+      '<div class="kv"><span class="k">lang</span><span class="dim">' + p.lang + "</span></div>";
+  }
 
   /* ───────────────────────── boot sequence ───────────────────────── */
 
@@ -417,6 +507,7 @@
         booting = false;
         bootWrap.hidden = true;
         appEl.hidden = false;
+        sessStart = Date.now();
         go("menu");
       });
   }
@@ -429,6 +520,12 @@
   var crumbEl   = document.getElementById("crumb");
   var statusEl  = document.getElementById("status");
   var hdrBack   = document.getElementById("hdrback");
+  var pvTitle   = document.getElementById("pvtitle");
+  var pvBody    = document.getElementById("pvbody");
+  var pvFoot    = document.getElementById("pvfoot");
+
+  var WIDE = window.matchMedia("(min-width:1000px)");
+  function wide(){ return WIDE.matches; }
 
   var ST = {
     view: "menu",
@@ -512,6 +609,8 @@
     });
     var cur = ST.rows[ST.cursor];
     if (cur && cur.el.scrollIntoView) cur.el.scrollIntoView({block:"nearest"});
+    // live master→detail preview follows the highlight on wide viewports
+    if ((ST.view === "menu" || ST.view === "projects") && wide()) refreshPreview();
   }
 
   function setStatus(hints){
@@ -566,21 +665,157 @@
     if (spinTimer){ clearInterval(spinTimer); spinTimer = null; }
   }
 
+  function startSpin(sp){
+    if (!sp) return;
+    if (RM){ sp.textContent = "◍"; return; }
+    var frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"], i = 0;
+    sp.textContent = frames[0];
+    spinTimer = setInterval(function(){
+      i = (i + 1) % frames.length;
+      sp.textContent = frames[i];
+    }, 90);
+  }
+
+  /* ── shared content builders (used by main column and preview pane) ── */
+
+  function buildAbout(c){ c.appendChild(h("div", "pane", ABOUT_HTML)); }
+
+  function buildNow(c){
+    var pane = h("div", "pane",
+      NOW_HTML + '<p class="spin-line"><span class="spin">◍</span> agents working…</p>');
+    c.appendChild(pane);
+    startSpin(pane.querySelector(".spin"));
+  }
+
+  function buildContactCard(c){
+    c.appendChild(h("div", "pane",
+      '<p class="dim">no forms, no funnels — just these two:</p>' +
+      CONTACT.map(function(x){
+        return '<div class="kv"><span class="k">' + x.aux + '</span><span class="hp">' + x.t + "</span></div>";
+      }).join("")));
+  }
+
+  function buildCoffee(c){ c.appendChild(h("div", "pane", coffeeHTML(ST.coffeeTried))); }
+
+  function buildProjectDetail(c, p){ c.appendChild(h("div", "pane", projDetailHTML(p))); }
+
+  function buildProjectIndex(c){
+    var box = h("div", "pv-list");
+    PROJECTS.forEach(function(p){
+      box.appendChild(h("div", "pv-li",
+        '<span class="n">' + p.name + '</span><span class="d2">' + p.tag +
+        '</span><span class="g">' + p.lang + "</span>"));
+    });
+    c.appendChild(box);
+    c.appendChild(h("p", "pv-note", PROJECTS.length + " repos · enter to browse"));
+  }
+
+  /* ── preview pane (wide viewports) ── */
+
+  function refreshPreview(){
+    if (!wide() || ST.view === "closed") return;
+    clearSpinner();
+    pvBody.innerHTML = "";
+    var path = "~";
+    switch (ST.view){
+      case "menu": {
+        var m = MENU[ST.cursor] || MENU[0];
+        path = "~ / " + m.id;
+        if (m.id === "about") buildAbout(pvBody);
+        else if (m.id === "projects") buildProjectIndex(pvBody);
+        else if (m.id === "now") buildNow(pvBody);
+        else if (m.id === "contact") buildContactCard(pvBody);
+        else buildCoffee(pvBody);
+        break;
+      }
+      case "projects": {
+        var list = filteredProjects();
+        var p = list[ST.cursor];
+        if (!p){
+          path = "~ / projects";
+          pvBody.appendChild(h("div", "nores", "no matching project"));
+        } else {
+          path = "~ / projects / " + p.name;
+          pvBody.appendChild(h("p", "vtitle", p.name + ' &nbsp;<span class="badge">' + p.lang + "</span>"));
+          pvBody.appendChild(h("p", "vsub", p.tag));
+          buildProjectDetail(pvBody, p);
+          pvBody.appendChild(h("p", "pv-note", "enter → open actions"));
+        }
+        break;
+      }
+      case "about":   path = "~ / about";   buildAbout(pvBody); break;
+      case "now":     path = "~ / now";     buildNow(pvBody); break;
+      case "contact": path = "~ / contact"; buildContactCard(pvBody); break;
+      case "coffee":  path = "~ / coffee";  buildCoffee(pvBody); break;
+      case "project": {
+        var pr = projByName(ST.proj);
+        if (pr){
+          path = "~ / projects / " + pr.name;
+          pvBody.appendChild(h("p", "vtitle", pr.name + ' &nbsp;<span class="badge">' + pr.lang + "</span>"));
+          pvBody.appendChild(h("p", "vsub", pr.tag));
+          buildProjectDetail(pvBody, pr);
+        }
+        break;
+      }
+    }
+    pvTitle.innerHTML = '<span class="pv-dot">◉</span> ' + path;
+    sessionLine();
+  }
+
+  /* ── ambient session line ── */
+
+  var sessStart = Date.now(), chW = 0, chH = 0;
+
+  function measureChar(){
+    var s = h("span", null, "0000000000");
+    s.style.cssText = "position:absolute;visibility:hidden;white-space:pre;";
+    document.body.appendChild(s);
+    chW = (s.offsetWidth / 10) || 8.4;
+    chH = s.offsetHeight || 21;
+    s.parentNode.removeChild(s);
+  }
+
+  function fmtUp(ms){
+    var t = Math.floor(ms / 1000);
+    function z(n){ return (n < 10 ? "0" : "") + n; }
+    return z(Math.floor(t / 3600)) + ":" + z(Math.floor((t % 3600) / 60)) + ":" + z(t % 60);
+  }
+
+  function sessionLine(){
+    if (!wide() || appEl.hidden) return;
+    if (!chW) measureChar();
+    var cols = Math.max(1, Math.floor(window.innerWidth / chW));
+    var rws  = Math.max(1, Math.floor(window.innerHeight / chH));
+    pvFoot.innerHTML =
+      "<span>georgenijo.com</span><span>pts/0</span><span>" + cols + "×" + rws +
+      '</span><span class="up">up ' + fmtUp(Date.now() - sessStart) + "</span>";
+  }
+
+  setInterval(sessionLine, 1000);
+  window.addEventListener("resize", function(){ chW = 0; sessionLine(); });
+
+  function onWideChange(){
+    if (!booting && ST.view !== "closed") render();
+  }
+  if (WIDE.addEventListener) WIDE.addEventListener("change", onWideChange);
+  else if (WIDE.addListener) WIDE.addListener(onWideChange);
+
   /* ── views ── */
 
   function render(){
     clearSpinner();
     contentEl.scrollTop = 0;
     switch (ST.view){
-      case "menu":     return vMenu();
-      case "about":    return vAbout();
-      case "projects": return vProjects();
-      case "project":  return vProject();
-      case "now":      return vNow();
-      case "contact":  return vContact();
-      case "coffee":   return vCoffee();
-      case "closed":   return vClosed();
+      case "menu":     vMenu(); break;
+      case "about":    vAbout(); break;
+      case "projects": vProjects(); break;
+      case "project":  vProject(); break;
+      case "now":      vNow(); break;
+      case "contact":  vContact(); break;
+      case "coffee":   vCoffee(); break;
+      case "closed":   vClosed(); return;
     }
+    refreshPreview();
   }
 
   function vMenu(){
@@ -597,12 +832,7 @@
     var w = frame("<b>~</b> / about", true);
     w.appendChild(h("p", "vtitle", "about"));
     w.appendChild(h("p", "vsub", "whoami"));
-    var pane = h("div", "pane",
-      '<p><span class="hl">George Nijo</span> — software engineer in <span class="hp">Boston</span>.</p>' +
-      '<p>I build infrastructure for AI agents: <span class="hp">LLM routers</span>, <span class="hp">MCP brokers</span>, and <span class="hp">agent control planes</span> — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>' +
-      '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>' +
-      '<p class="dim">Python · Go · Rust · just enough Swift</p>');
-    w.appendChild(pane);
+    if (!wide()) buildAbout(w);
     addRows(w, [
       {t:"see the projects", act:true, on:function(){ go("projects"); }},
       {t:"← back", on:back}
@@ -678,16 +908,12 @@
   }
 
   function vProject(){
-    var p = null;
-    PROJECTS.forEach(function(x){ if (x.name === ST.proj) p = x; });
+    var p = projByName(ST.proj);
     if (!p) return go("projects");
     var w = frame("<b>~</b> / projects / " + p.name, true);
     w.appendChild(h("p", "vtitle", p.name + ' &nbsp;<span class="badge">' + p.lang + "</span>"));
     w.appendChild(h("p", "vsub", p.tag));
-    w.appendChild(h("div", "pane",
-      "<p>" + p.desc + "</p>" +
-      '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/' + p.name + "</span></div>" +
-      '<div class="kv"><span class="k">lang</span><span class="dim">' + p.lang + "</span></div>"));
+    if (!wide()) buildProjectDetail(w, p);
     addRows(w, [
       {t:"open github.com/georgenijo/" + p.name + " ↗", act:true, href: GH + "/" + p.name},
       {t:"← back to projects", on:back}
@@ -699,40 +925,19 @@
     var w = frame("<b>~</b> / now", true);
     w.appendChild(h("p", "vtitle", "now"));
     w.appendChild(h("p", "vsub", "updated june 2026"));
-    var pane = h("div", "pane",
-      '<p>Heads-down on <span class="hl">AgentOS</span> — a personal + home agent operating system. One control plane for the agents that run my code, my inbox, and (eventually) the house.</p>' +
-      '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>' +
-      '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>' +
-      '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>' +
-      '<p class="spin-line"><span class="spin" id="spin">◍</span> agents working…</p>');
-    w.appendChild(pane);
+    if (!wide()) buildNow(w);
     addRows(w, [
       {t:"browse the parts", act:true, on:function(){ go("projects"); }},
       {t:"← back", on:back}
     ], "now");
     setStatus(stdHints(false));
-
-    if (!RM){
-      var frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"], i = 0;
-      var sp = document.getElementById("spin");
-      sp.textContent = frames[0];
-      spinTimer = setInterval(function(){
-        i = (i + 1) % frames.length;
-        sp.textContent = frames[i];
-      }, 90);
-    }
   }
 
   function vContact(){
     var w = frame("<b>~</b> / contact", true);
     w.appendChild(h("p", "vtitle", "contact"));
     w.appendChild(h("p", "vsub", "no forms, no funnels — just these two"));
-    addRows(w, [
-      {t:"george.nijo8@gmail.com", d:"email — the reliable channel", aux:"mailto",
-       href:"mailto:george.nijo8@gmail.com"},
-      {t:"github.com/georgenijo", d:"the code lives here", aux:"https", href:GH},
-      {t:"← back", on:back}
-    ], "contact");
+    addRows(w, CONTACT.concat([{t:"← back", on:back}]), "contact");
     setStatus(stdHints(false));
   }
 
@@ -740,10 +945,7 @@
     var w = frame("<b>~</b> / coffee", true);
     w.appendChild(h("p", "vtitle", "coffee"));
     w.appendChild(h("p", "vsub", "cream & sugar over port 22"));
-    var msg = ST.coffeeTried
-      ? '<p class="hl">order failed: no coffee endpoint on this host.</p><p class="dim">The café is next door — terminal.shop already has coffee-over-ssh covered. This server only pours bytes.</p>'
-      : '<p>You can, famously, buy coffee over SSH.</p><p class="dim">Not here, though. The café is next door; this host serves a portfolio and nothing hot.</p>';
-    w.appendChild(h("div", "pane", msg));
+    if (!wide()) buildCoffee(w);
     addRows(w, [
       {t: ST.coffeeTried ? "try ordering again (it won't help)" : "place order", act:true,
        on:function(){ ST.coffeeTried = true; render(); }},
