@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+</head>
+<body>
+<title>George Nijo — approach control</title>
+<style>
+/* Deliberately single-theme: a radar scope is a committed dark phosphor world. */
+:root{
+  --ground:#040a06;
+  --panel:#081009;
+  --panel-2:#0b150d;
+  --line:#14271a;
+  --line-2:#1d3a26;
+  --ph:#45ff8a;
+  --ph-dim:#2b8f55;
+  --ph-faint:rgba(69,255,138,.13);
+  --ink:#afcdbb;
+  --ink-dim:#6f8f7d;
+  --amber:#ffb454;
+  --amber-dim:#8a6231;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:13px;
+  line-height:1.45;
+  font-variant-numeric:tabular-nums;
+  overflow-x:hidden;
+}
+a{color:var(--ph);text-decoration:none;border-bottom:1px solid var(--ph-dim);}
+a:hover{color:#8dffb8;border-bottom-color:var(--ph);}
+a:focus-visible,button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;border-radius:1px;}
+button{font-family:var(--mono);}
+
+#app{
+  display:grid;
+  grid-template:
+    "bar   bar"  auto
+    "scope rail" 1fr
+    "tick  tick" auto
+    / minmax(0,1fr) 372px;
+  height:100dvh;
+}
+
+/* ---- top bar ---- */
+#bar{
+  grid-area:bar;
+  display:flex;align-items:center;gap:16px;
+  padding:9px 14px;
+  border-bottom:1px solid var(--line);
+  background:var(--panel);
+}
+#bar .facility{
+  color:var(--ph);
+  letter-spacing:.18em;
+  font-size:12px;
+  min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#bar .facility small{color:var(--ink-dim);letter-spacing:.14em;}
+#bar .spacer{flex:1;}
+#zulu{
+  color:var(--ph);
+  font-size:14px;
+  letter-spacing:.08em;
+  min-width:9ch;text-align:right;
+}
+#squawk{
+  background:transparent;
+  color:var(--amber);
+  border:1px solid var(--amber-dim);
+  padding:5px 12px;
+  font-size:11px;
+  letter-spacing:.16em;
+  cursor:pointer;
+  border-radius:2px;
+}
+#squawk:hover{border-color:var(--amber);background:rgba(255,180,84,.08);}
+#squawk:active{background:rgba(255,180,84,.18);}
+
+/* ---- scope ---- */
+#scopeWrap{
+  grid-area:scope;
+  position:relative;
+  min-width:0;min-height:0;
+}
+#scopeArea{
+  position:relative;
+  height:100%;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(69,255,138,.045), transparent 65%),
+    var(--ground);
+}
+#scope{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;
+  cursor:crosshair;
+}
+/* faint CRT scanlines */
+#scopeArea::after{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+
+/* ---- TWR INFO ---- */
+#twr{
+  position:absolute;top:14px;left:14px;z-index:3;
+  width:min(305px, calc(100% - 28px));
+  background:rgba(6,13,8,.88);
+  border:1px solid var(--line-2);
+  border-radius:2px;
+  padding:10px 13px 12px;
+  backdrop-filter:blur(2px);
+}
+#twr h1{
+  margin:0 0 6px;
+  font-size:11px;font-weight:600;
+  color:var(--amber);
+  letter-spacing:.22em;
+}
+#twr .who{color:#d8ecdf;font-size:13px;margin:0 0 2px;}
+#twr .role{color:var(--ink-dim);margin:0 0 7px;font-size:12px;}
+#twr p{margin:0 0 7px;font-size:12px;color:var(--ink);max-width:42ch;}
+#twr .now{color:var(--ph);}
+#twr .contact{
+  margin:0;padding-top:7px;border-top:1px dashed var(--line-2);
+  font-size:12px;display:flex;flex-direction:column;gap:2px;
+}
+
+/* ---- scope hint ---- */
+#hint{
+  position:absolute;left:14px;bottom:12px;z-index:3;
+  color:var(--ink-dim);font-size:11px;letter-spacing:.1em;
+  background:rgba(4,10,6,.7);padding:3px 8px;border-radius:2px;
+  pointer-events:none;
+}
+
+/* ---- flight strip rail ---- */
+#rail{
+  grid-area:rail;
+  min-height:0;
+  border-left:1px solid var(--line);
+  background:var(--panel);
+  display:flex;flex-direction:column;
+}
+#rail .rail-head{
+  padding:9px 14px 8px;
+  border-bottom:1px solid var(--line);
+  color:var(--ink-dim);
+  font-size:11px;letter-spacing:.2em;
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+#rail .rail-head .n{color:var(--ph);}
+#strips{
+  list-style:none;margin:0;padding:8px 10px 14px;
+  overflow-y:auto;flex:1;
+  display:flex;flex-direction:column;gap:7px;
+}
+.strip{
+  background:var(--panel-2);
+  border:1px solid var(--line);
+  border-left:4px solid var(--ph-dim);
+  border-radius:2px;
+}
+.strip.active{
+  border-color:var(--amber-dim);
+  border-left-color:var(--amber);
+  background:#12130a;
+}
+.strip-head{
+  display:grid;
+  grid-template-columns:7ch minmax(0,1fr) auto;
+  gap:10px;align-items:center;
+  width:100%;
+  padding:8px 10px;
+  background:none;border:0;
+  color:inherit;text-align:left;
+  font-size:12px;cursor:pointer;
+}
+.strip-head:hover{background:rgba(69,255,138,.05);}
+.strip.active .strip-head:hover{background:rgba(255,180,84,.06);}
+.strip-head .cs{color:var(--ph);font-weight:600;letter-spacing:.06em;}
+.strip.active .strip-head .cs{color:var(--amber);}
+.strip-head .nm{min-width:0;}
+.strip-head .nm .n1{display:block;color:#d8ecdf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.strip-head .nm .n2{display:block;color:var(--ink-dim);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.strip-head .fl{text-align:right;color:var(--ink);font-size:11px;line-height:1.5;}
+.strip-head .fl b{color:var(--ph);font-weight:600;display:block;}
+.strip.active .strip-head .fl b{color:var(--amber);}
+.strip-body{
+  border-top:1px dashed var(--line-2);
+  padding:9px 11px 11px;
+  font-size:12px;
+}
+.strip-body .desc{margin:0 0 8px;color:var(--ink);max-width:46ch;}
+.strip-body .meta{
+  display:grid;grid-template-columns:auto 1fr;gap:2px 12px;
+  margin:0 0 9px;font-size:11px;
+}
+.strip-body .meta dt{color:var(--ink-dim);letter-spacing:.12em;}
+.strip-body .meta dd{margin:0;color:#d8ecdf;}
+.strip-body .radio{
+  margin:0 0 9px;padding:7px 9px;
+  border-left:2px solid var(--amber-dim);
+  background:rgba(255,180,84,.05);
+  color:var(--amber);font-size:11.5px;font-style:normal;
+}
+.strip-body .radio .rx{color:var(--ink-dim);display:block;margin-top:2px;}
+.strip-body .gh{font-size:12px;}
+
+/* ---- radio log ticker ---- */
+#tick{
+  grid-area:tick;
+  border-top:1px solid var(--line);
+  background:var(--panel);
+  display:flex;align-items:center;
+  height:34px;
+  overflow:hidden;
+}
+#tick .label{
+  flex:none;
+  padding:0 12px;
+  color:var(--amber);
+  font-size:10px;letter-spacing:.2em;
+  border-right:1px solid var(--line);
+  align-self:stretch;display:flex;align-items:center;
+  background:var(--panel-2);
+}
+#tickView{flex:1;overflow:hidden;position:relative;height:100%;}
+#tickTrack{
+  position:absolute;top:0;left:0;height:100%;
+  display:flex;align-items:center;
+  white-space:nowrap;
+  will-change:transform;
+}
+#tickTrack .msg{color:var(--ph);font-size:12px;letter-spacing:.04em;padding-right:1ch;}
+#tickTrack .sep{color:var(--line-2);padding-right:1ch;}
+
+/* ---- mobile ---- */
+@media (max-width:880px){
+  #app{
+    display:block;
+    height:auto;min-height:100dvh;
+  }
+  #scopeWrap{height:auto;}
+  #scopeArea{height:min(62vh,480px);}
+  #twr{
+    position:static;width:auto;
+    margin:0;border-left:0;border-right:0;border-radius:0;
+    background:var(--panel-2);
+  }
+  #rail{border-left:0;}
+  #strips{overflow-y:visible;}
+  #tick{position:sticky;bottom:0;z-index:5;}
+  #hint{display:none;}
+}
+@media (max-width:480px){
+  .strip-head{grid-template-columns:7ch minmax(0,1fr) auto;gap:7px;padding:8px;}
+}
+</style>
+
+<div id="app">
+  <div id="bar">
+    <div class="facility">GEORGE NIJO APPROACH &middot; SECTOR 09 <small>&middot; PORTFOLIO SCOPE &middot; BOSTON CENTER</small></div>
+    <div class="spacer"></div>
+    <div id="zulu" aria-label="Zulu time">--:--:--Z</div>
+    <button id="squawk" type="button" title="Flash all targets on the scope">SQUAWK IDENT</button>
+  </div>
+
+  <div id="scopeWrap">
+    <div id="scopeArea">
+      <canvas id="scope" role="img" aria-label="Radar scope showing ten projects as aircraft. Use the flight strip list to inspect each one."></canvas>
+      <div id="hint">CLICK A TARGET OR A STRIP TO HAND OFF</div>
+    </div>
+    <section id="twr" aria-label="Tower info — about George Nijo">
+      <h1>TWR INFO</h1>
+      <p class="who">George Nijo</p>
+      <p class="role">software engineer &middot; Boston</p>
+      <p>Builds AI-agent infrastructure: LLM routers, MCP brokers, agent control planes. <span class="now">Currently building AgentOS.</span></p>
+      <p class="contact">
+        <a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a>
+        <a href="https://github.com/georgenijo" rel="me">github.com/georgenijo</a>
+      </p>
+    </section>
+  </div>
+
+  <nav id="rail" aria-label="Flight strips — projects">
+    <div class="rail-head"><span>FLIGHT PROGRESS STRIPS</span><span class="n">10 AC</span></div>
+    <ul id="strips"></ul>
+  </nav>
+
+  <div id="tick" aria-label="Radio log">
+    <span class="label">RADIO LOG 121.5</span>
+    <div id="tickView"><div id="tickTrack" aria-live="off"></div></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function(){
+  /* ============ data ============ */
+  var FLIGHTS = [
+    {cs:"NDR001", name:"nadirclaw",   type:"LLM router &amp; cost optimizer",
+     desc:"LLM router and cost optimizer. Classifies each request and routes it to the cheapest model that can actually handle it; logs every routing decision and the dollars it saved.",
+     lang:"Python", status:"EN ROUTE / ACTIVE", fl:390, spd:452, sq:"4201"},
+    {cs:"GHT002", name:"ghosthands",  type:"local computer-use for macOS",
+     desc:"Local computer-use for macOS. An agent that sees the screen and drives keyboard and mouse directly — accessibility APIs plus vision, no cloud in the loop.",
+     lang:"Python / Swift", status:"CLIMBING / IN DEV", fl:280, spd:361, sq:"4202"},
+    {cs:"USH003", name:"usher",       type:"MCP broker",
+     desc:"MCP broker. One endpoint that fronts many MCP servers — auth, routing, rate limits and observability for tool traffic between agents and servers.",
+     lang:"TypeScript", status:"CRUISE / STABLE", fl:310, spd:405, sq:"4203"},
+    {cs:"HGR004", name:"hangar",      type:"agent control plane",
+     desc:"Agent control plane. Deploy, schedule and supervise fleets of long-running agents: lifecycles, budgets, restarts and audit trails from one console.",
+     lang:"Go / TypeScript", status:"CLIMBING / IN DEV", fl:330, spd:428, sq:"4204"},
+    {cs:"OMN005", name:"omen",        type:"code intel for agents",
+     desc:"Code intelligence for agents. Call graphs, symbol maps and ranked repo context, served to LLMs so they stop guessing where things live.",
+     lang:"Rust", status:"EN ROUTE / ACTIVE", fl:260, spd:340, sq:"4205"},
+    {cs:"HRM006", name:"hermes-agent",type:"agent messaging runtime",
+     desc:"Messaging runtime for agents. Durable inboxes, structured handoffs and dead-letter queues so multi-agent systems can pass work without losing it.",
+     lang:"Python", status:"CRUISE / STABLE", fl:220, spd:318, sq:"4206"},
+    {cs:"FLT007", name:"fleetmap",    type:"multi-agent observability",
+     desc:"Observability for multi-agent systems. Live traces of which agent called what, with what tokens, at what cost — the flight-following screen for a fleet.",
+     lang:"TypeScript", status:"EN ROUTE / ACTIVE", fl:200, spd:296, sq:"4207"},
+    {cs:"GGE008", name:"gauge",       type:"eval harness",
+     desc:"Eval harness. Regression suites for prompts and agents, run on every change; catches the quiet degradations before users do.",
+     lang:"Python", status:"HOLDING / PAUSED", fl:180, spd:255, sq:"4210"},
+    {cs:"APT009", name:"aperture",    type:"vision toolkit for agents",
+     desc:"Vision toolkit for computer-use agents. Screenshot diffing, element detection and coordinate grounding — the eyes that ghosthands flies with.",
+     lang:"Python", status:"CLIMBING / IN DEV", fl:150, spd:238, sq:"4211"},
+    {cs:"STR010", name:"star-maker",  type:"project bootstrapper",
+     desc:"Project bootstrapper. Scaffolds a repo, CI and agent tooling from a single prompt — new projects cleared for departure in one command.",
+     lang:"TypeScript", status:"DEPARTURE / EXPERIMENTAL", fl:120, spd:210, sq:"4212"}
+  ];
+
+  var TICKER = [
+    "GEORGE NIJO CENTER, good evening",
+    "radar contact, ten projects on frequency, no conflicts observed",
+    "cleared direct AGENTOS, maintain present heading",
+    "NDR001 rerouted to haiku, saving $0.04 per leg",
+    "USH003 cleared to broker MCP traffic, squawk 4203",
+    "GHT002 established on the localizer, hands on macOS, no cloud in the loop",
+    "HGR004, you have control of the fleet, radar services provided",
+    "OMN005 reports field in sight, codebase indexed",
+    "FLT007 tracking all stations, token burn nominal",
+    "winds tokens 040 at 12, visibility unlimited",
+    "position: BOSTON, occupation: software engineer, mission: agent infrastructure",
+    "for handoff contact GEORGE on 121.5 — george.nijo8@gmail.com",
+    "github.com/georgenijo, frequency change approved, good day"
+  ];
+  var MODELS = ["haiku","sonnet","a local 8B","the small lane"];
+
+  /* ============ helpers ============ */
+  var TAU = Math.PI*2;
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var rng = mulberry32(20260702);
+  function pad(n){return (n<10?"0":"")+n;}
+  function esc(s){var d=document.createElement("div");d.innerHTML=s;return d.textContent;}
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* runtime state per flight */
+  FLIGHTS.forEach(function(f,i){
+    var brg = (i/FLIGHTS.length)*TAU + rng()*0.5;
+    var r = 0.30 + (i%4)*0.17 + rng()*0.08;
+    f.x = Math.cos(brg)*r;
+    f.y = Math.sin(brg)*r;
+    f.hdg = brg + Math.PI + (rng()-0.5)*1.6;   /* roughly inbound-ish crossing */
+    f.spdU = f.spd/45000;                       /* scope units per second */
+    f.painted = [];                             /* trail of painted returns */
+    f.el = null;
+  });
+
+  var selected = null;
+  var squawkUntil = 0;
+
+  /* ============ flight strips (DOM) ============ */
+  var stripsEl = document.getElementById("strips");
+  FLIGHTS.forEach(function(f){
+    var li = document.createElement("li");
+    li.className = "strip";
+    var id = "fs-"+f.cs.toLowerCase();
+    li.innerHTML =
+      '<button class="strip-head" type="button" aria-expanded="false" aria-controls="'+id+'">'+
+        '<span class="cs">'+f.cs+'</span>'+
+        '<span class="nm"><span class="n1">'+f.name+'</span><span class="n2">'+f.type+'</span></span>'+
+        '<span class="fl"><b>FL'+f.fl+'</b>'+f.spd+'KT</span>'+
+      '</button>'+
+      '<div class="strip-body" id="'+id+'" hidden>'+
+        '<p class="desc">'+f.desc+'</p>'+
+        '<dl class="meta">'+
+          '<dt>LANG</dt><dd>'+f.lang+'</dd>'+
+          '<dt>STATUS</dt><dd>'+f.status+'</dd>'+
+          '<dt>SQUAWK</dt><dd>'+f.sq+'</dd>'+
+          '<dt>ALT</dt><dd>FL'+f.fl+' (maturity)</dd>'+
+        '</dl>'+
+        '<p class="radio">&ldquo;'+f.cs+', contact github on 121.5, good day.&rdquo;'+
+          '<span class="rx">&ldquo;121.5, '+f.cs+', so long.&rdquo;</span></p>'+
+        '<p class="gh"><a href="https://github.com/georgenijo/'+f.name+'" target="_blank" rel="noopener">github.com/georgenijo/'+f.name+'</a></p>'+
+      '</div>';
+    f.el = li;
+    f.head = li.querySelector(".strip-head");
+    f.body = li.querySelector(".strip-body");
+    f.head.addEventListener("click", function(){
+      select(selected===f ? null : f, false);
+    });
+    stripsEl.appendChild(li);
+  });
+
+  function select(f, scrollTo){
+    if (selected && selected!==f){
+      selected.el.classList.remove("active");
+      selected.head.setAttribute("aria-expanded","false");
+      selected.body.hidden = true;
+    }
+    selected = f || null;
+    if (selected){
+      selected.el.classList.add("active");
+      selected.head.setAttribute("aria-expanded","true");
+      selected.body.hidden = false;
+      if (scrollTo) selected.el.scrollIntoView({block:"nearest", behavior: reduceMotion?"auto":"smooth"});
+      logNow(selected.cs+" handed off, contact github on 121.5");
+    }
+    if (reduceMotion) drawStatic();
+  }
+
+  /* ============ canvas scope ============ */
+  var wrap = document.getElementById("scopeArea");
+  var canvas = document.getElementById("scope");
+  var ctx = canvas.getContext("2d");
+  var W=0, H=0, CX=0, CY=0, R=0, dpr=1;
+
+  function resize(){
+    var b = wrap.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio||1, 2.5);
+    W = Math.max(1, Math.round(b.width));
+    H = Math.max(1, Math.round(b.height));
+    canvas.width = Math.round(W*dpr);
+    canvas.height = Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    CX = W/2; CY = H/2;
+    R = Math.min(W,H)/2 - 26;
+    if (R < 60) R = Math.min(W,H)/2 - 8;
+    if (reduceMotion) drawStatic();
+  }
+  if (window.ResizeObserver){ new ResizeObserver(resize).observe(wrap); }
+  window.addEventListener("resize", resize);
+  resize();
+
+  function sx(x){return CX + x*R;}
+  function sy(y){return CY + y*R;}
+
+  var ROT = 8000;           /* sweep period ms */
+  var sweepA = -Math.PI/2;  /* start at north */
+  var lastT = performance.now();
+
+  function angleDiff(a,b){ var d=(a-b)%TAU; if(d<0)d+=TAU; return d; }
+
+  function updateFlights(dt){
+    FLIGHTS.forEach(function(f){
+      f.x += Math.cos(f.hdg)*f.spdU*dt;
+      f.y += Math.sin(f.hdg)*f.spdU*dt;
+      var r = Math.hypot(f.x,f.y);
+      if (r > 1.08){
+        /* re-enter diametrically opposite with a little jitter */
+        var jitter = (rng()-0.5)*0.35;
+        f.x = -f.x*0.97; f.y = -f.y*0.97;
+        f.hdg += jitter;
+        f.painted.length = 0;
+      }
+    });
+  }
+
+  function paintSweep(prev, now){
+    FLIGHTS.forEach(function(f){
+      var b = Math.atan2(f.y, f.x);
+      var arc = angleDiff(now, prev);
+      if (angleDiff(b, prev) <= arc){
+        f.painted.push({x:f.x, y:f.y, t:performance.now()});
+        if (f.painted.length > 7) f.painted.shift();
+      }
+    });
+  }
+
+  function drawBackground(){
+    ctx.fillStyle = "#031008";
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,TAU); ctx.fill();
+
+    /* subtle inner glow */
+    var g = ctx.createRadialGradient(CX,CY,0, CX,CY,R);
+    g.addColorStop(0,"rgba(69,255,138,.05)");
+    g.addColorStop(0.8,"rgba(69,255,138,.015)");
+    g.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,TAU); ctx.fill();
+
+    /* range rings */
+    ctx.strokeStyle = "rgba(69,255,138,.15)";
+    ctx.lineWidth = 1;
+    for (var i=1;i<=4;i++){
+      ctx.beginPath(); ctx.arc(CX,CY,R*i/4,0,TAU); ctx.stroke();
+    }
+    /* crosshair */
+    ctx.strokeStyle = "rgba(69,255,138,.08)";
+    ctx.beginPath();
+    ctx.moveTo(CX-R,CY); ctx.lineTo(CX+R,CY);
+    ctx.moveTo(CX,CY-R); ctx.lineTo(CX,CY+R);
+    ctx.stroke();
+
+    /* compass ticks + bearings */
+    ctx.save();
+    ctx.font = "10px "+"ui-monospace, Menlo, Consolas, monospace";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (var d=0; d<360; d+=10){
+      var a = (d-90)*Math.PI/180;
+      var big = d%30===0;
+      var r1 = R - (big?10:5), r2 = R;
+      ctx.strokeStyle = big ? "rgba(69,255,138,.35)" : "rgba(69,255,138,.18)";
+      ctx.beginPath();
+      ctx.moveTo(CX+Math.cos(a)*r1, CY+Math.sin(a)*r1);
+      ctx.lineTo(CX+Math.cos(a)*r2, CY+Math.sin(a)*r2);
+      ctx.stroke();
+      if (big){
+        ctx.fillStyle = "rgba(69,255,138,.45)";
+        var lbl = d===0 ? "360" : (d<100?"0":"")+d;
+        ctx.fillText(lbl, CX+Math.cos(a)*(R-22), CY+Math.sin(a)*(R-22));
+      }
+    }
+    ctx.restore();
+
+    /* center + range label */
+    ctx.fillStyle = "rgba(69,255,138,.6)";
+    ctx.beginPath(); ctx.arc(CX,CY,2,0,TAU); ctx.fill();
+    ctx.fillStyle = "rgba(111,143,125,.7)";
+    ctx.font = "10px ui-monospace, Menlo, Consolas, monospace";
+    ctx.textAlign = "left";
+    ctx.fillText("RNG 40NM", CX + R*0.72, CY + 12);
+  }
+
+  function drawSweep(){
+    ctx.save();
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,TAU); ctx.clip();
+    if (ctx.createConicGradient){
+      var g = ctx.createConicGradient(sweepA, CX, CY);
+      g.addColorStop(0,   "rgba(69,255,138,0)");
+      g.addColorStop(0.72,"rgba(69,255,138,0)");
+      g.addColorStop(0.94,"rgba(69,255,138,.10)");
+      g.addColorStop(1,   "rgba(69,255,138,.26)");
+      ctx.fillStyle = g;
+      ctx.fillRect(CX-R,CY-R,R*2,R*2);
+    } else {
+      for (var i=0;i<50;i++){
+        var a = sweepA - i*0.012;
+        ctx.strokeStyle = "rgba(69,255,138,"+(0.22*(1-i/50))+")";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(CX,CY);
+        ctx.lineTo(CX+Math.cos(a)*R, CY+Math.sin(a)*R);
+        ctx.stroke();
+      }
+    }
+    /* leading line */
+    ctx.strokeStyle = "rgba(160,255,196,.9)";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(CX,CY);
+    ctx.lineTo(CX+Math.cos(sweepA)*R, CY+Math.sin(sweepA)*R);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawBlip(f, px, py, alpha, now){
+    var sel = (f===selected);
+    var col = sel ? "255,180,84" : "69,255,138";
+    var flash = now < squawkUntil ? (0.55+0.45*Math.sin(now/90)) : 1;
+    var a = Math.max(0.18, alpha) * flash;
+
+    /* trail */
+    for (var i=0;i<f.painted.length-1;i++){
+      var p = f.painted[i];
+      var ta = (i+1)/f.painted.length * 0.30 * flash;
+      ctx.fillStyle = "rgba("+col+","+ta+")";
+      ctx.fillRect(sx(p.x)-1.5, sy(p.y)-1.5, 3,3);
+    }
+
+    /* primary return */
+    ctx.fillStyle = "rgba("+col+","+a+")";
+    ctx.fillRect(px-3, py-3, 6,6);
+    if (alpha > 0.6 || sel){
+      ctx.strokeStyle = "rgba("+col+","+(a*0.5)+")";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(px,py,8,0,TAU); ctx.stroke();
+    }
+
+    /* leader + data block */
+    var flip = px > CX + R*0.45;
+    var lx = px + (flip?-16:16), ly = Math.max(py - 14, 30);
+    ctx.strokeStyle = "rgba("+col+","+(a*0.55)+")";
+    ctx.beginPath(); ctx.moveTo(px+(flip?-5:5),py-5); ctx.lineTo(lx,ly); ctx.stroke();
+
+    ctx.font = "11px ui-monospace, Menlo, Consolas, monospace";
+    ctx.textAlign = flip ? "right" : "left";
+    ctx.textBaseline = "alphabetic";
+    var tx = lx + (flip?-3:3);
+    ctx.fillStyle = "rgba("+col+","+Math.min(1, a+0.15)+")";
+    ctx.fillText(f.cs, tx, ly-12);
+    ctx.fillStyle = "rgba("+col+","+(a*0.8)+")";
+    ctx.fillText("FL"+f.fl, tx, ly);
+    ctx.fillText(f.spd+"KT", tx, ly+12);
+  }
+
+  function drawFlights(now){
+    FLIGHTS.forEach(function(f){
+      var last = f.painted[f.painted.length-1];
+      if (!last) return;
+      var age = now - last.t;
+      var alpha = 1 - (age/ROT)*0.8;
+      drawBlip(f, sx(last.x), sy(last.y), alpha, now);
+      f.hitX = sx(last.x); f.hitY = sy(last.y);
+    });
+  }
+
+  function frame(now){
+    var dt = Math.min(100, now - lastT)/1000;
+    lastT = now;
+    var prev = sweepA;
+    sweepA = prev + (TAU * dt*1000)/ROT;
+    if (sweepA > Math.PI) sweepA -= TAU;
+
+    updateFlights(dt);
+    paintSweep(prev, sweepA);
+
+    ctx.clearRect(0,0,W,H);
+    drawBackground();
+    drawSweep();
+    drawFlights(now);
+    requestAnimationFrame(frame);
+  }
+
+  /* reduced motion: one static painted picture, no sweep */
+  function drawStatic(){
+    var now = performance.now();
+    FLIGHTS.forEach(function(f){
+      f.painted = [{x:f.x, y:f.y, t:now}];
+    });
+    ctx.clearRect(0,0,W,H);
+    drawBackground();
+    FLIGHTS.forEach(function(f){
+      drawBlip(f, sx(f.x), sy(f.y), 1, 0);
+      f.hitX = sx(f.x); f.hitY = sy(f.y);
+    });
+    ctx.fillStyle = "rgba(111,143,125,.8)";
+    ctx.font = "10px ui-monospace, Menlo, Consolas, monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("SWEEP PAUSED — REDUCED MOTION", CX, CY + R - 34);
+  }
+
+  if (reduceMotion){ drawStatic(); }
+  else { requestAnimationFrame(frame); }
+
+  /* click / tap to hand off */
+  canvas.addEventListener("pointerdown", function(e){
+    var b = canvas.getBoundingClientRect();
+    var mx = e.clientX - b.left, my = e.clientY - b.top;
+    var best = null, bestD = 26;
+    FLIGHTS.forEach(function(f){
+      if (f.hitX===undefined) return;
+      var d = Math.hypot(f.hitX-mx, f.hitY-my);
+      if (d < bestD){ bestD = d; best = f; }
+    });
+    if (best) select(best===selected?null:best, true);
+  });
+
+  /* squawk ident */
+  document.getElementById("squawk").addEventListener("click", function(){
+    logNow("all stations, squawk IDENT — ident observed");
+    if (reduceMotion){
+      /* single gentle highlight instead of flashing */
+      drawStatic();
+      ctx.save();
+      ctx.strokeStyle = "rgba(160,255,196,.8)"; ctx.lineWidth = 1;
+      FLIGHTS.forEach(function(f){
+        ctx.beginPath(); ctx.arc(sx(f.x), sy(f.y), 12, 0, TAU); ctx.stroke();
+      });
+      ctx.restore();
+      setTimeout(drawStatic, 1400);
+    } else {
+      squawkUntil = performance.now() + 2000;
+    }
+  });
+
+  /* ============ zulu clock ============ */
+  var zulu = document.getElementById("zulu");
+  function tickClock(){
+    var d = new Date();
+    zulu.textContent = pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds())+"Z";
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  /* ============ radio log ticker ============ */
+  var view = document.getElementById("tickView");
+  var track = document.getElementById("tickTrack");
+  var queue = [];      /* upcoming message strings */
+  var qi = 0, dyn = 0;
+  var priority = [];   /* injected live messages */
+
+  function nextMessage(){
+    if (priority.length) return priority.shift();
+    dyn++;
+    if (dyn % 5 === 0){
+      var f = FLIGHTS[Math.floor(Math.random()*FLIGHTS.length)];
+      var m = MODELS[Math.floor(Math.random()*MODELS.length)];
+      var c = (Math.random()*8+1).toFixed(2);
+      return f.cs+" rerouted to "+m+", saving $0.0"+Math.floor(Math.random()*9+1)+" — cumulative $"+c+" this hour";
+    }
+    var s = TICKER[qi % TICKER.length]; qi++;
+    return s;
+  }
+  var showStaticMsg = null;
+  function logNow(msg){
+    priority.push(msg.toUpperCase());
+    if (reduceMotion && showStaticMsg) showStaticMsg();
+  }
+
+  if (reduceMotion){
+    /* static line, swapped periodically — no marquee */
+    track.style.position = "static";
+    track.style.padding = "0 12px";
+    showStaticMsg = function(){
+      track.innerHTML = "";
+      var s = document.createElement("span");
+      s.className = "msg";
+      s.textContent = nextMessage();
+      track.appendChild(s);
+    };
+    showStaticMsg();
+    setInterval(showStaticMsg, 9000);
+  } else {
+    var offset = 0, lastTick = performance.now();
+    function appendMsg(){
+      var s = document.createElement("span");
+      s.className = "msg";
+      s.textContent = nextMessage();
+      var sep = document.createElement("span");
+      sep.className = "sep";
+      sep.textContent = "✦";
+      track.appendChild(s); track.appendChild(sep);
+    }
+    function tickFrame(now){
+      var dt = Math.min(100, now-lastTick)/1000; lastTick = now;
+      var vw = view.clientWidth;
+      while (track.scrollWidth + offset < vw*1.6) appendMsg();
+      offset -= 55*dt;
+      var first = track.firstChild;
+      if (first){
+        var fw = first.getBoundingClientRect().width;
+        if (-offset > fw + 14){
+          offset += fw + (track.children[1] ? track.children[1].getBoundingClientRect().width : 0);
+          track.removeChild(track.firstChild);
+          if (track.firstChild && track.firstChild.className==="sep") track.removeChild(track.firstChild);
+        }
+      }
+      track.style.transform = "translateX("+offset.toFixed(2)+"px)";
+      requestAnimationFrame(tickFrame);
+    }
+    requestAnimationFrame(tickFrame);
+  }
+
+  /* esc via typed helper kept minimal */
+  void esc;
+})();
+</script>
+</body>
+</html>
