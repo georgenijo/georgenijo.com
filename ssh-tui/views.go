@@ -313,10 +313,9 @@ func nowText(st *styles, spin int) string {
 }
 
 func contactText(st *styles) string {
-	return st.dim.Render("no forms, no funnels — just these three:") + "\n\n" +
-		kvLine(st, "mailto", hyperlink("mailto:"+email, st.fg.Render(email))) + "\n" +
-		kvLine(st, "github", hyperlink(ghBase, st.fg.Render("github.com/georgenijo"))) + "\n" +
-		kvLine(st, "linkedin", hyperlink(liURL, st.fg.Render("linkedin.com/in/georgenijo")))
+	// The channel list lives in the rows below the slip (model.go) so it
+	// isn't printed twice; the slip carries only the intro line.
+	return st.dim.Render("no forms, no funnels — just these three:")
 }
 
 func coffeeText(st *styles, tried bool) string {

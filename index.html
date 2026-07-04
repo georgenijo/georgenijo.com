@@ -295,6 +295,8 @@
   .slip .dim{color:var(--muted);}
   .kv{display:flex;gap:12px;margin:3px 0;font-size:15px;}
   .kv .k{color:var(--faint);flex:none;min-width:10ch;}
+  .row .k{color:var(--faint);flex:none;min-width:10ch;}
+  .rows.kvrows{margin-top:10px;}
   .badge{
     display:inline-block;font-size:.6em;color:var(--fg);
     border:1px solid var(--border);padding:2px 8px;vertical-align:6px;
@@ -421,11 +423,7 @@ var NOW_HTML =
   '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
   '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
   '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>';
-var CONTACT_HTML =
-  '<p class="dim">no forms, no funnels — just these three:</p>'+
-  '<div class="kv"><span class="k">mailto</span><span class="hl">george.nijo8@gmail.com</span></div>'+
-  '<div class="kv"><span class="k">github</span><span class="hl">github.com/georgenijo</span></div>'+
-  '<div class="kv"><span class="k">linkedin</span><span class="hl">linkedin.com/in/georgenijo</span></div>';
+var CONTACT_INTRO = '<p class="dim">no forms, no funnels — just these three:</p>';
 
 /* ── boot ───────────────────────────────────────────────────── */
 var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById("boot"),
@@ -494,6 +492,7 @@ function makeRow(spec,idx){
   else{el=h("button","row");el.type="button";}
   var inner="";
   if(spec.num)inner+='<span class="num">'+spec.num+"</span>";
+  if(spec.k)inner+='<span class="k">'+spec.k+"</span>";
   inner+='<span class="tx"><span class="t">'+spec.t+"</span>";
   if(spec.d&&spec.dInline)inner+=' <span class="d">'+spec.d+"</span>";
   inner+="</span>";
@@ -596,12 +595,7 @@ function render(){
     case "projects":vProjects();break;
     case "project":vProject();break;
     case "now":vSheet("now","updated july 2026",NOW_HTML);break;
-    case "contact":vSheet("contact","say hello",CONTACT_HTML,[
-      {t:"write "+EMAIL+" ↗",href:"mailto:"+EMAIL},
-      {t:"open github.com/georgenijo ↗",href:GH},
-      {t:"open linkedin.com/in/georgenijo ↗",href:LI},
-      {t:"back to index",on:back}
-    ]);break;
+    case "contact":vContact();break;
     case "closed":vClosed();return;
   }
 }
@@ -612,6 +606,21 @@ function vMenu(){
     return {num:pad2(i+1),t:m.t,d:m.d,on:function(){go(m.id);}};
   }),"menu","index");
   setStatus(stdHints(true));
+}
+function vContact(){
+  var w=frame([{t:"~",go:"menu"},{t:"contact"}]);
+  w.appendChild(h("p","vkick","say hello"));
+  w.appendChild(h("p","vtitle stamp","contact"));
+  var slip=h("div","slip",CONTACT_INTRO);
+  w.appendChild(slip);
+  addRows(slip,[
+    {k:"mailto",t:EMAIL,href:"mailto:"+EMAIL},
+    {k:"github",t:"github.com/georgenijo",href:GH},
+    {k:"linkedin",t:"linkedin.com/in/georgenijo",href:LI}
+  ],"contact","kvrows");
+  addRows(w,[{t:"back to index",on:back}],"contact","acts");
+  inkIn(w);
+  setStatus(stdHints(false));
 }
 function vSheet(id,sub,body,acts){
   var w=frame([{t:"~",go:"menu"},{t:id}]);
