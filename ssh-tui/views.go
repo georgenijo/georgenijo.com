@@ -55,6 +55,9 @@ func (m model) View() string {
 	if m.width <= 0 || m.height <= 0 {
 		return ""
 	}
+	if m.booting {
+		return m.renderBoot()
+	}
 	head := m.header(false)
 	status := m.statusBar()
 	bodyH := m.height - lipgloss.Height(head) - lipgloss.Height(status)
@@ -70,6 +73,56 @@ func (m model) View() string {
 		body = m.body(bodyH)
 	}
 	return head + "\n" + fitHeight(body, bodyH) + "\n" + status
+}
+
+// ── boot sequence ────────────────────────────────────────────────
+
+// renderBoot draws the intro animation: the fake ssh command typing
+// itself, the connection lines, then the block GEORGE wordmark
+// revealed row by row. One frame ≈ 30ms; any key skips.
+func (m model) renderBoot() string {
+	st := m.st
+	var b strings.Builder
+	b.WriteString("\n")
+
+	// typed command with a trailing block cursor while typing
+	n := min(max(m.bootFrame-3, 0), len(bootCmd))
+	line := "  " + st.accentBold.Render("➜ ~ $") + " " + st.fg.Render(bootCmd[:n])
+	if n < len(bootCmd) {
+		line += st.dim.Render("█")
+	}
+	b.WriteString(line + "\n")
+
+	// staged boot lines
+	after := m.bootFrame - 3 - len(bootCmd)
+	if after >= 8 {
+		b.WriteString("  " + st.dim.Render(bootConnLine) + "\n")
+	}
+	if after >= 14 {
+		b.WriteString("  " + st.dim.Render("Host key: ") + st.fg.Render(bootFingerprint) +
+			" " + st.accentBold.Render("✓ known") + "\n")
+	}
+	if after >= 20 {
+		b.WriteString("  " + st.dim.Render(bootAuthLine) + "\n")
+	}
+
+	// block wordmark, one row per two frames, then the tagline
+	if after >= 28 {
+		b.WriteString("\n")
+		rows := min((after-28)/2+1, len(asciiGeorge))
+		for i := 0; i < rows; i++ {
+			b.WriteString("  " + st.title.Render(asciiGeorge[i]) + "\n")
+		}
+		if rows == len(asciiGeorge) && after >= 28+len(asciiGeorge)*2+4 {
+			b.WriteString("\n  " + st.dim.Render(tagline) + "\n")
+		}
+	}
+
+	lines := strings.Split(b.String(), "\n")
+	for i, l := range lines {
+		lines[i] = ansi.Truncate(l, m.width, "…")
+	}
+	return strings.Join(lines, "\n")
 }
 
 // ── masthead / status bar ────────────────────────────────────────
@@ -235,14 +288,14 @@ func (m model) urlNoteBlock() string {
 // ── slip content builders ────────────────────────────────────────
 
 func kvLine(st *styles, k, v string) string {
-	return st.faint.Render(padTo(k, 7)) + " " + v
+	return st.faint.Render(padTo(k, 8)) + " " + v
 }
 
 func aboutText(st *styles) string {
-	p1 := "George Nijo — software engineer in Boston."
-	p2 := "I build infrastructure for AI agents: LLM routers, MCP brokers, and agent control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable."
-	p3 := "Currently building AgentOS, a personal + home agent operating system."
-	p4 := st.dim.Render("Python · Go · Rust · just enough Swift")
+	p1 := "George Nijo — software engineer in Boston. Supervisor of agents."
+	p2 := "I build infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building AgentOS, a personal + home agent operating system."
+	p3 := "Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing. Ship the menu bar app before the platform."
+	p4 := st.dim.Render("Python · Go · Rust · Swift · a dash of TypeScript")
 	return p1 + "\n\n" + p2 + "\n\n" + p3 + "\n\n" + p4
 }
 
@@ -257,9 +310,10 @@ func nowText(st *styles, spin int) string {
 }
 
 func contactText(st *styles) string {
-	return st.dim.Render("no forms, no funnels — just these two:") + "\n\n" +
+	return st.dim.Render("no forms, no funnels — just these three:") + "\n\n" +
 		kvLine(st, "mailto", hyperlink("mailto:"+email, st.fg.Render(email))) + "\n" +
-		kvLine(st, "https", hyperlink(ghBase, st.fg.Render("github.com/georgenijo")))
+		kvLine(st, "github", hyperlink(ghBase, st.fg.Render("github.com/georgenijo"))) + "\n" +
+		kvLine(st, "linkedin", hyperlink(liURL, st.fg.Render("linkedin.com/in/georgenijo")))
 }
 
 func coffeeText(st *styles, tried bool) string {

@@ -94,6 +94,7 @@ func teaHandler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 		w, h = 80, 24
 	}
 	m := newModel(newStyles(sessionRenderer(s)), w, h)
+	m.booting = true // real sessions get the boot animation; unit tests skip it
 	return m, []tea.ProgramOption{tea.WithAltScreen()}
 }
 

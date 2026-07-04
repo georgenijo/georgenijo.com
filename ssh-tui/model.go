@@ -94,7 +94,14 @@ type model struct {
 	start     time.Time
 	lastInput time.Time
 	spin      int
+
+	booting   bool // intro boot animation; any key skips
+	bootFrame int
 }
+
+// bootTotalFrames is the full boot animation length in 30ms frames:
+// lead-in, typed command, staged boot lines, banner rows, hold.
+var bootTotalFrames = 3 + len(bootCmd) + 28 + len(asciiGeorge)*2 + 4 + 15
 
 func newModel(st *styles, w, h int) model {
 	now := time.Now()
@@ -110,6 +117,9 @@ func newModel(st *styles, w, h int) model {
 }
 
 func (m model) Init() tea.Cmd {
+	if m.booting {
+		return tick(30 * time.Millisecond)
+	}
 	return tick(time.Second)
 }
 
@@ -120,6 +130,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tickMsg:
+		if m.booting {
+			m.bootFrame++
+			if m.bootFrame > bootTotalFrames {
+				m.booting = false
+			}
+			return m, tick(m.tickInterval())
+		}
 		m.spin++
 		if time.Since(m.lastInput) > idleLimit {
 			return m, tea.Quit
@@ -128,6 +145,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		m.lastInput = time.Now()
+		if m.booting {
+			if msg.Type == tea.KeyCtrlC {
+				return m, tea.Quit
+			}
+			m.booting = false // any key skips the boot animation
+			return m, nil
+		}
 		return m.handleKey(msg)
 	}
 	return m, nil
@@ -188,6 +212,9 @@ func (m model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) tickInterval() time.Duration {
+	if m.booting {
+		return 30 * time.Millisecond
+	}
 	if m.spinnerVisible() {
 		return 120 * time.Millisecond
 	}
@@ -269,6 +296,7 @@ func (m model) rows() []row {
 		return []row{
 			{title: email, desc: "email — the reliable channel", aux: "mailto", link: mailto, kind: rkLink, arg: mailto},
 			{title: "github.com/georgenijo", desc: "the code lives here", aux: "https", link: ghBase, kind: rkLink, arg: ghBase},
+			{title: "linkedin.com/in/georgenijo", desc: "the professional channel", aux: "https", link: liURL, kind: rkLink, arg: liURL},
 			{title: "← back", kind: rkBack},
 		}
 

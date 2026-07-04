@@ -9,7 +9,8 @@
 <meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
 <meta property="og:url" content="https://georgenijo.com">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#f6f2e8">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f2e8">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171310">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f2e8'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23b5351c' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
 <style>
   /* ── Direction 3 · PAPER v2 ────────────────────────────────────
@@ -17,9 +18,10 @@
      serif lines like a book's table of contents; projects are a
      printed ledger; details are full-page slips.
      Live layer: the cursor itself. Native pointer hidden; a
-     blinking ink caret follows the mouse and morphs into a ring
-     over anything interactive. Inverts what's under it (blend
-     difference), so it never hides content. */
+     blinking ink caret follows the mouse and morphs into a
+     crop-mark viewfinder frame over anything interactive. The
+     caret inverts what's under it (blend difference), so it never
+     hides content. */
   :root{
     --bg:#f6f2e8;
     --surface:#fbf8f1;
@@ -30,8 +32,24 @@
     --hairline:#d9d0bd;
     --accent:#b5351c;
     --selbg:rgba(28,23,16,.045);
+    --wash:rgba(28,23,16,.03);
     --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Cascadia Mono",monospace;
     --serif:'Iowan Old Style','Charter',Georgia,serif;
+  }
+  /* dark negative of the paper theme (media-query only, no JS toggle) */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171310;
+      --surface:#1f1a14;
+      --fg:#e8e2d4;
+      --muted:#a2957f;
+      --faint:#6e6353;
+      --border:#e8e2d4;
+      --hairline:#3a3126;
+      --accent:#e06a50;
+      --selbg:rgba(232,226,212,.05);
+      --wash:rgba(232,226,212,.035);
+    }
   }
   *,*::before,*::after{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;}
@@ -45,7 +63,7 @@
   /* paper wash */
   body::after{
     content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(120% 100% at 50% 0%, rgba(28,23,16,.03), transparent 55%);
+    background:radial-gradient(120% 100% at 50% 0%, var(--wash), transparent 55%);
   }
 
   /* ── cursor takeover (pointer:fine only) ── */
@@ -55,7 +73,6 @@
   #cur{
     position:fixed;top:0;left:0;z-index:2000;
     pointer-events:none;
-    mix-blend-mode:difference;
   }
   #cur[hidden]{display:none;}
   #cur .core{
@@ -63,28 +80,32 @@
     width:11px;height:20px;
     margin:-10px 0 0 -5px;
     background:#fff;
+    mix-blend-mode:difference;
     animation:carets 1.1s steps(1) infinite;
-    transition:width .16s ease,height .16s ease,border-radius .16s ease,margin .16s ease,background .16s ease;
+    transition:opacity .12s ease,transform .12s ease;
   }
   @keyframes carets{50%{opacity:.35;}}
-  /* over links / rows / buttons: caret becomes a ring */
-  #cur.on .core{
-    width:38px;height:38px;
-    margin:-19px 0 0 -19px;
-    border-radius:50%;
-    background:transparent;
-    box-shadow:inset 0 0 0 2px #fff;
-    animation:none;
-  }
-  #cur.on .core::after{
-    content:"›";
-    display:grid;place-items:center;height:100%;
-    color:#fff;font:700 16px/1 var(--mono);
-  }
+  /* over links / rows / buttons: caret morphs into a crop-mark /
+     viewfinder frame — four corner brackets in the accent ink
+     (this is the cursor's share of the one-accent budget) */
+  #cur.on .core{opacity:0;transform:scale(.45);animation:none;}
   #cur.down .core{transform:scale(.72);}
-  .core::after{content:"";}
+  #cur .fr{
+    position:absolute;left:0;top:0;
+    width:30px;height:30px;margin:-15px 0 0 -15px;
+    opacity:0;transform:scale(.5);
+    transition:opacity .12s ease,transform .12s ease;
+  }
+  #cur.on .fr{opacity:1;transform:scale(1);}
+  #cur.on.down .fr{transform:scale(.78);} /* brackets tighten on press */
+  #cur .fr i{position:absolute;width:9px;height:9px;border:0 solid var(--accent);}
+  #cur .fr i:nth-child(1){left:0;top:0;border-top-width:2px;border-left-width:2px;}
+  #cur .fr i:nth-child(2){right:0;top:0;border-top-width:2px;border-right-width:2px;}
+  #cur .fr i:nth-child(3){left:0;bottom:0;border-bottom-width:2px;border-left-width:2px;}
+  #cur .fr i:nth-child(4){right:0;bottom:0;border-bottom-width:2px;border-right-width:2px;}
   @media (prefers-reduced-motion: reduce){
     #cur .core{animation:none;transition:none;}
+    #cur .fr{transition:none;}
   }
 
   .term{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
@@ -120,8 +141,20 @@
     border-bottom:2px solid var(--border);
   }
   .brand{font-family:var(--serif);font-style:italic;font-size:1.15em;white-space:nowrap;}
-  .crumb{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9em;}
+  .crumb{
+    color:var(--muted);flex:1;min-width:0;font-size:.9em;
+    display:flex;align-items:center;white-space:nowrap;
+  }
+  .crumb .path{min-width:0;overflow:hidden;text-overflow:ellipsis;}
   .crumb b{color:var(--fg);font-weight:400;}
+  .crumb-lnk{
+    background:none;border:none;font:inherit;color:var(--muted);
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:44px;padding:0 5px;margin:-13px 0;
+    text-decoration:none;
+  }
+  .crumb-back{flex:none;min-width:44px;padding:0 8px;margin-right:4px;}
+  .crumb-lnk:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
   .conn{flex:none;color:var(--faint);font-size:.78em;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;}
   @media (max-width:560px){ .conn{display:none;} }
 
@@ -133,6 +166,20 @@
   .sheet{max-width:1060px;margin:0 auto;}
   .reveal{animation:fadeUp .18s ease both;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  /* slip "printing": lines rise in with a hair of ink bleed;
+     titles land like a rubber stamp. Entry-only — nothing loops. */
+  .ink{animation:inkIn .15s ease both;}
+  @keyframes inkIn{
+    from{opacity:0;transform:translateY(5px);text-shadow:0 0 .4px currentColor;}
+    to{opacity:1;transform:none;text-shadow:none;}
+  }
+  .stamp{animation:stampIn .24s cubic-bezier(.2,.7,.3,1) both;transform-origin:18% 60%;}
+  @keyframes stampIn{
+    0%{opacity:0;transform:scale(1.06) rotate(-.5deg);}
+    55%{opacity:1;transform:scale(.992) rotate(.15deg);}
+    100%{opacity:1;transform:none;}
+  }
 
   .vkick{
     color:var(--muted);font-size:.82em;
@@ -249,7 +296,7 @@
   .reconnect:hover{background:var(--fg);color:var(--bg);}
 
   @media (prefers-reduced-motion: reduce){
-    .cur-b,.reveal{animation:none;}
+    .cur-b,.reveal,.ink,.stamp{animation:none;}
     .rows.index .t{transition:none;}
   }
 </style>
@@ -269,7 +316,7 @@
   </div>
 </div>
 
-<div id="cur" hidden aria-hidden="true"><span class="core"></span></div>
+<div id="cur" hidden aria-hidden="true"><span class="core"></span><span class="fr"><i></i><i></i><i></i><i></i></span></div>
 
 <script>
 (function(){
@@ -280,11 +327,10 @@ var FINE = matchMedia("(pointer:fine)").matches;
 /* ── live layer: cursor takeover ────────────────────────────────
    One fixed element, lerped toward the pointer each frame. Default
    state is a blinking ink caret (the terminal cursor escaped into
-   the page); over anything interactive it opens into a ring with a
-   "›". mix-blend-mode:difference inverts whatever sits under it —
-   readable on cream, ink, and vermilion alike, and it never
-   obscures text the way a trail did. Touch devices keep the native
-   cursor untouched. */
+   the page); over anything interactive it opens into a crop-mark /
+   viewfinder frame — four corner brackets in the accent ink. The
+   caret keeps mix-blend-mode:difference so it reads on cream, ink,
+   and vermilion alike. Touch devices keep the native cursor. */
 var curEl=document.getElementById("cur");
 if(FINE){
   var cx=-100,cy=-100,px=-100,py=-100,shown=false;
@@ -309,25 +355,27 @@ if(FINE){
 
 /* ── content (mirrors ssh-tui/content.go) ───────────────────── */
 var GH = "https://github.com/georgenijo";
+var LI = "https://www.linkedin.com/in/georgenijo/";
+var EMAIL = "george.nijo8@gmail.com";
 var PROJECTS = [
-  {name:"agent-mesh",  lang:"Go",         tag:"Coordination layer for agents",
-   desc:"A shared nervous system for the coding agents on your machine. Claude Code, Codex, and Cursor discover each other, lock files instead of fighting over them, and trade notes on a blackboard — one mesh CLI runs it all."},
+  {name:"agent-mesh",  lang:"Go",         tag:"Agents orchestrating themselves",
+   desc:"Hand the mesh a vague goal and the agents work out the rest: who does what, who owns which file, what's already been answered. Presence, file claims, async questions, a shared blackboard — Claude Code, Codex, and Cursor acting like one team instead of five strangers."},
   {name:"usher",       lang:"Go",         tag:"MCP broker",
-   desc:"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
+   desc:"One front desk every agent talks to: a single MCP endpoint that routes, trims, arbitrates, and audits tool calls across a fleet of servers. Auth, health, and name collisions are handled before the agent even notices."},
   {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
-   desc:"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
+   desc:"Mission control for long-lived coding agents: scheduling, budgets, kill switches, and an audit log of every tool call a fleet makes. Where agents live between jobs — and answer for what they did."},
   {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
-   desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine. A native Swift sibling does the low-level driving."},
+   desc:"Full computer-use with zero cloud: a local model reads the screen and drives native Mac apps through the accessibility tree — and never fakes success. A Swift-native sibling does the low-level driving. Nothing leaves the machine."},
   {name:"murmur-app",  lang:"Rust",       tag:"Local voice-to-text for macOS",
-   desc:"Hold a key, speak, release — the words land in whatever app has focus. whisper.cpp on the GPU; no cloud, no subscription, nothing leaves the machine."},
+   desc:"Hold a key, speak, release — the words land in whatever app has focus before your hands find the keyboard. Whisper on the GPU, fully offline: no cloud, no subscription, no audio leaving the machine."},
   {name:"fleetmap",    lang:"Swift",      tag:"Live map of what your Mac runs",
-   desc:"Every process as a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what is running; this shows what is talking to what."},
+   desc:"Your Mac as a living map: every process a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what's running; fleetmap shows what's talking to what."},
   {name:"gauge",       lang:"Swift",      tag:"Claude usage in the menu bar",
-   desc:"A one-purpose menu-bar meter: session and weekly limits, pace until reset, and spend estimated from local logs. Know the budget before the model does."},
+   desc:"A one-purpose menu-bar meter for Claude: session and weekly limits, pace until reset, and spend charted straight from local logs. Know the budget is gone before the model does."},
   {name:"whoop-dashboard",lang:"TypeScript",tag:"Health analytics with an AI coach",
-   desc:"WHOOP sleep, strain, and recovery in one dashboard, with a Claude coach that reads the trends and talks back."},
+   desc:"Sleep, strain, and recovery in one dashboard — with a Claude coach that reads months of WHOOP trends and talks back. Health data that finally answers questions."},
   {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
-   desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."}
+   desc:"A film camera in your pocket: fixed stocks, 36 exposures, and no preview until the roll is developed. A Metal pipeline paints the light leaks, grain, and date stamps. Patience as a feature."}
 ];
 var MENU = [
   {id:"about",    t:"about",    d:"who's at the keyboard"},
@@ -336,19 +384,20 @@ var MENU = [
   {id:"contact",  t:"contact",  d:"say hello"}
 ];
 var ABOUT_HTML =
-  '<p><span class="hl">George Nijo</span> — software engineer in Boston.</p>'+
-  '<p>I build infrastructure for AI agents: LLM routers, MCP brokers, and agent control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>'+
-  '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>'+
-  '<p class="dim">Python · Go · Rust · just enough Swift</p>';
+  '<p><span class="hl">George Nijo</span> — software engineer in Boston. Supervisor of agents.</p>'+
+  '<p>I build infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>'+
+  '<p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing. Ship the menu bar app before the platform.</p>'+
+  '<p class="dim">Python · Go · Rust · Swift · a dash of TypeScript</p>';
 var NOW_HTML =
   '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
   '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
   '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
   '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>';
 var CONTACT_HTML =
-  '<p class="dim">no forms, no funnels — just these two:</p>'+
+  '<p class="dim">no forms, no funnels — just these three:</p>'+
   '<div class="kv"><span class="k">mailto</span><span class="hl">george.nijo8@gmail.com</span></div>'+
-  '<div class="kv"><span class="k">https</span><span class="hl">github.com/georgenijo</span></div>';
+  '<div class="kv"><span class="k">github</span><span class="hl">github.com/georgenijo</span></div>'+
+  '<div class="kv"><span class="k">linkedin</span><span class="hl">linkedin.com/in/georgenijo</span></div>';
 
 /* ── boot ───────────────────────────────────────────────────── */
 var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById("boot"),
@@ -410,7 +459,10 @@ function quit(){ST.cursors={};ST.view="closed";render();}
 function h(tag,cls,htmlStr){var el=document.createElement(tag);if(cls)el.className=cls;if(htmlStr!=null)el.innerHTML=htmlStr;return el;}
 function makeRow(spec,idx){
   var el;
-  if(spec.href){el=h("a","row");el.href=spec.href;el.target="_blank";el.rel="noopener";}
+  if(spec.href){
+    el=h("a","row");el.href=spec.href;
+    if(spec.href.indexOf("mailto:")!==0){el.target="_blank";el.rel="noopener";}
+  }
   else{el=h("button","row");el.type="button";}
   var inner="";
   if(spec.num)inner+='<span class="num">'+spec.num+"</span>";
@@ -454,10 +506,43 @@ function stdHints(list){
   hints.push({k:"q",l:"quit",on:quit});
   return hints;
 }
+/* frame(): builds the header crumb + a fresh sheet.
+   Pass a string for a static crumb (menu), or an array of
+   {t,go?} segments — segments with `go` become clickable, and a
+   "← back" control is prepended (esc keeps working as before). */
 function frame(crumb){
-  crumbEl.innerHTML=crumb;
+  crumbEl.innerHTML="";
+  if(typeof crumb==="string"){
+    crumbEl.appendChild(h("span","path",crumb));
+  }else{
+    var bk=h("button","crumb-lnk crumb-back","← back");
+    bk.type="button";bk.setAttribute("aria-label","go back");
+    bk.addEventListener("click",back);
+    crumbEl.appendChild(bk);
+    var path=h("span","path");
+    crumb.forEach(function(seg,i){
+      if(i)path.appendChild(document.createTextNode(" / "));
+      if(seg.go){
+        var b=h("button","crumb-lnk",seg.t);b.type="button";
+        b.addEventListener("click",function(){go(seg.go);});
+        path.appendChild(b);
+      }else path.appendChild(h("b",null,seg.t));
+    });
+    crumbEl.appendChild(path);
+  }
   pageEl.innerHTML="";ST.rows=[];
   var wrap=h("div","reveal sheet");pageEl.appendChild(wrap);return wrap;
+}
+/* slip "printing": stagger the sheet's lines in, ~25ms apart,
+   capped so the whole entry settles well under 350ms. Entry only —
+   reduced-motion skips it entirely (CSS also disables .ink/.stamp). */
+function inkIn(wrap){
+  if(RM)return;
+  var els=wrap.querySelectorAll(".vkick:not(.stamp),.slip>*,.acts .row");
+  for(var i=0;i<els.length;i++){
+    els[i].classList.add("ink");
+    els[i].style.animationDelay=Math.min(i*25,180)+"ms";
+  }
 }
 function addRows(wrap,specs,restoreKey,cls){
   var box=h("div","rows"+(cls?" "+cls:""));
@@ -483,7 +568,12 @@ function render(){
     case "projects":vProjects();break;
     case "project":vProject();break;
     case "now":vSheet("now","updated july 2026",NOW_HTML);break;
-    case "contact":vSheet("contact","say hello",CONTACT_HTML);break;
+    case "contact":vSheet("contact","say hello",CONTACT_HTML,[
+      {t:"write "+EMAIL+" ↗",href:"mailto:"+EMAIL},
+      {t:"open github.com/georgenijo ↗",href:GH},
+      {t:"open linkedin.com/in/georgenijo ↗",href:LI},
+      {t:"back to index",on:back}
+    ]);break;
     case "closed":vClosed();return;
   }
 }
@@ -495,19 +585,20 @@ function vMenu(){
   }),"menu","index");
   setStatus(stdHints(true));
 }
-function vSheet(id,sub,body){
-  var w=frame("<b>~</b> / "+id);
+function vSheet(id,sub,body,acts){
+  var w=frame([{t:"~",go:"menu"},{t:id}]);
   w.appendChild(h("p","vkick",sub));
-  w.appendChild(h("p","vtitle",id));
+  w.appendChild(h("p","vtitle stamp",id));
   w.appendChild(h("div","slip",body));
-  addRows(w,[
+  addRows(w,acts||[
     {t:"see the projects",on:function(){go("projects");}},
     {t:"back to index",on:back}
   ],id,"acts");
+  inkIn(w);
   setStatus(stdHints(false));
 }
 function vProjects(){
-  var w=frame("<b>~</b> / projects");
+  var w=frame([{t:"~",go:"menu"},{t:"projects"}]);
   w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · five languages"));
   w.appendChild(h("p","vtitle","projects"));
   addRows(w,PROJECTS.map(function(p,i){
@@ -519,14 +610,15 @@ function vProjects(){
 function vProject(){
   var p=projByName(ST.proj);
   if(!p)return go("projects");
-  var w=frame("<b>~</b> / projects / "+p.name);
-  w.appendChild(h("p","vkick",p.tag));
-  w.appendChild(h("p","vtitle",p.name+' <span class="badge">'+p.lang+"</span>"));
+  var w=frame([{t:"~",go:"menu"},{t:"projects",go:"projects"},{t:p.name}]);
+  w.appendChild(h("p","vkick stamp",pad2(PROJECTS.indexOf(p)+1)+" · "+p.tag));
+  w.appendChild(h("p","vtitle stamp",p.name+' <span class="badge">'+p.lang+"</span>"));
   w.appendChild(h("div","slip",projDetailHTML(p)));
   addRows(w,[
     {t:"open github.com/georgenijo/"+p.name+" ↗",href:GH+"/"+p.name},
     {t:"back to projects",on:back}
   ],"project:"+p.name,"acts");
+  inkIn(w);
   setStatus(stdHints(false));
 }
 function vClosed(){
@@ -558,6 +650,8 @@ window.addEventListener("keydown",function(e){
   if(k==="ArrowDown"||k==="j"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.min(ST.cursor+1,ST.rows.length-1);paintCursor();}}
   else if(k==="ArrowUp"||k==="k"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.max(ST.cursor-1,0);paintCursor();}}
   else if(k==="Enter"){
+    if(document.activeElement&&document.activeElement.closest&&
+       document.activeElement.closest(".crumb"))return; // crumb link focused: let it activate
     var r=ST.rows[ST.cursor];if(!r)return;
     if(document.activeElement===r.el)return;
     e.preventDefault();
