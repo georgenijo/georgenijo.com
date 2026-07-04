@@ -28,6 +28,12 @@ import (
 // is disconnected (enforced in the model; a transport deadline backstops it).
 const idleLimit = 20 * time.Minute
 
+// buildStamp is stamped in by deploy.sh via -ldflags "-X main.buildStamp=...",
+// e.g. "july 2026" (lowercase month + year at deploy time). Dev builds (go
+// build/go run with no ldflags) leave it empty, which the "now" view
+// treats as "don't show an updated line".
+var buildStamp = ""
+
 func newServer(addr, hostKey string) (*ssh.Server, error) {
 	return wish.NewServer(
 		wish.WithAddress(addr),

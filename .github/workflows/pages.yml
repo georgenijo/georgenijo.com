@@ -1,0 +1,64 @@
+name: Deploy Pages
+
+# Deploys the static site (index.html, 404.html, og.png, CNAME,
+# concept-5-ssh.html) to GitHub Pages on every push to main, stamping the
+# "updated <month> <year>" text in index.html with the date of the commit
+# actually being deployed, so it never goes stale.
+#
+# NOTE: after this workflow is merged, the repo's Pages source must be
+# switched from "deploy from branch" to "GitHub Actions", e.g.:
+#   gh api repos/georgenijo/georgenijo.com/pages -X PUT -f build_type=workflow
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time; new pushes cancel an in-flight run
+# rather than queueing behind it.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Stamp "updated <month> <year>" in index.html
+        run: |
+          set -euo pipefail
+          STAMP=$(git log -1 --format=%cd --date=format:'%B %Y' | tr '[:upper:]' '[:lower:]')
+          echo "Stamping index.html with: updated ${STAMP}"
+          # Matches "updated <month> <year>" regardless of which month/year
+          # is currently baked in, so this keeps working forever.
+          sed -i -E "s/updated [a-z]+ [0-9]{4}/updated ${STAMP}/" index.html
+          grep -n "updated ${STAMP}" index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare site directory
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp index.html 404.html og.png CNAME concept-5-ssh.html _site/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -301,6 +301,9 @@ func aboutText(st *styles) string {
 
 func nowText(st *styles, spin int) string {
 	p1 := "Heads-down on AgentOS — one control plane for the agents that run my code, my inbox, and (eventually) the house."
+	if buildStamp != "" {
+		p1 += "\n" + st.dim.Render("updated "+buildStamp)
+	}
 	kv := func(k, v string) string { return st.faint.Render(padTo(k, 10)) + " " + st.dim.Render(v) }
 	kvs := kv("hangar", "scheduling + budgets for long-lived agents") + "\n" +
 		kv("usher", "auth story for brokered MCP servers") + "\n" +
