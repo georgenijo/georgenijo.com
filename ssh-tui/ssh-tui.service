@@ -1,0 +1,29 @@
+# systemd USER unit for the georgenijo.com SSH portfolio.
+#
+# Install (no sudo needed):
+#   mkdir -p ~/.config/systemd/user
+#   cp ssh-tui.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now ssh-tui
+#   loginctl enable-linger $USER   # keep it running after logout
+#
+# Expects the binary at ~/ssh-tui/ssh-tui.
+
+[Unit]
+Description=georgenijo.com SSH portfolio (Wish + Bubbletea)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/ssh-tui
+ExecStart=%h/ssh-tui/ssh-tui -addr :23231 -hostkey %h/ssh-tui/ssh_host_ed25519
+Restart=on-failure
+RestartSec=3
+
+# Modest hardening + headroom for a 1GB box.
+MemoryMax=256M
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
