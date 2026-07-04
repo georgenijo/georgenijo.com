@@ -25,7 +25,7 @@ var projects = []project{
 		"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
 	{"hermes-agent", "Python", "Errand-running personal agent",
 		"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
-	{"fleetmap", "TypeScript", "Live map of running agents",
+	{"fleetmap", "Go", "Live map of running agents",
 		"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
 	{"gauge", "Go", "Eval harness for agent stacks",
 		"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
