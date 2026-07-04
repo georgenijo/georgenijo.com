@@ -9,1062 +9,567 @@
 <meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
 <meta property="og:url" content="https://georgenijo.com">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#141021">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23141021'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23ff6ac1' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
-</head>
-<body>
+<meta name="theme-color" content="#f6f2e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f2e8'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23b5351c' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
 <style>
-  /* ── Concept 5 · ssh georgenijo.com ─────────────────────────────
-     A browser simulation of a Charm (Bubbletea/Wish) SSH portfolio.
-     Single deliberate visual world: dark charmed terminal.
-     Palette: ink #141021 · panel #1c1631 · fg #eae4f6
-              charm pink #ff6ac1 · charm purple #7d56f4 · lav #b7a4f7
-  ──────────────────────────────────────────────────────────────── */
+  /* ── Direction 3 · PAPER v2 ────────────────────────────────────
+     Single-page typographic index — no split panes. Menu is huge
+     serif lines like a book's table of contents; projects are a
+     printed ledger; details are full-page slips.
+     Live layer: the cursor itself. Native pointer hidden; a
+     blinking ink caret follows the mouse and morphs into a ring
+     over anything interactive. Inverts what's under it (blend
+     difference), so it never hides content. */
   :root{
-    --bg:#141021;
-    --bg2:#1c1631;
-    --line:#2c2347;
-    --fg:#eae4f6;
-    --dim:#9187ad;
-    --faint:#5c527d;
-    --pink:#ff6ac1;
-    --purple:#7d56f4;
-    --lav:#b7a4f7;
-    --green:#9ef29b;
-    --cyan:#7ee0e6;
-    --selbg:rgba(255,106,193,.07);
-    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono","Cascadia Mono",monospace;
+    --bg:#f6f2e8;
+    --surface:#fbf8f1;
+    --fg:#1c1710;
+    --muted:#6e6353;
+    --faint:#a2957f;
+    --border:#1c1710;
+    --hairline:#d9d0bd;
+    --accent:#b5351c;
+    --selbg:rgba(28,23,16,.045);
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Cascadia Mono",monospace;
+    --serif:'Iowan Old Style','Charter',Georgia,serif;
   }
   *,*::before,*::after{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;}
   body{
-    background:var(--bg);
-    color:var(--fg);
-    font-family:var(--mono);
-    font-size:14px;
-    line-height:1.55;
-    overflow:hidden;
-    -webkit-font-smoothing:antialiased;
+    background:var(--bg);color:var(--fg);
+    font-family:var(--mono);font-size:14px;line-height:1.55;
+    overflow:hidden;-webkit-font-smoothing:antialiased;
   }
   @media (max-width:600px){ body{font-size:13px;} }
 
-  .term{
-    height:100dvh;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-    background:
-      radial-gradient(120% 90% at 50% 0%, rgba(125,86,244,.10), transparent 60%),
-      var(--bg);
+  /* paper wash */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 0%, rgba(28,23,16,.03), transparent 55%);
   }
 
-  /* ── focus ── */
+  /* ── cursor takeover (pointer:fine only) ── */
+  @media (pointer:fine){
+    body, a, button, input, .row{cursor:none;}
+  }
+  #cur{
+    position:fixed;top:0;left:0;z-index:2000;
+    pointer-events:none;
+    mix-blend-mode:difference;
+  }
+  #cur[hidden]{display:none;}
+  #cur .core{
+    display:block;
+    width:11px;height:20px;
+    margin:-10px 0 0 -5px;
+    background:#fff;
+    animation:carets 1.1s steps(1) infinite;
+    transition:width .16s ease,height .16s ease,border-radius .16s ease,margin .16s ease,background .16s ease;
+  }
+  @keyframes carets{50%{opacity:.35;}}
+  /* over links / rows / buttons: caret becomes a ring */
+  #cur.on .core{
+    width:38px;height:38px;
+    margin:-19px 0 0 -19px;
+    border-radius:50%;
+    background:transparent;
+    box-shadow:inset 0 0 0 2px #fff;
+    animation:none;
+  }
+  #cur.on .core::after{
+    content:"›";
+    display:grid;place-items:center;height:100%;
+    color:#fff;font:700 16px/1 var(--mono);
+  }
+  #cur.down .core{transform:scale(.72);}
+  .core::after{content:"";}
+  @media (prefers-reduced-motion: reduce){
+    #cur .core{animation:none;transition:none;}
+  }
+
+  .term{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
   :focus{outline:none;}
-  :focus-visible{outline:2px solid var(--pink);outline-offset:2px;border-radius:4px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
-  /* ── boot / ssh sequence ── */
-  .boot{
-    flex:1;
-    min-height:0;
-    overflow-y:auto;
-    overflow-x:hidden;
-    padding:clamp(14px,3vw,32px);
-  }
-  .boot pre{
-    margin:0;
-    font-family:inherit;
-    font-size:inherit;
-    white-space:pre-wrap;
-    word-break:break-word;
-  }
-  .b-dim{color:var(--dim);}
-  .b-ok{color:var(--green);}
-  .b-key{color:var(--cyan);}
-  .b-cmd{color:var(--fg);}
-  .prompt-sig{color:var(--pink);}
-  .cur{
-    display:inline-block;width:.62em;height:1.1em;
-    background:var(--pink);vertical-align:-.18em;
-    animation:blink 1.06s steps(1) infinite;
-  }
+  /* ── boot ── */
+  .boot{flex:1;min-height:0;overflow-y:auto;padding:clamp(14px,3vw,32px);}
+  .boot pre{margin:0;font:inherit;white-space:pre-wrap;word-break:break-word;}
+  .b-dim{color:var(--muted);}
+  .b-ok{color:var(--accent);}
+  .prompt-sig{color:var(--accent);}
+  .cur-b{display:inline-block;width:.62em;height:1.1em;background:var(--fg);vertical-align:-.18em;animation:blink 1.06s steps(1) infinite;}
   @keyframes blink{50%{opacity:0;}}
-
-  .motd{margin-top:14px;}
-  .ascii{
-    margin:0;
-    font-family:inherit;
-    font-size:clamp(5px,2.15vw,13px);
-    line-height:1.18;
-    white-space:pre;
-    font-weight:700;
-    background:linear-gradient(100deg,var(--pink) 5%,var(--lav) 55%,var(--purple) 95%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;color:transparent;
+  .masthead{
+    margin:18px 0 0;font-family:var(--serif);
+    font-size:clamp(44px,7.5vw,96px);line-height:1.02;
+    letter-spacing:-0.025em;font-weight:600;
   }
-  .motd-tag{color:var(--dim);margin-top:8px;}
-  .motd-tag .dot{color:var(--faint);}
+  .masthead em{font-style:italic;color:var(--accent);}
+  .motd-tag{
+    color:var(--muted);margin-top:10px;
+    text-transform:uppercase;letter-spacing:.08em;font-size:.82em;
+    border-top:2px solid var(--border);display:inline-block;padding-top:8px;
+  }
 
-  /* ── TUI app frame ── */
+  /* ── app frame ── */
   .app{flex:1;min-height:0;display:flex;flex-direction:column;}
   .app[hidden]{display:none;}
-
   header.bar{
-    flex:none;
-    display:flex;align-items:center;gap:10px;
-    padding:10px clamp(12px,3vw,24px);
-    background:linear-gradient(90deg,rgba(255,106,193,.16),rgba(125,86,244,.16) 62%,rgba(125,86,244,.05));
-    border-bottom:1px solid var(--line);
-    min-height:46px;
+    flex:none;display:flex;align-items:baseline;gap:14px;
+    padding:12px clamp(16px,4vw,56px) 10px;
+    border-bottom:2px solid var(--border);
   }
-  .chip{
-    flex:none;
-    font-weight:700;letter-spacing:.08em;font-size:.86em;
-    color:#1a1030;
-    background:linear-gradient(120deg,var(--pink),var(--purple));
-    padding:3px 11px;border-radius:7px;
-    white-space:nowrap;
-  }
-  .crumb{
-    color:var(--dim);
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    min-width:0;flex:1;
-  }
-  .crumb b{color:var(--lav);font-weight:400;}
-  .conn{
-    flex:none;color:var(--faint);font-size:.82em;white-space:nowrap;
-  }
+  .brand{font-family:var(--serif);font-style:italic;font-size:1.15em;white-space:nowrap;}
+  .crumb{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9em;}
+  .crumb b{color:var(--fg);font-weight:400;}
+  .conn{flex:none;color:var(--faint);font-size:.78em;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;}
   @media (max-width:560px){ .conn{display:none;} }
-  .backbtn{
-    flex:none;
-    font:inherit;font-size:.86em;
-    color:var(--lav);
-    background:rgba(125,86,244,.14);
-    border:1px solid var(--line);
-    border-radius:7px;
-    padding:3px 10px;
-    cursor:pointer;
-  }
-  .backbtn:hover{border-color:var(--purple);color:var(--fg);}
 
-  .split{flex:1;min-height:0;display:flex;}
-  main.content{
-    flex:1;min-width:0;min-height:0;
-    overflow-y:auto;overflow-x:hidden;
-    padding:clamp(12px,2.5vw,26px) clamp(12px,3vw,28px);
-    scrollbar-width:thin;
-    scrollbar-color:var(--line) transparent;
+  main.page{
+    flex:1;min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;
+    padding:clamp(18px,3.5vw,44px) clamp(16px,4vw,56px) clamp(28px,5vw,64px);
+    scrollbar-width:thin;scrollbar-color:var(--hairline) transparent;
   }
-
-  /* ── preview pane (wide viewports, Bubbletea master-detail) ── */
-  aside.preview{display:none;}
-  @media (min-width:1000px){
-    .split > main.content{flex:0 0 clamp(340px,36%,440px);border-right:1px solid var(--line);}
-    aside.preview{
-      display:flex;flex-direction:column;
-      flex:1;min-width:0;min-height:0;
-      margin:16px 22px 16px 20px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:rgba(28,22,49,.42);
-      overflow:hidden;
-    }
-    .pv-title{
-      flex:none;display:flex;align-items:center;gap:8px;
-      padding:8px 16px;
-      border-bottom:1px solid var(--line);
-      background:linear-gradient(90deg,rgba(125,86,244,.12),transparent 70%);
-      color:var(--dim);font-size:.85em;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .pv-title .pv-dot{color:var(--pink);font-size:.75em;}
-    .pv-body{
-      flex:1;min-height:0;min-width:0;
-      overflow-y:auto;overflow-x:hidden;
-      padding:16px 20px;
-      scrollbar-width:thin;
-      scrollbar-color:var(--line) transparent;
-    }
-    .pv-body .pane{background:transparent;border:none;border-radius:0;padding:0;margin:0 0 12px;max-width:64ch;}
-    .pv-foot{
-      flex:none;display:flex;gap:18px;
-      padding:7px 16px;
-      border-top:1px solid var(--line);
-      color:var(--faint);font-size:.8em;
-      font-variant-numeric:tabular-nums;
-      white-space:nowrap;overflow:hidden;
-    }
-    .pv-foot .up{margin-left:auto;}
-    .pv-list{display:flex;flex-direction:column;gap:4px;max-width:72ch;}
-    .pv-li{display:flex;gap:12px;align-items:baseline;min-width:0;}
-    .pv-li .n{color:var(--lav);flex:none;min-width:13ch;}
-    .pv-li .d2{color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .pv-li .g{margin-left:auto;flex:none;color:var(--faint);font-size:.82em;padding-left:10px;}
-    .pv-note{color:var(--faint);font-size:.84em;margin:12px 0 0;}
-  }
+  .sheet{max-width:1060px;margin:0 auto;}
   .reveal{animation:fadeUp .18s ease both;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
 
-  .vtitle{color:var(--pink);font-weight:700;margin:0 0 2px;}
-  .vsub{color:var(--faint);margin:0 0 14px;font-size:.9em;}
+  .vkick{
+    color:var(--muted);font-size:.82em;
+    text-transform:uppercase;letter-spacing:.08em;
+    margin:0 0 6px;
+  }
+  .vkick .n{color:var(--accent);}
+  .vtitle{
+    font-family:var(--serif);font-weight:600;font-style:italic;
+    font-size:clamp(30px,4.5vw,52px);line-height:1.05;
+    letter-spacing:-0.02em;margin:0 0 26px;
+  }
 
-  /* ── rows (Bubbletea list items) ── */
-  .rows{display:flex;flex-direction:column;gap:2px;max-width:640px;}
+  /* ── index (menu) — table of contents in display type ── */
+  .rows{border-top:1px solid var(--hairline);}
   .row{
-    display:flex;align-items:baseline;gap:0;
-    width:100%;
-    font:inherit;text-align:left;text-decoration:none;
-    color:var(--dim);
-    background:none;border:none;
-    border-left:2px solid transparent;
-    padding:7px 12px 7px 14px;
-    min-height:42px;
-    cursor:pointer;
-    border-radius:0 6px 6px 0;
+    display:grid;align-items:baseline;width:100%;
+    font:inherit;text-align:left;text-decoration:none;color:var(--fg);
+    background:none;border:none;border-bottom:1px solid var(--hairline);
+    padding:0;min-height:46px;
   }
-  .row .tx{display:flex;flex-direction:column;min-width:0;}
-  .row .t{color:var(--fg);}
-  .row .d{color:var(--faint);font-size:.86em;}
-  .row .aux{margin-left:auto;flex:none;color:var(--faint);font-size:.82em;padding-left:12px;}
-  .row:hover{background:rgba(255,255,255,.025);}
-  .row.sel{
-    border-left-color:var(--pink);
-    background:var(--selbg);
-  }
-  .row.sel .t{color:var(--pink);font-weight:700;}
-  .row.sel .d{color:var(--lav);}
-  .row.sel .aux{color:var(--lav);}
-  .row.act .t::before{content:"→ ";color:var(--faint);}
-  .row.act.sel .t::before{color:var(--pink);}
+  .row:hover{background:var(--selbg);}
+  .row.sel{background:var(--selbg);}
+  .row .tx{display:block;min-width:0;}
 
-  /* ── panes (detail boxes) ── */
-  .pane{
-    max-width:640px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    background:var(--bg2);
-    padding:16px 18px;
-    margin:0 0 16px;
+  .rows.index .row{
+    grid-template-columns:5ch 1fr auto;gap:18px;
+    padding:clamp(14px,2.2vw,26px) 6px;
   }
-  .pane p{margin:0 0 10px;max-width:58ch;}
-  .pane p:last-child{margin-bottom:0;}
-  .pane .hl{color:var(--pink);}
-  .pane .hp{color:var(--lav);}
-  .pane .dim{color:var(--dim);}
-  .kv{display:flex;gap:10px;margin:2px 0;}
+  .rows.index .num{
+    color:var(--faint);font-size:.85em;
+    letter-spacing:.06em;align-self:center;
+  }
+  .rows.index .t{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(32px,5.4vw,62px);line-height:1.04;
+    letter-spacing:-0.02em;
+    transition:transform .14s ease;
+  }
+  .rows.index .d{
+    color:var(--muted);font-size:.88em;align-self:center;
+    text-align:right;
+  }
+  @media (max-width:700px){ .rows.index .row{grid-template-columns:5ch 1fr;} .rows.index .d{display:none;} }
+  .rows.index .row.sel .t{font-style:italic;color:var(--accent);transform:translateX(10px);}
+  .rows.index .row.sel .num{color:var(--accent);}
+
+  /* ── ledger (projects) ── */
+  .rows.ledger .row{
+    grid-template-columns:4ch minmax(0,1fr) auto;gap:16px;
+    padding:13px 6px;
+  }
+  .rows.ledger .num{color:var(--faint);font-size:.82em;align-self:center;}
+  .rows.ledger .t{
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    font-size:clamp(19px,2.4vw,24px);letter-spacing:-0.01em;
+  }
+  .rows.ledger .d{color:var(--muted);font-size:.88em;display:block;}
+  .rows.ledger .aux{
+    color:var(--faint);font-size:.78em;align-self:center;
+    text-transform:uppercase;letter-spacing:.07em;
+  }
+  .rows.ledger .row.sel .t{color:var(--accent);}
+  .rows.ledger .row.sel .num{color:var(--accent);}
+
+  /* ── actions (underlined mono links) ── */
+  .acts{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border-top:0;}
+  .acts .row{
+    display:inline-flex;gap:8px;width:auto;min-height:44px;align-items:center;
+    border-bottom:none;padding:6px 4px;color:var(--fg);
+  }
+  .acts .row .t{text-decoration:underline;text-underline-offset:3px;}
+  .acts .row.sel .t{color:var(--accent);}
+  .acts .row.sel::before{content:"›";color:var(--accent);}
+
+  /* ── printed slip (detail body) ── */
+  .slip{
+    max-width:72ch;border:2px solid var(--border);
+    background:var(--surface);
+    padding:clamp(18px,3vw,30px) clamp(18px,3vw,32px);
+  }
+  .slip p{margin:0 0 12px;max-width:58ch;font-size:15px;}
+  .slip p:last-child{margin-bottom:0;}
+  .slip .hl{color:var(--accent);}
+  .slip .dim{color:var(--muted);}
+  .kv{display:flex;gap:12px;margin:3px 0;font-size:15px;}
   .kv .k{color:var(--faint);flex:none;min-width:7ch;}
   .badge{
-    display:inline-block;font-size:.78em;
-    color:var(--cyan);border:1px solid rgba(126,224,230,.35);
-    border-radius:5px;padding:0 7px;vertical-align:1px;
+    display:inline-block;font-size:.6em;color:var(--fg);
+    border:1px solid var(--border);padding:2px 8px;vertical-align:6px;
+    font-family:var(--mono);font-style:normal;font-weight:400;
+    text-transform:uppercase;letter-spacing:.07em;
   }
-  .spin-line{color:var(--dim);margin-top:12px;}
-  .spin{color:var(--pink);display:inline-block;min-width:1ch;}
 
-  /* ── filter ── */
-  .filterbar{
-    display:flex;align-items:center;gap:8px;
-    max-width:640px;
-    margin:0 0 10px;
-    padding:5px 12px;
-    border:1px solid var(--purple);
-    border-radius:8px;
-    background:var(--bg2);
-  }
-  .filterbar .sig{color:var(--pink);font-weight:700;}
-  .filterbar input{
-    flex:1;min-width:0;
-    font:inherit;color:var(--fg);
-    background:none;border:none;outline:none;
-  }
-  .nores{color:var(--faint);padding:10px 14px;}
-
-  /* ── status bar ── */
   footer.status{
-    flex:none;
-    display:flex;align-items:center;gap:14px;
-    flex-wrap:wrap;
-    padding:8px clamp(12px,3vw,24px);
-    border-top:1px solid var(--line);
-    background:rgba(28,22,49,.65);
-    color:var(--faint);
-    font-size:.84em;
-    min-height:38px;
+    flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:8px clamp(16px,4vw,56px);min-height:38px;
+    border-top:2px solid var(--border);
+    color:var(--faint);font-size:.84em;
   }
   .hint{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-  kbd{
-    font:inherit;
-    color:var(--lav);
-    background:rgba(125,86,244,.13);
-    border:1px solid var(--line);
-    border-radius:4px;
-    padding:0 6px;
-  }
-  button.hint{
-    background:none;border:none;cursor:pointer;
-    font:inherit;color:var(--faint);padding:2px;
-  }
-  button.hint:hover kbd{border-color:var(--pink);color:var(--pink);}
+  kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);padding:0 6px;}
+  button.hint{background:none;border:none;font:inherit;color:var(--faint);padding:2px;}
+  button.hint:hover kbd{background:var(--fg);color:var(--bg);}
 
-  /* ── closed / reconnect ── */
   .closed{padding:clamp(16px,4vw,36px);}
-  .closed p{margin:0 0 6px;color:var(--dim);}
+  .closed p{margin:0 0 6px;color:var(--muted);}
   .closed .msg{color:var(--fg);}
   .reconnect{
-    margin-top:18px;
-    font:inherit;
-    color:var(--pink);
-    background:rgba(255,106,193,.08);
-    border:1px solid var(--pink);
-    border-radius:8px;
+    margin-top:18px;font:inherit;color:var(--fg);
+    background:transparent;border:2px solid var(--border);
     padding:9px 16px;
-    cursor:pointer;
   }
-  .reconnect:hover{background:rgba(255,106,193,.16);}
+  .reconnect:hover{background:var(--fg);color:var(--bg);}
 
   @media (prefers-reduced-motion: reduce){
-    .cur{animation:none;}
-    .reveal{animation:none;}
+    .cur-b,.reveal{animation:none;}
+    .rows.index .t{transition:none;}
   }
 </style>
+</head>
+<body>
 
 <div class="term" id="term">
   <div class="boot" id="boot" aria-live="polite"><pre id="bootpre"></pre></div>
-
   <div class="app" id="app" hidden>
     <header class="bar">
-      <button class="backbtn" id="hdrback" hidden aria-label="Back">‹ back</button>
-      <span class="chip">GEORGE&nbsp;NIJO</span>
+      <span class="brand">George Nijo</span>
       <span class="crumb" id="crumb">~</span>
-      <span class="conn" id="conn">ssh · ed25519 · 24ms</span>
+      <span class="conn">ssh · ed25519 · paper</span>
     </header>
-    <div class="split">
-      <main class="content" id="content" tabindex="-1"></main>
-      <aside class="preview" id="preview">
-        <div class="pv-title" id="pvtitle"></div>
-        <div class="pv-body" id="pvbody"></div>
-        <div class="pv-foot" id="pvfoot"></div>
-      </aside>
-    </div>
+    <main class="page" id="page" tabindex="-1"></main>
     <footer class="status" id="status"></footer>
   </div>
 </div>
 
+<div id="cur" hidden aria-hidden="true"><span class="core"></span></div>
+
 <script>
 (function(){
-  "use strict";
-  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ───────────────────────── content ───────────────────────── */
-
-  var GH = "https://github.com/georgenijo";
-
-  var PROJECTS = [
-    {name:"nadirclaw",   lang:"Python",     tag:"LLM router & cost optimizer",
-     desc:"Routes every prompt to the cheapest model that can actually handle it. Scores request complexity, tracks per-provider spend in real time, and fails over cleanly when a provider rate-limits."},
-    {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
-     desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine."},
-    {name:"usher",       lang:"Go",         tag:"MCP broker",
-     desc:"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
-    {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
-     desc:"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
-    {name:"omen",        lang:"Rust",       tag:"Code intel for AI agents",
-     desc:"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
-    {name:"hermes-agent",lang:"Python",     tag:"Errand-running personal agent",
-     desc:"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
-    {name:"fleetmap",    lang:"TypeScript", tag:"Live map of running agents",
-     desc:"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
-    {name:"gauge",       lang:"Go",         tag:"Eval harness for agent stacks",
-     desc:"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
-    {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
-     desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."},
-    {name:"star-maker",  lang:"Python",     tag:"Constellations from your data",
-     desc:"Turns any dataset into a navigable night sky. Mostly an excuse to draw stars with math."}
-  ];
-
-  var MENU = [
-    {id:"about",    t:"about",    d:"who's at the keyboard"},
-    {id:"projects", t:"projects", d:"ten repos, four languages"},
-    {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
-    {id:"contact",  t:"contact",  d:"say hello"},
-    {id:"coffee",   t:"coffee",   d:"order a cup over ssh"}
-  ];
-
-  var CONTACT = [
-    {t:"george.nijo8@gmail.com", d:"email — the reliable channel", aux:"mailto",
-     href:"mailto:george.nijo8@gmail.com"},
-    {t:"github.com/georgenijo", d:"the code lives here", aux:"https", href:GH}
-  ];
-
-  var ABOUT_HTML =
-    '<p><span class="hl">George Nijo</span> — software engineer in <span class="hp">Boston</span>.</p>' +
-    '<p>I build infrastructure for AI agents: <span class="hp">LLM routers</span>, <span class="hp">MCP brokers</span>, and <span class="hp">agent control planes</span> — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>' +
-    '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>' +
-    '<p class="dim">Python · Go · Rust · just enough Swift</p>';
-
-  var NOW_HTML =
-    '<p>Heads-down on <span class="hl">AgentOS</span> — a personal + home agent operating system. One control plane for the agents that run my code, my inbox, and (eventually) the house.</p>' +
-    '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>' +
-    '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>' +
-    '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>';
-
-  function coffeeHTML(tried){
-    return tried
-      ? '<p class="hl">order failed: no coffee endpoint on this host.</p><p class="dim">The café is next door — terminal.shop already has coffee-over-ssh covered. This server only pours bytes.</p>'
-      : '<p>You can, famously, buy coffee over SSH.</p><p class="dim">Not here, though. The café is next door; this host serves a portfolio and nothing hot.</p>';
-  }
-
-  function projByName(n){
-    for (var i = 0; i < PROJECTS.length; i++) if (PROJECTS[i].name === n) return PROJECTS[i];
-    return null;
-  }
-
-  function projDetailHTML(p){
-    return "<p>" + p.desc + "</p>" +
-      '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/' + p.name + "</span></div>" +
-      '<div class="kv"><span class="k">lang</span><span class="dim">' + p.lang + "</span></div>";
-  }
-
-  /* ───────────────────────── boot sequence ───────────────────────── */
-
-  var bootPre  = document.getElementById("bootpre");
-  var bootWrap = document.getElementById("boot");
-  var appEl    = document.getElementById("app");
-  var booting  = false, bootSkip = false;
-
-  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-
-  var BOOT_LINES = [
-    {h:'<span class="b-dim">Resolving georgenijo.com… 129.80.134.194</span>', w:340},
-    {h:'<span class="b-dim">Connecting to georgenijo.com port 22.</span>', w:220},
-    {h:'<span class="b-dim">Remote protocol version 2.0, remote software version</span> <span class="b-key">charmed-wish_1.4</span>', w:260},
-    {h:'<span class="b-dim">Host key:</span> <span class="b-key">ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU</span> <span class="b-ok">✓ known</span>', w:300},
-    {h:'<span class="b-ok">Authenticated to georgenijo.com (via publickey).</span>', w:380}
-  ];
-
-  var ASCII =
-"  ██████╗ ███████╗ ██████╗ ██████╗  ██████╗ ███████╗\n" +
-" ██╔════╝ ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝\n" +
-" ██║  ███╗█████╗  ██║   ██║██████╔╝██║  ███╗█████╗  \n" +
-" ██║   ██║██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  \n" +
-" ╚██████╔╝███████╗╚██████╔╝██║  ██║╚██████╔╝███████╗\n" +
-"  ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝";
-
-  function motdHTML(){
-    return '<div class="motd">' +
-      '<pre class="ascii">' + esc(ASCII) + "</pre>" +
-      '<div class="motd-tag">software engineer <span class="dot">·</span> boston <span class="dot">·</span> agent infrastructure</div>' +
-      '<div class="motd-tag b-dim">Last login: Tue Jun 30 21:07:12 2026 from 10.0.0.42</div>' +
-      "</div>";
-  }
-
-  function sleep(ms){
-    return new Promise(function(res){
-      if (bootSkip || RM) return res();
-      setTimeout(res, ms);
-    });
-  }
-
-  function runBoot(){
-    booting = true; bootSkip = false;
-    appEl.hidden = true; bootWrap.hidden = false;
-    bootPre.innerHTML = "";
-
-    var CMD = "ssh georgenijo.com";
-    var html = '<span class="prompt-sig">➜ ~ $</span> ';
-    bootPre.innerHTML = html + '<span class="cur"></span>';
-
-    var p = Promise.resolve();
-
-    // type the command character by character
-    CMD.split("").forEach(function(ch, i){
-      p = p.then(function(){
-        return sleep(34 + (ch === " " ? 60 : 0)).then(function(){
-          html = '<span class="prompt-sig">➜ ~ $</span> <span class="b-cmd">' + esc(CMD.slice(0, i + 1)) + "</span>";
-          bootPre.innerHTML = html + '<span class="cur"></span>';
-        });
-      });
-    });
-
-    p = p.then(function(){ return sleep(320); });
-
-    BOOT_LINES.forEach(function(line){
-      p = p.then(function(){
-        return sleep(line.w).then(function(){
-          html += "\n" + line.h;
-          bootPre.innerHTML = html + '\n<span class="cur"></span>';
-          bootWrap.scrollTop = bootWrap.scrollHeight;
-        });
-      });
-    });
-
-    p = p.then(function(){ return sleep(300); })
-     .then(function(){
-        bootPre.innerHTML = html + motdHTML();
-        bootWrap.scrollTop = bootWrap.scrollHeight;
-        return sleep(1000);
-      })
-     .then(function(){
-        booting = false;
-        bootWrap.hidden = true;
-        appEl.hidden = false;
-        sessStart = Date.now();
-        go("menu");
-      });
-  }
-
-  function skipBoot(){ bootSkip = true; }
-
-  /* ───────────────────────── TUI state ───────────────────────── */
-
-  var contentEl = document.getElementById("content");
-  var crumbEl   = document.getElementById("crumb");
-  var statusEl  = document.getElementById("status");
-  var hdrBack   = document.getElementById("hdrback");
-  var pvTitle   = document.getElementById("pvtitle");
-  var pvBody    = document.getElementById("pvbody");
-  var pvFoot    = document.getElementById("pvfoot");
-
-  var WIDE = window.matchMedia("(min-width:1000px)");
-  function wide(){ return WIDE.matches; }
-
-  var ST = {
-    view: "menu",
-    proj: null,
-    coffeeTried: false,
-    filterOn: false,
-    filterText: "",
-    cursors: {},          // remembered cursor per view id
-    rows: [],             // current row descriptors {el, act, href}
-    cursor: 0
-  };
-
-  var PARENT = {about:"menu", projects:"menu", now:"menu", contact:"menu",
-                coffee:"menu", project:"projects", menu:null, closed:null};
-
-  var spinTimer = null;
-
-  function go(view, opts){
-    opts = opts || {};
-    // remember cursor for the view we're leaving
-    ST.cursors[viewKey()] = ST.cursor;
-    ST.view = view;
-    if ("proj" in opts) ST.proj = opts.proj;
-    ST.filterOn = false; ST.filterText = "";
-    if (view !== "coffee") ST.coffeeTried = false;
-    render();
-  }
-
-  function viewKey(){ return ST.view === "project" ? "project:" + (ST.proj||"") : ST.view; }
-
-  function back(){
-    if (ST.filterOn){ closeFilter(); return; }
-    var p = PARENT[ST.view];
-    if (p) go(p);
-  }
-
-  function quit(){
-    ST.cursors = {};
-    ST.view = "closed";
-    render();
-  }
-
-  /* ───────────────────────── rendering ───────────────────────── */
-
-  function h(tag, cls, htmlStr){
-    var el = document.createElement(tag);
-    if (cls) el.className = cls;
-    if (htmlStr != null) el.innerHTML = htmlStr;
-    return el;
-  }
-
-  function makeRow(spec, idx){
-    var el;
-    if (spec.href){
-      el = h("a", "row");
-      el.href = spec.href;
-      el.target = "_blank";
-      el.rel = "noopener";
-    } else {
-      el = h("button", "row");
-      el.type = "button";
-    }
-    if (spec.act) el.classList.add("act");
-    var inner = '<span class="tx"><span class="t">' + spec.t + "</span>";
-    if (spec.d) inner += '<span class="d">' + spec.d + "</span>";
-    inner += "</span>";
-    if (spec.aux) inner += '<span class="aux">' + spec.aux + "</span>";
-    el.innerHTML = inner;
-    // Hover never moves the selection (CSS :hover styling only).
-    // Wide (split) mode: the first click on a row selects it; a click on the
-    // already-selected row activates it. Narrow mode: a click activates
-    // directly, so mobile users never need to tap twice.
-    var wasSel = false;
-    el.addEventListener("pointerdown", function(){ wasSel = (ST.cursor === idx); });
-    el.addEventListener("click", function(e){
-      var kbClick = (e.detail === 0); // Enter on a focused row, or synthetic click
-      if (wide() && !kbClick && !wasSel){
-        if (spec.href) e.preventDefault();
-        ST.cursor = idx; paintCursor();
-        return;
-      }
-      ST.cursor = idx; paintCursor();
-      if (!spec.href && spec.on) spec.on();
-    });
-    el.addEventListener("focus", function(){ ST.cursor = idx; paintCursor(); });
-    return el;
-  }
-
-  function paintCursor(){
-    ST.rows.forEach(function(r, i){
-      r.el.classList.toggle("sel", i === ST.cursor);
-    });
-    var cur = ST.rows[ST.cursor];
-    if (cur && cur.el.scrollIntoView) cur.el.scrollIntoView({block:"nearest"});
-    // live master→detail preview follows the highlight on wide viewports
-    if ((ST.view === "menu" || ST.view === "projects") && wide()) refreshPreview();
-  }
-
-  function setStatus(hints){
-    statusEl.innerHTML = "";
-    hints.forEach(function(hnt){
-      if (hnt.on){
-        var b = h("button", "hint");
-        b.type = "button";
-        b.innerHTML = "<kbd>" + hnt.k + "</kbd> " + hnt.l;
-        b.addEventListener("click", hnt.on);
-        statusEl.appendChild(b);
-      } else {
-        statusEl.appendChild(h("span", "hint", "<kbd>" + hnt.k + "</kbd> " + hnt.l));
-      }
-    });
-  }
-
-  function stdHints(list, filterable){
-    var hints = [];
-    if (list) hints.push({k:"↑/↓", l:"navigate"}, {k:"enter", l:"select"});
-    if (filterable) hints.push({k:"/", l:"filter", on:function(){ openFilter(); }});
-    if (PARENT[ST.view]) hints.push({k:"esc", l:"back", on:back});
-    hints.push({k:"q", l:"quit", on:quit});
-    return hints;
-  }
-
-  function frame(crumb, backable){
-    crumbEl.innerHTML = crumb;
-    hdrBack.hidden = !backable;
-    contentEl.innerHTML = "";
-    ST.rows = [];
-    var wrap = h("div", "reveal");
-    contentEl.appendChild(wrap);
-    return wrap;
-  }
-
-  function addRows(wrap, specs, restoreKey){
-    var box = h("div", "rows");
-    specs.forEach(function(s){
-      var idx = ST.rows.length;
-      var el = makeRow(s, idx);
-      ST.rows.push({el:el, on:s.on, href:s.href});
-      box.appendChild(el);
-    });
-    wrap.appendChild(box);
-    var saved = ST.cursors[restoreKey];
-    ST.cursor = (typeof saved === "number" && saved < ST.rows.length) ? saved : 0;
-    paintCursor();
-  }
-
-  function clearSpinner(){
-    if (spinTimer){ clearInterval(spinTimer); spinTimer = null; }
-  }
-
-  function startSpin(sp){
-    if (!sp) return;
-    if (RM){ sp.textContent = "◍"; return; }
-    var frames = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"], i = 0;
-    sp.textContent = frames[0];
-    spinTimer = setInterval(function(){
-      i = (i + 1) % frames.length;
-      sp.textContent = frames[i];
-    }, 90);
-  }
-
-  /* ── shared content builders (used by main column and preview pane) ── */
-
-  function buildAbout(c){ c.appendChild(h("div", "pane", ABOUT_HTML)); }
-
-  function buildNow(c){
-    var pane = h("div", "pane",
-      NOW_HTML + '<p class="spin-line"><span class="spin">◍</span> agents working…</p>');
-    c.appendChild(pane);
-    startSpin(pane.querySelector(".spin"));
-  }
-
-  function buildContactCard(c){
-    c.appendChild(h("div", "pane",
-      '<p class="dim">no forms, no funnels — just these two:</p>' +
-      CONTACT.map(function(x){
-        return '<div class="kv"><span class="k">' + x.aux + '</span><span class="hp">' + x.t + "</span></div>";
-      }).join("")));
-  }
-
-  function buildCoffee(c){ c.appendChild(h("div", "pane", coffeeHTML(ST.coffeeTried))); }
-
-  function buildProjectDetail(c, p){ c.appendChild(h("div", "pane", projDetailHTML(p))); }
-
-  function buildProjectIndex(c){
-    var box = h("div", "pv-list");
-    PROJECTS.forEach(function(p){
-      box.appendChild(h("div", "pv-li",
-        '<span class="n">' + p.name + '</span><span class="d2">' + p.tag +
-        '</span><span class="g">' + p.lang + "</span>"));
-    });
-    c.appendChild(box);
-    c.appendChild(h("p", "pv-note", PROJECTS.length + " repos · enter to browse"));
-  }
-
-  /* ── preview pane (wide viewports) ── */
-
-  function refreshPreview(){
-    if (!wide() || ST.view === "closed") return;
-    clearSpinner();
-    pvBody.innerHTML = "";
-    var path = "~";
-    switch (ST.view){
-      case "menu": {
-        var m = MENU[ST.cursor] || MENU[0];
-        path = "~ / " + m.id;
-        if (m.id === "about") buildAbout(pvBody);
-        else if (m.id === "projects") buildProjectIndex(pvBody);
-        else if (m.id === "now") buildNow(pvBody);
-        else if (m.id === "contact") buildContactCard(pvBody);
-        else buildCoffee(pvBody);
-        break;
-      }
-      case "projects": {
-        var list = filteredProjects();
-        var p = list[ST.cursor];
-        if (!p){
-          path = "~ / projects";
-          pvBody.appendChild(h("div", "nores", "no matching project"));
-        } else {
-          path = "~ / projects / " + p.name;
-          pvBody.appendChild(h("p", "vtitle", p.name + ' &nbsp;<span class="badge">' + p.lang + "</span>"));
-          pvBody.appendChild(h("p", "vsub", p.tag));
-          buildProjectDetail(pvBody, p);
-          pvBody.appendChild(h("p", "pv-note", "enter → open actions"));
-        }
-        break;
-      }
-      case "about":   path = "~ / about";   buildAbout(pvBody); break;
-      case "now":     path = "~ / now";     buildNow(pvBody); break;
-      case "contact": path = "~ / contact"; buildContactCard(pvBody); break;
-      case "coffee":  path = "~ / coffee";  buildCoffee(pvBody); break;
-      case "project": {
-        var pr = projByName(ST.proj);
-        if (pr){
-          path = "~ / projects / " + pr.name;
-          pvBody.appendChild(h("p", "vtitle", pr.name + ' &nbsp;<span class="badge">' + pr.lang + "</span>"));
-          pvBody.appendChild(h("p", "vsub", pr.tag));
-          buildProjectDetail(pvBody, pr);
-        }
-        break;
-      }
-    }
-    pvTitle.innerHTML = '<span class="pv-dot">◉</span> ' + path;
-    sessionLine();
-  }
-
-  /* ── ambient session line ── */
-
-  var sessStart = Date.now(), chW = 0, chH = 0;
-
-  function measureChar(){
-    var s = h("span", null, "0000000000");
-    s.style.cssText = "position:absolute;visibility:hidden;white-space:pre;";
-    document.body.appendChild(s);
-    chW = (s.offsetWidth / 10) || 8.4;
-    chH = s.offsetHeight || 21;
-    s.parentNode.removeChild(s);
-  }
-
-  function fmtUp(ms){
-    var t = Math.floor(ms / 1000);
-    function z(n){ return (n < 10 ? "0" : "") + n; }
-    return z(Math.floor(t / 3600)) + ":" + z(Math.floor((t % 3600) / 60)) + ":" + z(t % 60);
-  }
-
-  function sessionLine(){
-    if (!wide() || appEl.hidden) return;
-    if (!chW) measureChar();
-    var cols = Math.max(1, Math.floor(window.innerWidth / chW));
-    var rws  = Math.max(1, Math.floor(window.innerHeight / chH));
-    pvFoot.innerHTML =
-      "<span>georgenijo.com</span><span>pts/0</span><span>" + cols + "×" + rws +
-      '</span><span class="up">up ' + fmtUp(Date.now() - sessStart) + "</span>";
-  }
-
-  setInterval(sessionLine, 1000);
-  window.addEventListener("resize", function(){ chW = 0; sessionLine(); });
-
-  function onWideChange(){
-    if (!booting && ST.view !== "closed") render();
-  }
-  if (WIDE.addEventListener) WIDE.addEventListener("change", onWideChange);
-  else if (WIDE.addListener) WIDE.addListener(onWideChange);
-
-  /* ── views ── */
-
-  function render(){
-    clearSpinner();
-    contentEl.scrollTop = 0;
-    switch (ST.view){
-      case "menu":     vMenu(); break;
-      case "about":    vAbout(); break;
-      case "projects": vProjects(); break;
-      case "project":  vProject(); break;
-      case "now":      vNow(); break;
-      case "contact":  vContact(); break;
-      case "coffee":   vCoffee(); break;
-      case "closed":   vClosed(); return;
-    }
-    refreshPreview();
-  }
-
-  function vMenu(){
-    var w = frame("<b>georgenijo.com</b> ~", false);
-    w.appendChild(h("p", "vtitle", "hi, i'm george."));
-    w.appendChild(h("p", "vsub", "software engineer · boston · pick a door"));
-    addRows(w, MENU.map(function(m){
-      return {t:m.t, d:m.d, on:function(){ go(m.id); }};
-    }), "menu");
-    setStatus(stdHints(true));
-  }
-
-  function vAbout(){
-    var w = frame("<b>~</b> / about", true);
-    w.appendChild(h("p", "vtitle", "about"));
-    w.appendChild(h("p", "vsub", "whoami"));
-    if (!wide()) buildAbout(w);
-    addRows(w, [
-      {t:"see the projects", act:true, on:function(){ go("projects"); }},
-      {t:"← back", on:back}
-    ], "about");
-    setStatus(stdHints(false));
-  }
-
-  function filteredProjects(){
-    var q = ST.filterText.trim().toLowerCase();
-    if (!q) return PROJECTS;
-    return PROJECTS.filter(function(p){
-      return (p.name + " " + p.tag + " " + p.lang).toLowerCase().indexOf(q) !== -1;
-    });
-  }
-
-  function vProjects(){
-    var w = frame("<b>~</b> / projects", true);
-    w.appendChild(h("p", "vtitle", "projects"));
-    w.appendChild(h("p", "vsub", PROJECTS.length + " items · enter for details"));
-
-    if (ST.filterOn){
-      var fb = h("div", "filterbar", '<span class="sig">/</span>');
-      var inp = document.createElement("input");
-      inp.id = "flt";
-      inp.value = ST.filterText;
-      inp.placeholder = "filter projects…";
-      inp.setAttribute("aria-label", "Filter projects");
-      inp.addEventListener("input", function(){
-        ST.filterText = inp.value;
-        rebuildProjectRows(w);
-      });
-      fb.appendChild(inp);
-      w.appendChild(fb);
-    }
-
-    var host = h("div");
-    host.id = "projrows";
-    w.appendChild(host);
-    rebuildProjectRows(w);
-
-    if (ST.filterOn){
-      var el = document.getElementById("flt");
-      if (el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
-    }
-    setStatus(stdHints(true, true));
-  }
-
-  function rebuildProjectRows(){
-    var host = document.getElementById("projrows");
-    if (!host) return;
-    host.innerHTML = "";
-    ST.rows = [];
-    var list = filteredProjects();
-    if (!list.length){
-      host.appendChild(h("div", "nores", "nothing matches “" + ST.filterText.replace(/</g,"&lt;") + "” — esc to clear"));
-      return;
-    }
-    var box = h("div", "rows");
-    list.forEach(function(p){
-      var idx = ST.rows.length;
-      var spec = {
-        t: p.name, d: p.tag, aux: p.lang,
-        on: function(){ go("project", {proj: p.name}); }
-      };
-      var el = makeRow(spec, idx);
-      ST.rows.push({el:el, on:spec.on});
-      box.appendChild(el);
-    });
-    host.appendChild(box);
-    var saved = ST.cursors["projects"];
-    ST.cursor = (!ST.filterText && typeof saved === "number" && saved < ST.rows.length) ? saved : 0;
-    paintCursor();
-  }
-
-  function vProject(){
-    var p = projByName(ST.proj);
-    if (!p) return go("projects");
-    var w = frame("<b>~</b> / projects / " + p.name, true);
-    w.appendChild(h("p", "vtitle", p.name + ' &nbsp;<span class="badge">' + p.lang + "</span>"));
-    w.appendChild(h("p", "vsub", p.tag));
-    if (!wide()) buildProjectDetail(w, p);
-    addRows(w, [
-      {t:"open github.com/georgenijo/" + p.name + " ↗", act:true, href: GH + "/" + p.name},
-      {t:"← back to projects", on:back}
-    ], "project:" + p.name);
-    setStatus(stdHints(false));
-  }
-
-  function vNow(){
-    var w = frame("<b>~</b> / now", true);
-    w.appendChild(h("p", "vtitle", "now"));
-    w.appendChild(h("p", "vsub", "updated june 2026"));
-    if (!wide()) buildNow(w);
-    addRows(w, [
-      {t:"browse the parts", act:true, on:function(){ go("projects"); }},
-      {t:"← back", on:back}
-    ], "now");
-    setStatus(stdHints(false));
-  }
-
-  function vContact(){
-    var w = frame("<b>~</b> / contact", true);
-    w.appendChild(h("p", "vtitle", "contact"));
-    w.appendChild(h("p", "vsub", "no forms, no funnels — just these two"));
-    addRows(w, CONTACT.concat([{t:"← back", on:back}]), "contact");
-    setStatus(stdHints(false));
-  }
-
-  function vCoffee(){
-    var w = frame("<b>~</b> / coffee", true);
-    w.appendChild(h("p", "vtitle", "coffee"));
-    w.appendChild(h("p", "vsub", "cream & sugar over port 22"));
-    if (!wide()) buildCoffee(w);
-    addRows(w, [
-      {t: ST.coffeeTried ? "try ordering again (it won't help)" : "place order", act:true,
-       on:function(){ ST.coffeeTried = true; render(); }},
-      {t:"← back", on:back}
-    ], "coffee");
-    setStatus(stdHints(false));
-  }
-
-  function vClosed(){
-    clearSpinner();
-    crumbEl.innerHTML = "";
-    hdrBack.hidden = true;
-    appEl.hidden = true;
-    bootWrap.hidden = false;
-    bootPre.innerHTML = "";
-    bootWrap.innerHTML =
-      '<div class="closed reveal">' +
-      '<p class="msg">Connection to georgenijo.com closed.</p>' +
-      '<p>Thanks for stopping by.</p>' +
-      '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh georgenijo.com  (reconnect)</button>' +
-      "</div>";
-    var b = document.getElementById("reconn");
-    b.addEventListener("click", restart);
-    b.focus();
-  }
-
-  function restart(){
-    bootWrap.innerHTML = "";
-    var pre = document.createElement("pre");
-    pre.id = "bootpre";
-    bootWrap.appendChild(pre);
-    bootPre = pre;
-    ST.view = "menu"; ST.cursors = {};
-    runBoot();
-  }
-
-  /* ───────────────────────── filter helpers ───────────────────────── */
-
-  function openFilter(){
-    if (ST.view !== "projects") return;
-    ST.filterOn = true;
-    render();
-  }
-
-  function closeFilter(){
-    ST.filterOn = false; ST.filterText = "";
-    render();
-  }
-
-  /* ───────────────────────── input ───────────────────────── */
-
-  hdrBack.addEventListener("click", back);
-  bootWrap.addEventListener("click", function(){ if (booting) skipBoot(); });
-
-  window.addEventListener("keydown", function(e){
-    if (booting){
-      if (e.key !== "Shift" && e.key !== "Meta" && e.key !== "Control" && e.key !== "Alt"){
-        skipBoot();
-      }
-      return;
-    }
-
-    // filter input has focus: only intercept Escape / Enter
-    if (e.target && e.target.id === "flt"){
-      if (e.key === "Escape"){ e.preventDefault(); closeFilter(); }
-      else if (e.key === "Enter"){
-        e.preventDefault();
-        e.target.blur();
-        contentEl.focus({preventScroll:true});
-      }
-      return;
-    }
-
-    if (ST.view === "closed"){
-      if (e.key === "Enter" || e.key.toLowerCase() === "r"){ e.preventDefault(); restart(); }
-      return;
-    }
-
-    var k = e.key;
-    if (k === "ArrowDown" || k === "j"){
-      e.preventDefault();
-      if (ST.rows.length){ ST.cursor = Math.min(ST.cursor + 1, ST.rows.length - 1); paintCursor(); }
-    } else if (k === "ArrowUp" || k === "k"){
-      e.preventDefault();
-      if (ST.rows.length){ ST.cursor = Math.max(ST.cursor - 1, 0); paintCursor(); }
-    } else if (k === "Enter"){
-      var r = ST.rows[ST.cursor];
-      if (!r) return;
-      // if the row itself is focused, let the browser handle activation natively
-      if (document.activeElement === r.el) return;
-      e.preventDefault();
-      if (r.href){ r.el.click(); }
-      else if (r.on){ r.on(); }
-    } else if (k === "Escape"){
-      e.preventDefault(); back();
-    } else if (k === "q" && !e.metaKey && !e.ctrlKey && !e.altKey){
-      e.preventDefault(); quit();
-    } else if (k === "/" && (ST.view === "projects")){
-      e.preventDefault(); openFilter();
-    } else if (k === "Home" && ST.rows.length){
-      e.preventDefault(); ST.cursor = 0; paintCursor();
-    } else if (k === "End" && ST.rows.length){
-      e.preventDefault(); ST.cursor = ST.rows.length - 1; paintCursor();
-    }
+"use strict";
+var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+var FINE = matchMedia("(pointer:fine)").matches;
+
+/* ── live layer: cursor takeover ────────────────────────────────
+   One fixed element, lerped toward the pointer each frame. Default
+   state is a blinking ink caret (the terminal cursor escaped into
+   the page); over anything interactive it opens into a ring with a
+   "›". mix-blend-mode:difference inverts whatever sits under it —
+   readable on cream, ink, and vermilion alike, and it never
+   obscures text the way a trail did. Touch devices keep the native
+   cursor untouched. */
+var curEl=document.getElementById("cur");
+if(FINE){
+  var cx=-100,cy=-100,px=-100,py=-100,shown=false;
+  addEventListener("pointermove",function(e){
+    cx=e.clientX;cy=e.clientY;
+    if(!shown){shown=true;px=cx;py=cy;curEl.hidden=false;}
+  },{passive:true});
+  document.addEventListener("pointerleave",function(){shown=false;curEl.hidden=true;});
+  addEventListener("pointerdown",function(){curEl.classList.add("down");});
+  addEventListener("pointerup",function(){curEl.classList.remove("down");});
+  document.addEventListener("pointerover",function(e){
+    var hit=e.target.closest&&e.target.closest("a,button,.row,input,kbd");
+    curEl.classList.toggle("on",!!hit);
   });
+  (function curLoop(){
+    var k=RM?1:0.35;
+    px+=(cx-px)*k;py+=(cy-py)*k;
+    curEl.style.transform="translate("+px+"px,"+py+"px)";
+    requestAnimationFrame(curLoop);
+  })();
+}
 
-  /* ───────────────────────── go ───────────────────────── */
-  runBoot();
+/* ── content (mirrors ssh-tui/content.go) ───────────────────── */
+var GH = "https://github.com/georgenijo";
+var PROJECTS = [
+  {name:"nadirclaw",   lang:"Python",     tag:"LLM router & cost optimizer",
+   desc:"Routes every prompt to the cheapest model that can actually handle it. Scores request complexity, tracks per-provider spend in real time, and fails over cleanly when a provider rate-limits."},
+  {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
+   desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine."},
+  {name:"usher",       lang:"Go",         tag:"MCP broker",
+   desc:"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
+  {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
+   desc:"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
+  {name:"omen",        lang:"Rust",       tag:"Code intel for AI agents",
+   desc:"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
+  {name:"hermes-agent",lang:"Python",     tag:"Errand-running personal agent",
+   desc:"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
+  {name:"fleetmap",    lang:"Go",         tag:"Live map of running agents",
+   desc:"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
+  {name:"gauge",       lang:"Go",         tag:"Eval harness for agent stacks",
+   desc:"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
+  {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
+   desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."},
+  {name:"star-maker",  lang:"Python",     tag:"Constellations from your data",
+   desc:"Turns any dataset into a navigable night sky. Mostly an excuse to draw stars with math."}
+];
+var MENU = [
+  {id:"about",    t:"about",    d:"who's at the keyboard"},
+  {id:"projects", t:"projects", d:"ten repos, four languages"},
+  {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
+  {id:"contact",  t:"contact",  d:"say hello"}
+];
+var ABOUT_HTML =
+  '<p><span class="hl">George Nijo</span> — software engineer in Boston.</p>'+
+  '<p>I build infrastructure for AI agents: LLM routers, MCP brokers, and agent control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable.</p>'+
+  '<p>Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>'+
+  '<p class="dim">Python · Go · Rust · just enough Swift</p>';
+var NOW_HTML =
+  '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
+  '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
+  '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
+  '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>';
+var CONTACT_HTML =
+  '<p class="dim">no forms, no funnels — just these two:</p>'+
+  '<div class="kv"><span class="k">mailto</span><span class="hl">george.nijo8@gmail.com</span></div>'+
+  '<div class="kv"><span class="k">https</span><span class="hl">github.com/georgenijo</span></div>';
+
+/* ── boot ───────────────────────────────────────────────────── */
+var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById("boot"),
+    appEl=document.getElementById("app"), booting=false, bootSkip=false;
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var BOOT_LINES=[
+  {h:'<span class="b-dim">Connecting to georgenijo.com port 22.</span>',w:240},
+  {h:'<span class="b-dim">Host key:</span> ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU <span class="b-ok">✓ known</span>',w:300},
+  {h:'<span class="b-ok">Authenticated to georgenijo.com (via publickey).</span>',w:340}
+];
+function sleep(ms){return new Promise(function(res){ if(bootSkip||RM) return res(); setTimeout(res,ms); });}
+function runBoot(){
+  booting=true; bootSkip=false;
+  appEl.hidden=true; bootWrap.hidden=false; bootPre.innerHTML="";
+  var CMD="ssh georgenijo.com", html='<span class="prompt-sig">➜ ~ $</span> ';
+  bootPre.innerHTML=html+'<span class="cur-b"></span>';
+  var p=Promise.resolve();
+  CMD.split("").forEach(function(ch,i){
+    p=p.then(function(){return sleep(30).then(function(){
+      html='<span class="prompt-sig">➜ ~ $</span> '+esc(CMD.slice(0,i+1));
+      bootPre.innerHTML=html+'<span class="cur-b"></span>';
+    });});
+  });
+  p=p.then(function(){return sleep(280);});
+  BOOT_LINES.forEach(function(line){
+    p=p.then(function(){return sleep(line.w).then(function(){
+      html+="\n"+line.h;
+      bootPre.innerHTML=html+'\n<span class="cur-b"></span>';
+    });});
+  });
+  p.then(function(){return sleep(260);}).then(function(){
+    bootPre.innerHTML=html+
+      '<div class="masthead">George <em>Nijo</em></div>'+
+      '<div class="motd-tag">software engineer · boston · agent infrastructure</div>';
+    return sleep(950);
+  }).then(function(){
+    booting=false; bootWrap.hidden=true; appEl.hidden=false; go("menu");
+  });
+}
+function skipBoot(){ bootSkip=true; }
+
+/* ── TUI state (same machine as production index.html) ──────── */
+var pageEl=document.getElementById("page"), crumbEl=document.getElementById("crumb"),
+    statusEl=document.getElementById("status");
+var ST={view:"menu",proj:null,rows:[],cursor:0,cursors:{}};
+var PARENT={about:"menu",projects:"menu",now:"menu",contact:"menu",project:"projects",menu:null,closed:null};
+
+function projByName(n){for(var i=0;i<PROJECTS.length;i++)if(PROJECTS[i].name===n)return PROJECTS[i];return null;}
+function projDetailHTML(p){
+  return "<p>"+p.desc+"</p>"+
+    '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/'+p.name+'</span></div>'+
+    '<div class="kv"><span class="k">lang</span><span class="dim">'+p.lang+"</span></div>";
+}
+function go(view,opts){opts=opts||{};ST.cursors[viewKey()]=ST.cursor;ST.view=view;if("proj" in opts)ST.proj=opts.proj;render();}
+function viewKey(){return ST.view==="project"?"project:"+(ST.proj||""):ST.view;}
+function back(){var p=PARENT[ST.view];if(p)go(p);}
+function quit(){ST.cursors={};ST.view="closed";render();}
+
+function h(tag,cls,htmlStr){var el=document.createElement(tag);if(cls)el.className=cls;if(htmlStr!=null)el.innerHTML=htmlStr;return el;}
+function makeRow(spec,idx){
+  var el;
+  if(spec.href){el=h("a","row");el.href=spec.href;el.target="_blank";el.rel="noopener";}
+  else{el=h("button","row");el.type="button";}
+  var inner="";
+  if(spec.num)inner+='<span class="num">'+spec.num+"</span>";
+  inner+='<span class="tx"><span class="t">'+spec.t+"</span>";
+  if(spec.d&&spec.dInline)inner+=' <span class="d">'+spec.d+"</span>";
+  inner+="</span>";
+  if(spec.d&&!spec.dInline)inner+='<span class="d">'+spec.d+"</span>";
+  if(spec.aux)inner+='<span class="aux">'+spec.aux+"</span>";
+  el.innerHTML=inner;
+  el.addEventListener("click",function(){
+    ST.cursor=idx;paintCursor();
+    if(!spec.href&&spec.on)spec.on();
+  });
+  el.addEventListener("focus",function(){ST.cursor=idx;paintCursor();});
+  return el;
+}
+function scrollNear(el){
+  var top=el.offsetTop-pageEl.offsetTop, bot=top+el.offsetHeight;
+  if(top<pageEl.scrollTop)pageEl.scrollTop=top;
+  else if(bot>pageEl.scrollTop+pageEl.clientHeight)pageEl.scrollTop=bot-pageEl.clientHeight;
+}
+function paintCursor(){
+  ST.rows.forEach(function(r,i){r.el.classList.toggle("sel",i===ST.cursor);});
+  var cur=ST.rows[ST.cursor];
+  if(cur)scrollNear(cur.el);
+}
+function setStatus(hints){
+  statusEl.innerHTML="";
+  hints.forEach(function(hnt){
+    if(hnt.on){
+      var b=h("button","hint");b.type="button";
+      b.innerHTML="<kbd>"+hnt.k+"</kbd> "+hnt.l;
+      b.addEventListener("click",hnt.on);statusEl.appendChild(b);
+    } else statusEl.appendChild(h("span","hint","<kbd>"+hnt.k+"</kbd> "+hnt.l));
+  });
+}
+function stdHints(list){
+  var hints=[];
+  if(list)hints.push({k:"↑/↓",l:"navigate"},{k:"enter",l:"select"});
+  if(PARENT[ST.view])hints.push({k:"esc",l:"back",on:back});
+  hints.push({k:"q",l:"quit",on:quit});
+  return hints;
+}
+function frame(crumb){
+  crumbEl.innerHTML=crumb;
+  pageEl.innerHTML="";ST.rows=[];
+  var wrap=h("div","reveal sheet");pageEl.appendChild(wrap);return wrap;
+}
+function addRows(wrap,specs,restoreKey,cls){
+  var box=h("div","rows"+(cls?" "+cls:""));
+  specs.forEach(function(s){
+    var idx=ST.rows.length;
+    var el=makeRow(s,idx);
+    ST.rows.push({el:el,on:s.on,href:s.href});
+    box.appendChild(el);
+  });
+  wrap.appendChild(box);
+  var saved=ST.cursors[restoreKey];
+  ST.cursor=(typeof saved==="number"&&saved<ST.rows.length)?saved:0;
+  paintCursor();
+}
+function pad2(n){return (n<10?"0":"")+n;}
+
+/* ── views ──────────────────────────────────────────────────── */
+function render(){
+  pageEl.scrollTop=0;
+  switch(ST.view){
+    case "menu":vMenu();break;
+    case "about":vSheet("about","whoami",ABOUT_HTML);break;
+    case "projects":vProjects();break;
+    case "project":vProject();break;
+    case "now":vSheet("now","updated july 2026",NOW_HTML);break;
+    case "contact":vSheet("contact","say hello",CONTACT_HTML);break;
+    case "closed":vClosed();return;
+  }
+}
+function vMenu(){
+  var w=frame("<b>georgenijo.com</b> ~");
+  w.appendChild(h("p","vkick","index <span class='n'>·</span> software engineer · boston"));
+  addRows(w,MENU.map(function(m,i){
+    return {num:pad2(i+1),t:m.t,d:m.d,on:function(){go(m.id);}};
+  }),"menu","index");
+  setStatus(stdHints(true));
+}
+function vSheet(id,sub,body){
+  var w=frame("<b>~</b> / "+id);
+  w.appendChild(h("p","vkick",sub));
+  w.appendChild(h("p","vtitle",id));
+  w.appendChild(h("div","slip",body));
+  addRows(w,[
+    {t:"see the projects",on:function(){go("projects");}},
+    {t:"back to index",on:back}
+  ],id,"acts");
+  setStatus(stdHints(false));
+}
+function vProjects(){
+  var w=frame("<b>~</b> / projects");
+  w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · four languages"));
+  w.appendChild(h("p","vtitle","projects"));
+  addRows(w,PROJECTS.map(function(p,i){
+    return {num:pad2(i+1),t:p.name,d:p.tag,dInline:true,aux:p.lang,
+            on:function(){go("project",{proj:p.name});}};
+  }),"projects","ledger");
+  setStatus(stdHints(true));
+}
+function vProject(){
+  var p=projByName(ST.proj);
+  if(!p)return go("projects");
+  var w=frame("<b>~</b> / projects / "+p.name);
+  w.appendChild(h("p","vkick",p.tag));
+  w.appendChild(h("p","vtitle",p.name+' <span class="badge">'+p.lang+"</span>"));
+  w.appendChild(h("div","slip",projDetailHTML(p)));
+  addRows(w,[
+    {t:"open github.com/georgenijo/"+p.name+" ↗",href:GH+"/"+p.name},
+    {t:"back to projects",on:back}
+  ],"project:"+p.name,"acts");
+  setStatus(stdHints(false));
+}
+function vClosed(){
+  crumbEl.innerHTML="";appEl.hidden=true;
+  bootWrap.hidden=false;
+  bootWrap.innerHTML='<div class="closed reveal">'+
+    '<p class="msg">Connection to georgenijo.com closed.</p>'+
+    '<p>Thanks for stopping by.</p>'+
+    '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh georgenijo.com  (reconnect)</button></div>';
+  var b=document.getElementById("reconn");
+  b.addEventListener("click",restart);b.focus();
+}
+function restart(){
+  bootWrap.innerHTML="";
+  var pre=document.createElement("pre");pre.id="bootpre";
+  bootWrap.appendChild(pre);bootPre=pre;
+  ST.view="menu";ST.cursors={};runBoot();
+}
+
+/* ── input ──────────────────────────────────────────────────── */
+bootWrap.addEventListener("click",function(){if(booting)skipBoot();});
+window.addEventListener("keydown",function(e){
+  if(booting){skipBoot();return;}
+  if(ST.view==="closed"){
+    if(e.key==="Enter"||e.key.toLowerCase()==="r"){e.preventDefault();restart();}
+    return;
+  }
+  var k=e.key;
+  if(k==="ArrowDown"||k==="j"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.min(ST.cursor+1,ST.rows.length-1);paintCursor();}}
+  else if(k==="ArrowUp"||k==="k"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.max(ST.cursor-1,0);paintCursor();}}
+  else if(k==="Enter"){
+    var r=ST.rows[ST.cursor];if(!r)return;
+    if(document.activeElement===r.el)return;
+    e.preventDefault();
+    if(r.href)r.el.click();else if(r.on)r.on();
+  }
+  else if(k==="Escape"){e.preventDefault();back();}
+  else if(k==="q"&&!e.metaKey&&!e.ctrlKey&&!e.altKey){e.preventDefault();quit();}
+});
+
+runBoot();
 })();
 </script>
 </body>
