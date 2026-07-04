@@ -90,10 +90,10 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("timed out waiting for %q; got:\n%s", what, snapshot())
 	}
 
-	// MOTD wordmark and menu must show up.
-	waitFor("██████", 10*time.Second)      // gradient ASCII banner
-	waitFor("pick a door", 10*time.Second) // menu subtitle
-	waitFor("who's at the keyboard", 5*time.Second)
+	// MOTD masthead and menu must show up.
+	waitFor("GEORGE NIJO", 10*time.Second)           // masthead wordmark
+	waitFor("agent infrastructure", 10*time.Second)  // masthead tagline
+	waitFor("who's at the keyboard", 10*time.Second) // menu row
 
 	// Navigate: j (down to projects), enter — expect the projects list.
 	if _, err := stdin.Write([]byte("j")); err != nil {
@@ -103,7 +103,7 @@ func TestEndToEnd(t *testing.T) {
 	if _, err := stdin.Write([]byte("\r")); err != nil {
 		t.Fatal(err)
 	}
-	waitFor("enter for details", 5*time.Second)
+	waitFor("ledger", 5*time.Second) // projects breadcrumb
 	waitFor("nadirclaw", 5*time.Second)
 
 	// q must disconnect cleanly with the goodbye line.

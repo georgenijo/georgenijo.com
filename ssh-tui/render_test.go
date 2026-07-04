@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -66,9 +67,14 @@ func TestRenderSnapshots(t *testing.T) {
 	dump("project detail narrow", press(t, nm, "j", "enter", "enter"))
 	dump("about narrow", press(t, nm, "enter"))
 
-	if err := os.WriteFile("/tmp/claude-1000/-home-george-Documents-code/bb95bdb8-b9a5-4451-9d10-69d7b66d55f2/scratchpad/snapshots.txt", []byte(b.String()), 0o644); err != nil {
+	out := os.Getenv("SNAPSHOT_OUT")
+	if out == "" {
+		out = filepath.Join(t.TempDir(), "snapshots.txt")
+	}
+	if err := os.WriteFile(out, []byte(b.String()), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	t.Logf("snapshots written to %s", out)
 }
 
 // TestInteraction covers the core key flows.
