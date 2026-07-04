@@ -104,7 +104,7 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatal(err)
 	}
 	waitFor("ledger", 5*time.Second) // projects breadcrumb
-	waitFor("nadirclaw", 5*time.Second)
+	waitFor("agent-mesh", 5*time.Second)
 
 	// q must disconnect cleanly with the goodbye line.
 	if _, err := stdin.Write([]byte("q")); err != nil {

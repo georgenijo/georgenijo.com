@@ -219,7 +219,7 @@
   .slip .hl{color:var(--accent);}
   .slip .dim{color:var(--muted);}
   .kv{display:flex;gap:12px;margin:3px 0;font-size:15px;}
-  .kv .k{color:var(--faint);flex:none;min-width:7ch;}
+  .kv .k{color:var(--faint);flex:none;min-width:10ch;}
   .badge{
     display:inline-block;font-size:.6em;color:var(--fg);
     border:1px solid var(--border);padding:2px 8px;vertical-align:6px;
@@ -310,30 +310,28 @@ if(FINE){
 /* ── content (mirrors ssh-tui/content.go) ───────────────────── */
 var GH = "https://github.com/georgenijo";
 var PROJECTS = [
-  {name:"nadirclaw",   lang:"Python",     tag:"LLM router & cost optimizer",
-   desc:"Routes every prompt to the cheapest model that can actually handle it. Scores request complexity, tracks per-provider spend in real time, and fails over cleanly when a provider rate-limits."},
-  {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
-   desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine."},
+  {name:"agent-mesh",  lang:"Go",         tag:"Coordination layer for agents",
+   desc:"A shared nervous system for the coding agents on your machine. Claude Code, Codex, and Cursor discover each other, lock files instead of fighting over them, and trade notes on a blackboard — one mesh CLI runs it all."},
   {name:"usher",       lang:"Go",         tag:"MCP broker",
    desc:"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
   {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
    desc:"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
-  {name:"omen",        lang:"Rust",       tag:"Code intel for AI agents",
-   desc:"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
-  {name:"hermes-agent",lang:"Python",     tag:"Errand-running personal agent",
-   desc:"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
-  {name:"fleetmap",    lang:"Go",         tag:"Live map of running agents",
-   desc:"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
-  {name:"gauge",       lang:"Go",         tag:"Eval harness for agent stacks",
-   desc:"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
+  {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
+   desc:"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine. A native Swift sibling does the low-level driving."},
+  {name:"murmur-app",  lang:"Rust",       tag:"Local voice-to-text for macOS",
+   desc:"Hold a key, speak, release — the words land in whatever app has focus. whisper.cpp on the GPU; no cloud, no subscription, nothing leaves the machine."},
+  {name:"fleetmap",    lang:"Swift",      tag:"Live map of what your Mac runs",
+   desc:"Every process as a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what is running; this shows what is talking to what."},
+  {name:"gauge",       lang:"Swift",      tag:"Claude usage in the menu bar",
+   desc:"A one-purpose menu-bar meter: session and weekly limits, pace until reset, and spend estimated from local logs. Know the budget before the model does."},
+  {name:"whoop-dashboard",lang:"TypeScript",tag:"Health analytics with an AI coach",
+   desc:"WHOOP sleep, strain, and recovery in one dashboard, with a Claude coach that reads the trends and talks back."},
   {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
-   desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."},
-  {name:"star-maker",  lang:"Python",     tag:"Constellations from your data",
-   desc:"Turns any dataset into a navigable night sky. Mostly an excuse to draw stars with math."}
+   desc:"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."}
 ];
 var MENU = [
   {id:"about",    t:"about",    d:"who's at the keyboard"},
-  {id:"projects", t:"projects", d:"ten repos, four languages"},
+  {id:"projects", t:"projects", d:"nine repos, five languages"},
   {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
   {id:"contact",  t:"contact",  d:"say hello"}
 ];
@@ -346,7 +344,7 @@ var NOW_HTML =
   '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
   '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
   '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
-  '<div class="kv"><span class="k">omen</span><span class="dim">context packing that fits the window</span></div>';
+  '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>';
 var CONTACT_HTML =
   '<p class="dim">no forms, no funnels — just these two:</p>'+
   '<div class="kv"><span class="k">mailto</span><span class="hl">george.nijo8@gmail.com</span></div>'+
@@ -510,7 +508,7 @@ function vSheet(id,sub,body){
 }
 function vProjects(){
   var w=frame("<b>~</b> / projects");
-  w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · four languages"));
+  w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · five languages"));
   w.appendChild(h("p","vtitle","projects"));
   addRows(w,PROJECTS.map(function(p,i){
     return {num:pad2(i+1),t:p.name,d:p.tag,dInline:true,aux:p.lang,

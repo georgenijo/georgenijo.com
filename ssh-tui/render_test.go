@@ -98,8 +98,8 @@ func TestInteraction(t *testing.T) {
 	}
 	// enter on a project opens detail
 	m5 := press(t, m, "j", "enter", "j", "j", "enter")
-	if m5.view != viewProject || m5.projName != "usher" {
-		t.Fatalf("expected usher detail, got view=%v proj=%q", m5.view, m5.projName)
+	if m5.view != viewProject || m5.projName != "hangar" {
+		t.Fatalf("expected hangar detail, got view=%v proj=%q", m5.view, m5.projName)
 	}
 	// coffee gag toggles
 	m6 := press(t, m, "j", "j", "j", "j", "enter", "enter")

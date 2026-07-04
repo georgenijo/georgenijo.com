@@ -13,26 +13,24 @@ type project struct {
 }
 
 var projects = []project{
-	{"nadirclaw", "Python", "LLM router & cost optimizer",
-		"Routes every prompt to the cheapest model that can actually handle it. Scores request complexity, tracks per-provider spend in real time, and fails over cleanly when a provider rate-limits."},
-	{"ghosthands", "Python", "Local computer-use for macOS",
-		"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine."},
+	{"agent-mesh", "Go", "Coordination layer for agents",
+		"A shared nervous system for the coding agents on your machine. Claude Code, Codex, and Cursor discover each other, lock files instead of fighting over them, and trade notes on a blackboard — one mesh CLI runs it all."},
 	{"usher", "Go", "MCP broker",
 		"One MCP endpoint that fans out to many servers. Handles auth, health checks, and tool-name collisions so agents see a single clean catalog."},
 	{"hangar", "Rust", "Agent control plane",
 		"Where agents live between jobs. Scheduling, budgets, kill switches, and an audit log for every tool call a fleet makes."},
-	{"omen", "Rust", "Code intel for AI agents",
-		"Feeds an agent the ten lines that matter instead of the whole repo. Symbol graphs, blast-radius queries, and context packing tuned for LLM windows."},
-	{"hermes-agent", "Python", "Errand-running personal agent",
-		"A daemon that reads the inbox, watches the calendar, and drafts the boring replies. Sandboxed tools; a human signs off on anything that sends."},
-	{"fleetmap", "Go", "Live map of running agents",
-		"One screen showing every agent, what it is doing, and what it is spending. The ops view an agent fleet deserves."},
-	{"gauge", "Go", "Eval harness for agent stacks",
-		"Replayable scenario suites for routers, brokers, and agents. Catch the regression before it pages you."},
+	{"ghosthands", "Python", "Local computer-use for macOS",
+		"Drives the Mac desktop with local models: screenshots in, accessibility-tree actions out. Nothing between your screen and the agent leaves the machine. A native Swift sibling does the low-level driving."},
+	{"murmur-app", "Rust", "Local voice-to-text for macOS",
+		"Hold a key, speak, release — the words land in whatever app has focus. whisper.cpp on the GPU; no cloud, no subscription, nothing leaves the machine."},
+	{"fleetmap", "Swift", "Live map of what your Mac runs",
+		"Every process as a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what is running; this shows what is talking to what."},
+	{"gauge", "Swift", "Claude usage in the menu bar",
+		"A one-purpose menu-bar meter: session and weekly limits, pace until reset, and spend estimated from local logs. Know the budget before the model does."},
+	{"whoop-dashboard", "TypeScript", "Health analytics with an AI coach",
+		"WHOOP sleep, strain, and recovery in one dashboard, with a Claude coach that reads the trends and talks back."},
 	{"aperture", "Swift", "iOS film camera",
 		"A film camera in your pocket: fixed stocks, 36 exposures, no preview until the roll is developed. Patience as a feature."},
-	{"star-maker", "Python", "Constellations from your data",
-		"Turns any dataset into a navigable night sky. Mostly an excuse to draw stars with math."},
 }
 
 func projByName(name string) *project {
@@ -52,7 +50,7 @@ type menuItem struct {
 
 var menuItems = []menuItem{
 	{"about", "about", "who's at the keyboard"},
-	{"projects", "projects", "ten repos, four languages"},
+	{"projects", "projects", "nine repos, five languages"},
 	{"now", "now", "what's cooking — AgentOS"},
 	{"contact", "contact", "say hello"},
 	{"coffee", "coffee", "order a cup over ssh"},

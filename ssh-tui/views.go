@@ -106,7 +106,7 @@ func (m model) crumbText() string {
 	case viewMenu:
 		return ""
 	case viewProjects:
-		return fmt.Sprintf("~ / projects — ledger · %d repos · four languages", len(projects))
+		return fmt.Sprintf("~ / projects — ledger · %d repos · five languages", len(projects))
 	case viewProject:
 		return "~ / projects / " + m.projName
 	default:
@@ -248,9 +248,10 @@ func aboutText(st *styles) string {
 
 func nowText(st *styles, spin int) string {
 	p1 := "Heads-down on AgentOS — one control plane for the agents that run my code, my inbox, and (eventually) the house."
-	kvs := kvLine(st, "hangar", st.dim.Render("scheduling + budgets for long-lived agents")) + "\n" +
-		kvLine(st, "usher", st.dim.Render("auth story for brokered MCP servers")) + "\n" +
-		kvLine(st, "omen", st.dim.Render("context packing that fits the window"))
+	kv := func(k, v string) string { return st.faint.Render(padTo(k, 10)) + " " + st.dim.Render(v) }
+	kvs := kv("hangar", "scheduling + budgets for long-lived agents") + "\n" +
+		kv("usher", "auth story for brokered MCP servers") + "\n" +
+		kv("agent-mesh", "keeping parallel agents out of each other's files")
 	spinner := st.dim.Render(spinFrames[spin%len(spinFrames)] + " agents working…")
 	return p1 + "\n\n" + kvs + "\n\n" + spinner
 }
