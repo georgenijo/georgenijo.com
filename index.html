@@ -411,6 +411,7 @@ var MENU = [
   {id:"about",    t:"about",    d:"who's at the keyboard"},
   {id:"projects", t:"projects", d:"nine repos, five languages"},
   {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
+  {id:"burn",     t:"burn log", d:"tokens · models · commits", href:"./burn.html"},
   {id:"contact",  t:"contact",  d:"say hello"}
 ];
 var ABOUT_HTML =
@@ -422,7 +423,8 @@ var NOW_HTML =
   '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
   '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
   '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
-  '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>';
+  '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>'+
+  '<p class="dim">→ <a href="./burn.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px">burn log</a> — tokens · models · commits — 6.72B total · 30-day line · ship notes</p>';
 var CONTACT_INTRO = '<p class="dim">no forms, no funnels — just these three:</p>';
 
 /* ── boot ───────────────────────────────────────────────────── */
@@ -603,6 +605,7 @@ function vMenu(){
   var w=frame("<b>georgenijo.com</b> ~");
   w.appendChild(h("p","vkick","index <span class='n'>·</span> software engineer · boston"));
   addRows(w,MENU.map(function(m,i){
+    if(m.href) return {num:pad2(i+1),t:m.t,d:m.d,href:m.href};
     return {num:pad2(i+1),t:m.t,d:m.d,on:function(){go(m.id);}};
   }),"menu","index");
   setStatus(stdHints(true));

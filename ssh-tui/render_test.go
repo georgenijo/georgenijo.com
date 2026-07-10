@@ -57,9 +57,10 @@ func TestRenderSnapshots(t *testing.T) {
 	dump("project detail wide", press(t, wm, "j", "enter", "j", "j", "enter"))
 	dump("projects filtered wide", press(t, wm, "j", "enter", "/", "r", "u"))
 	dump("now wide", press(t, wm, "j", "j", "enter"))
-	dump("contact wide", press(t, wm, "j", "j", "j", "enter"))
-	dump("contact url note", press(t, wm, "j", "j", "j", "enter", "enter"))
-	dump("coffee tried wide", press(t, wm, "j", "j", "j", "j", "enter", "enter"))
+	dump("burn wide", press(t, wm, "j", "j", "j", "enter"))
+	dump("contact wide", press(t, wm, "j", "j", "j", "j", "enter"))
+	dump("contact url note", press(t, wm, "j", "j", "j", "j", "enter", "enter"))
+	dump("coffee tried wide", press(t, wm, "j", "j", "j", "j", "j", "enter", "enter"))
 
 	nm := testModel(80, 24)
 	dump("menu narrow 80x24", nm)
@@ -101,13 +102,18 @@ func TestInteraction(t *testing.T) {
 	if m5.view != viewProject || m5.projName != "hangar" {
 		t.Fatalf("expected hangar detail, got view=%v proj=%q", m5.view, m5.projName)
 	}
-	// coffee gag toggles
-	m6 := press(t, m, "j", "j", "j", "j", "enter", "enter")
+	// coffee gag toggles (menu now: about, projects, now, burn, contact, coffee)
+	m6 := press(t, m, "j", "j", "j", "j", "j", "enter", "enter")
 	if !m6.coffeeTried {
 		t.Fatal("coffee order should set coffeeTried")
 	}
 	if v := press(t, m6, "esc"); v.coffeeTried {
 		t.Fatal("leaving coffee should reset coffeeTried")
+	}
+	// burn view renders
+	m7 := press(t, m, "j", "j", "j", "enter")
+	if m7.view != viewBurn {
+		t.Fatalf("expected burn view, got %v", m7.view)
 	}
 	// q quits
 	_, cmd := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})

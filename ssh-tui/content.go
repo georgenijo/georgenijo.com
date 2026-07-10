@@ -53,6 +53,7 @@ var menuItems = []menuItem{
 	{"about", "about", "who's at the keyboard"},
 	{"projects", "projects", "nine repos, five languages"},
 	{"now", "now", "what's cooking — AgentOS"},
+	{"burn", "burn log", "tokens · models · commits"},
 	{"contact", "contact", "say hello"},
 	{"coffee", "coffee", "order a cup over ssh"},
 }

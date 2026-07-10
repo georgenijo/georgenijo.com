@@ -339,6 +339,140 @@ func projectTitleLine(st *styles, p *project) string {
 	return st.title.Render(p.Name) + "  " + st.badge.Render("["+p.Lang+"]")
 }
 
+func burnText(st *styles, cw int) string {
+	if burnError != "" {
+		return st.dim.Render("burn data unavailable: "+burnError) + "\n" +
+			st.faint.Render("run scripts/collect-burn.py --fleet && redeploy")
+	}
+	if len(burnData.Last30) == 0 {
+		return st.dim.Render("no burn data — run scripts/collect-burn.py --fleet")
+	}
+	total := fmtTokens(burnData.TotalTokens)
+	var last30Tok int64
+	for _, d := range burnData.Last30 {
+		last30Tok += d.Tokens
+	}
+	// find peak
+	var peak burnDay
+	for _, d := range burnData.Last30 {
+		if d.Tokens > peak.Tokens {
+			peak = d
+		}
+	}
+	models := ""
+	if len(burnData.ByModelTop) > 0 {
+		var parts []string
+		for _, m := range burnData.ByModelTop {
+			parts = append(parts, m.Short)
+		}
+		models = strings.Join(parts, ", ")
+	}
+	// Layout: kv lines
+	lines := []string{
+		kvLine(st, "total", total+" tokens"),
+		kvLine(st, "last 30d", fmtTokens(last30Tok)+" tokens"),
+		kvLine(st, "models", st.dim.Render(models)),
+	}
+	if peak.Date != "" {
+		lines = append(lines, kvLine(st, "peak", st.dim.Render(peak.Date+" · "+fmtTokens(peak.Tokens))))
+	}
+	if burnData.GeneratedAt != "" {
+		lines = append(lines, st.faint.Render("updated "+burnData.GeneratedAt))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func burnChartBlock(st *styles, cw int) string {
+	if len(burnData.Last30) == 0 {
+		return ""
+	}
+	// chart width: use cw-2 for box padding, cap at 72
+	chartW := cw - 4
+	if chartW > 72 {
+		chartW = 72
+	}
+	if chartW < 12 {
+		chartW = 12
+	}
+	// sparkline (one line)
+	spark := burnSparkline(burnData.Last30, chartW)
+	// line chart 6 rows high
+	lineH := 6
+	lineChart := burnLineChart(burnData.Last30, chartW, lineH)
+
+	// labels
+	first := burnData.Last30[0].Date
+	mid := burnData.Last30[len(burnData.Last30)/2].Date
+	last := burnData.Last30[len(burnData.Last30)-1].Date
+	labelLine := st.faint.Render(padTo(first, 12) + padTo(mid, chartW-20) + last)
+
+	// combine
+	peak := burnData.Last30[0]
+	for _, d := range burnData.Last30 {
+		if d.Tokens > peak.Tokens {
+			peak = d
+		}
+	}
+	head := st.faint.Render("30-day burn") + "  " + st.dim.Render(fmtTokens(peak.Tokens)+" peak · "+peak.Date+" · ● = release day")
+
+	barsBlock := ""
+	if len(burnData.ByModelTop) > 0 {
+		// model bars area: each model line 100% - proportional filled with █
+		var maxT int64 = 1
+		for _, m := range burnData.ByModelTop {
+			if m.Tokens > maxT {
+				maxT = m.Tokens
+			}
+		}
+		var lines []string
+		lines = append(lines, "")
+		lines = append(lines, st.faint.Render("by model · tokens"))
+		for i, m := range burnData.ByModelTop {
+			barW := chartW - 22
+			if barW < 8 {
+				barW = 8
+			}
+			fill := int(float64(m.Tokens) / float64(maxT) * float64(barW))
+			if fill < 1 && m.Tokens > 0 {
+				fill = 1
+			}
+			bar := strings.Repeat("█", fill)
+			if i == 0 {
+				bar = st.accent.Render(bar)
+			}
+			remaining := strings.Repeat("░", barW-fill)
+			line := fmt.Sprintf("%02d %s %s%s %s", i+1, padTo(m.Short, 14), bar, st.faint.Render(remaining), fmtTokens(m.Tokens))
+			lines = append(lines, line)
+		}
+		barsBlock = "\n" + strings.Join(lines, "\n")
+	}
+
+	// ship note for peak or most commits day
+	var shipDay *burnDay
+	for i := range burnData.Last30 {
+		d := &burnData.Last30[i]
+		if d.Commits >= 30 {
+			if shipDay == nil || d.Commits > shipDay.Commits {
+				shipDay = d
+			}
+		}
+	}
+	shipNote := ""
+	if shipDay != nil {
+		shipNote = "\n\n" + st.faint.Render(shipDay.Date+" · "+fmtTokens(shipDay.Tokens)+" · "+fmt.Sprintf("%d commits", shipDay.Commits)) +
+			"\n" + st.dim.Render(strings.Join(shipDay.TopRepos, " · "))
+		for _, msg := range shipDay.TopMsgs {
+			shipNote += "\n" + st.fg.Render("· "+msg)
+		}
+	}
+
+	return head + "\n" +
+		st.dim.Render(lineChart) + "\n" +
+		st.dim.Render(spark) + "\n" +
+		labelLine +
+		barsBlock + shipNote
+}
+
 // ── single-column body ───────────────────────────────────────────
 
 func (m model) body(h int) string {
@@ -396,6 +530,13 @@ func (m model) body(h int) string {
 	case viewCoffee:
 		add(st.title.Render("coffee"), "")
 		add(slip(coffeeText(st, m.coffeeTried)), "")
+		add(m.renderRows(cw, 0))
+
+	case viewBurn:
+		add(st.title.Render("burn log"), "")
+		add(slip(burnText(st, slipW)), "")
+		// chart and bars live outside slip so they breathe
+		add("", st.dim.Render(burnChartBlock(st, cw)))
 		add(m.renderRows(cw, 0))
 	}
 
