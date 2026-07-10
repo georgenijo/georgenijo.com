@@ -339,6 +339,16 @@ func projectTitleLine(st *styles, p *project) string {
 	return st.title.Render(p.Name) + "  " + st.badge.Render("["+p.Lang+"]")
 }
 
+func burnPeakDay() burnDay {
+	var peak burnDay
+	for _, d := range burnData.Last30 {
+		if d.Tokens > peak.Tokens {
+			peak = d
+		}
+	}
+	return peak
+}
+
 func burnText(st *styles, cw int) string {
 	if burnError != "" {
 		return st.dim.Render("burn data unavailable: "+burnError) + "\n" +
@@ -352,13 +362,7 @@ func burnText(st *styles, cw int) string {
 	for _, d := range burnData.Last30 {
 		last30Tok += d.Tokens
 	}
-	// find peak
-	var peak burnDay
-	for _, d := range burnData.Last30 {
-		if d.Tokens > peak.Tokens {
-			peak = d
-		}
-	}
+	peak := burnPeakDay()
 	models := ""
 	if len(burnData.ByModelTop) > 0 {
 		var parts []string
@@ -367,7 +371,6 @@ func burnText(st *styles, cw int) string {
 		}
 		models = strings.Join(parts, ", ")
 	}
-	// Layout: kv lines
 	lines := []string{
 		kvLine(st, "total", total+" tokens"),
 		kvLine(st, "last 30d", fmtTokens(last30Tok)+" tokens"),
@@ -383,6 +386,9 @@ func burnText(st *styles, cw int) string {
 }
 
 func burnChartBlock(st *styles, cw int) string {
+	if burnError != "" {
+		return ""
+	}
 	if len(burnData.Last30) == 0 {
 		return ""
 	}
@@ -407,12 +413,7 @@ func burnChartBlock(st *styles, cw int) string {
 	labelLine := st.faint.Render(padTo(first, 12) + padTo(mid, chartW-20) + last)
 
 	// combine
-	peak := burnData.Last30[0]
-	for _, d := range burnData.Last30 {
-		if d.Tokens > peak.Tokens {
-			peak = d
-		}
-	}
+	peak := burnPeakDay()
 	head := st.faint.Render("30-day burn") + "  " + st.dim.Render(fmtTokens(peak.Tokens)+" peak · "+peak.Date+" · ● = release day")
 
 	barsBlock := ""

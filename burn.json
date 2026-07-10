@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T00:41:12.617977",
-  "totalTokens": 6738560083,
+  "generatedAt": "2026-07-10T00:55:13.009999",
+  "totalTokens": 6754818070,
   "byModelTop": [
     {
       "short": "opus-4-8",
@@ -20,7 +20,7 @@
     {
       "short": "5.5",
       "model": "gpt-5.5",
-      "tokens": 655743010
+      "tokens": 656058582
     },
     {
       "short": "sonnet-4-6",
@@ -379,17 +379,14 @@
     },
     {
       "date": "2026-07-10",
-      "tokens": 20647110,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
+      "tokens": 36905097,
+      "commits": 1,
+      "topRepos": [
+        "georgenijo.com (1)"
+      ],
+      "topMsgs": [
+        "feat: burn log \u2014 tokens \u00b7 models \u00b7 commits + live pipeline + TUI view"
+      ]
     }
-  ],
-  "_perNodeCheck": {
-    "macbook": "ok",
-    "mac-mini": "ok",
-    "opti": "ok",
-    "ubuntu": "ok",
-    "whoop-vm": "no ssh user in manifest"
-  }
+  ]
 }

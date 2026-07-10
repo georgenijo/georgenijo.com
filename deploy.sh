@@ -48,20 +48,18 @@ STAMP="$(date +'%B %Y' | tr '[:upper:]' '[:lower:]')"
 echo "==> [0/7] Refreshing burn.json (fleet-wide if fleet is available)"
 # Optional live refresh of burn log data before baking the TUI binary.
 # If fleet is available, we aggregate across all nodes; otherwise local.
-# Never fails the deploy — falls back to existing burn.json.
-set +e
+# Never fails the deploy — collector pipelines have targeted || true.
 if command -v fleet >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
   if [ -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
-    python3 "${SCRIPT_DIR}/scripts/collect-burn.py" --fleet 2>&1 | sed 's/^/    burn: /'
+    python3 "${SCRIPT_DIR}/scripts/collect-burn.py" --fleet 2>&1 | sed 's/^/    burn: /' || true
   else
     echo "    burn: scripts/collect-burn.py not found, skipping"
   fi
 elif [ -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
-  python3 "${SCRIPT_DIR}/scripts/collect-burn.py" 2>&1 | sed 's/^/    burn: /'
+  python3 "${SCRIPT_DIR}/scripts/collect-burn.py" 2>&1 | sed 's/^/    burn: /' || true
 else
   echo "    burn: no collector, skipping"
 fi
-set -e
 # Copy fresh burn.json into ssh-tui/ so go:embed picks it up
 if [ -f "${SCRIPT_DIR}/burn.json" ]; then
   cp "${SCRIPT_DIR}/burn.json" "${SRC_DIR}/burn.json"

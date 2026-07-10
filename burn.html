@@ -101,6 +101,12 @@ footer.status kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);paddin
 /* Inline fallback — replaced live by fetch('./burn.json') on load */
 const INLINE_FALLBACK = {"generatedAt": "2026-07-10T00:31:33.213583","totalTokens": 6726689035,"byModelTop": [{"short":"opus-4-8","model":"claude-opus-4-8","tokens":3144949323},{"short":"fable-5","model":"claude-fable-5","tokens":1267222218},{"short":"sonnet-5","model":"claude-sonnet-5","tokens":886347088},{"short":"5.5","model":"gpt-5.5","tokens":655743010},{"short":"sonnet-4-6","model":"claude-sonnet-4-6","tokens":357915837}],"last30": [{"date":"2026-06-08","tokens":14247978,"commits":1,"topRepos":["agent-mesh (1)"],"topMsgs":["[coordinator] Ticket intake: mesh submit + GitHub issue inge"]},{"date":"2026-06-09","tokens":113998288,"commits":50,"topRepos":["agent-mesh (50)"],"topMsgs":["feat(hooks): add Codex CLI adapter","Merge pull request #74 from georgenijo/issue/25-scheduler","docs(decisions): log #25 scheduler design decisions"]},{"date":"2026-06-10","tokens":164296062,"commits":44,"topRepos":["agent-mesh (43)","homelab (1)"],"topMsgs":["docs: add ticket lifecycle mockup (#90)","Merge pull request #87 from georgenijo/issue/80-reviewgate","docs(decisions): log the #80 review-gating transport and pol"]},{"date":"2026-06-11","tokens":510162340,"commits":51,"topRepos":["homelab (45)","agent-mesh (6)"],"topMsgs":["fix: homepage stuck loading — pull fallback + retry path","feat: basic HTML serializer for codebase views (read-only)","feat: repo tree explorer (static file browser)"]},{"date":"2026-06-12","tokens":130104812,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-13","tokens":186015754,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-14","tokens":175843846,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-15","tokens":2076738,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-18","tokens":989460,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-19","tokens":955526,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-21","tokens":23355526,"commits":7,"topRepos":["whoop-dashboard (7)"],"topMsgs":["Merge branch 'feat/ios-haptics' into develop"]},{"date":"2026-06-22","tokens":8087136,"commits":2,"topRepos":["whoop-dashboard (2)"],"topMsgs":["Merge branch 'feat/power' into develop"]},{"date":"2026-06-23","tokens":426863312,"commits":21,"topRepos":["homelab (21)"],"topMsgs":["feat(mesh): orchestrator v2 — file claims + presence","feat(web): control plane UI"]},{"date":"2026-06-24","tokens":159064052,"commits":9,"topRepos":["homelab (5)","agentos (4)"],"topMsgs":["feat: presence heartbeat + file locks","feat: agent blackboard"]},{"date":"2026-06-25","tokens":524885059,"commits":49,"topRepos":["agentos (29)","homelab (12)","agent-mesh (8)"],"topMsgs":["feat: mesh workers — 19f1249 spawn","feat: npm package for mesh client"]},{"date":"2026-06-26","tokens":370481197,"commits":47,"topRepos":["agentos (26)","agent-mesh (19)","whoop-dashboard (2)"],"topMsgs":["feat: mission queue + kill switch","feat: budget guard — $ cap per run","feat: audit log — every tool call"]},{"date":"2026-06-27","tokens":41325494,"commits":5,"topRepos":["agentos (5)"],"topMsgs":["feat: hangar supervisor live — 9 PRs shipped"]},{"date":"2026-06-28","tokens":262175835,"commits":61,"topRepos":["agent-mesh (34)","whoop-dashboard (22)","agentos (5)"],"topMsgs":["feat(ios): native Workout Detail screen + nav (#427)","feat(ios): native Stats screen + tab (#428)","feat(api): iOS workout-detail + stats endpoints (#427/#428 native)"]},{"date":"2026-06-29","tokens":385767495,"commits":24,"topRepos":["agentos (14)","agent-mesh (10)"],"topMsgs":["feat(#141): escalation primitive — worker can escalate ambiguous tasks (#150)","feat(#85): bounded re-dispatch with review feedback on re"]},{"date":"2026-06-30","tokens":68341182,"commits":13,"topRepos":["agentos (8)","agent-mesh (5)"],"topMsgs":["docs: revamp README — modern layout, badges, mermaid diagrams (#153)","docs: reorganize docs tree + add V1→V2 report (#152)"]},{"date":"2026-07-01","tokens":54033431,"commits":16,"topRepos":["agentos (16)"],"topMsgs":["feat: google senses live — brief → Orion card"]},{"date":"2026-07-02","tokens":241938471,"commits":47,"topRepos":["agentos (45)","georgenijo.com (2)"],"topMsgs":["feat: operate mode — drop optional creds per feature","feat: orion mesh dashboard"]},{"date":"2026-07-03","tokens":484206567,"commits":112,"topRepos":["agentos (104)","georgenijo.com (8)"],"topMsgs":["feat: site rebuild — paper v2 + ssh-tui","feat: fleet manifests + iptables redirect","feat: hangar UI — SvelteKit"]},{"date":"2026-07-04","tokens":583531916,"commits":89,"topRepos":["agentos (80)","georgenijo.com (7)","agent-mesh (2)"],"topMsgs":["feat: georgenijo.com — boot anim, viewfinder cursor, dark mode","fix: cloudflare DNS — apex NS cleanup","feat: social card + JSON-LD + 404"]},{"date":"2026-07-05","tokens":429117,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-06","tokens":47272323,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-07","tokens":859422405,"commits":69,"topRepos":["agentos (66)","agent-mesh (3)"],"topMsgs":["feat: AgentOS roadmap 0–5 shipped to main + google senses LIVE","feat: settings authority + operator settings screen (v1) (#156)","feat: brief→Orion card"]},{"date":"2026-07-08","tokens":5005817,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-09","tokens":10307006,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-10","tokens":1350824,"commits":0,"topRepos":[],"topMsgs":[]}]};
 
+function esc(s){
+  var d=document.createElement('div');
+  d.textContent=s==null?'':String(s);
+  return d.innerHTML;
+}
+
 function fmtTok(t){
   if(t>=1e9) return `${(t/1e9).toFixed(2)}B`;
   if(t>=1e6) return `${(t/1e6).toFixed(1)}M`;
@@ -121,11 +127,11 @@ function showNote(i){
   if(activeNote===i && el.classList.contains('on')){ el.classList.remove('on'); activeNote=-1; return; }
   activeNote=i;
   if((d.commits||0)===0){
-    el.innerHTML='<span class="ndate">'+d.date+' · '+fmtTok(d.tokens)+' · quiet day</span><span class="nmsg dim">no commits logged — background agents / codex</span>';
+    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · quiet day</span><span class="nmsg dim">no commits logged — background agents / codex</span>';
   }else{
-    el.innerHTML='<span class="ndate">'+d.date+' · '+fmtTok(d.tokens)+' · '+d.commits+' commits</span>'
-      +'<span class="nmsg dim">'+(d.topRepos||[]).join(' · ')+'</span>'
-      +(d.topMsgs||[]).map(function(m){return '<span class="nmsg">· '+m+'</span>';}).join('');
+    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · '+esc(String(d.commits))+' commits</span>'
+      +'<span class="nmsg dim">'+(d.topRepos||[]).map(esc).join(' · ')+'</span>'
+      +(d.topMsgs||[]).map(function(m){return '<span class="nmsg">· '+esc(m)+'</span>';}).join('');
   }
   el.classList.add('on');
 }
@@ -173,7 +179,7 @@ function render(){
     '<div class="slip ink col">'+
       '<div class="kv"><span class="k">total</span><span>'+total+' tokens<span class="dim">'+gen+'</span></span></div>'+
       '<div class="kv"><span class="k">last 30d</span><span>'+fmtTok(last30Tok)+' tokens</span></div>'+
-      '<div class="kv"><span class="k">models</span><span>'+(DATA.byModelTop||[]).map(function(m){return m.short;}).join(', ')+'</span></div>'+
+      '<div class="kv"><span class="k">models</span><span>'+(DATA.byModelTop||[]).map(function(m){return esc(m.short);}).join(', ')+'</span></div>'+
     '</div>'+
 
     '<div class="spark-wrap ink col" style="animation-delay:40ms">'+
@@ -188,7 +194,7 @@ function render(){
       (DATA.byModelTop||[]).map(function(m,i){
         var w=((m.tokens||0)/maxModelTok*100).toFixed(1);
         return '<div class="mbar '+(i===0?'peak':'')+'">'
-          +'<span class="ml">'+String(i+1).padStart(2,'0')+' '+m.short+'</span>'
+          +'<span class="ml">'+String(i+1).padStart(2,'0')+' '+esc(m.short)+'</span>'
           +'<span class="track"><span class="fill" style="width:'+w+'%"></span></span>'
           +'<span class="mv">'+fmtTok(m.tokens||0)+'</span>'
         +'</div>';

@@ -188,12 +188,16 @@ def collect_fleet_and_merge():
 
     by_model_top=[{"short":short_model(k),"model":k,"tokens":int(v)} for k,v in per_model_tokens.most_common(5)]
 
+    # Do NOT include per-node hostnames in public burn.json — log them to stderr instead
+    for n in nodes:
+        status = "ok" if n.get("ok") else n.get("error", "fail")
+        print(f"  fleet node: {n.get('node','?')} → {status}", file=sys.stderr)
+
     return {
         "generatedAt": datetime.now().isoformat(),
         "totalTokens": int(total_tokens),
         "byModelTop": by_model_top,
         "last30": last30,
-        "_perNodeCheck": {n["node"]: ("ok" if n.get("ok") else n.get("error","fail")) for n in nodes}
     }
 
 def main():

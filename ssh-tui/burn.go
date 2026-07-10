@@ -151,21 +151,19 @@ func burnLineChart(days []burnDay, width, height int) string {
 			nextX := int(math.Round(float64(i+1) / float64(n-1) * float64(width-1)))
 			nextRatio := float64(vals[i+1]) / float64(maxV)
 			nextY := int(math.Round((1 - nextRatio) * float64(height-1)))
-			// Bresenham-like
+			// Bresenham-like interpolation: use larger of dx, |dy|
 			dx := nextX - x
 			dy := nextY - y
 			steps := dx
 			if steps == 0 {
 				steps = 1
 			}
-			if abs := dy; abs > dx {
-				if abs < 0 {
-					// shouldn't negative, but handle
-				}
-				steps = dy
-				if steps < 0 {
-					steps = -steps
-				}
+			ady := dy
+			if ady < 0 {
+				ady = -ady
+			}
+			if ady > dx {
+				steps = ady
 			}
 			if steps < 1 {
 				steps = 1
