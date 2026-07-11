@@ -1,0 +1,14 @@
+ssh-tui/ssh-tui
+ssh-tui/ssh_host_*
+*.log
+.DS_Store
+
+# local generated concept drafts kept out of main
+concept-5-ssh.html
+concept-usage.html
+
+# private fleet aggregates (may contain node names)
+usage-fleet.json
+
+# temp
+/tmp/

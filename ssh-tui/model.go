@@ -17,6 +17,7 @@ const (
 	viewNow
 	viewContact
 	viewCoffee
+	viewBurn
 )
 
 var viewNames = map[viewID]string{
@@ -27,6 +28,7 @@ var viewNames = map[viewID]string{
 	viewNow:      "now",
 	viewContact:  "contact",
 	viewCoffee:   "coffee",
+	viewBurn:     "burn",
 }
 
 var parentOf = map[viewID]viewID{
@@ -35,6 +37,7 @@ var parentOf = map[viewID]viewID{
 	viewNow:      viewMenu,
 	viewContact:  viewMenu,
 	viewCoffee:   viewMenu,
+	viewBurn:     viewMenu,
 	viewProject:  viewProjects,
 }
 
@@ -44,6 +47,7 @@ var viewByID = map[string]viewID{
 	"now":      viewNow,
 	"contact":  viewContact,
 	"coffee":   viewCoffee,
+	"burn":     viewBurn,
 }
 
 type rowKind int
@@ -307,6 +311,12 @@ func (m model) rows() []row {
 		}
 		return []row{
 			{title: order, act: true, kind: rkCoffee},
+			{title: "← back", kind: rkBack},
+		}
+
+	case viewBurn:
+		// No selectable rows except back — detail is in the slip
+		return []row{
 			{title: "← back", kind: rkBack},
 		}
 	}

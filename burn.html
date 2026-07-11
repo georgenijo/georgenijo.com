@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>burn log · George Nijo</title>
+<meta name="description" content="Token burn from agents — 30-day line, top models by tokens, ship notes from git log.">
+<meta property="og:title" content="burn log — George Nijo">
+<meta property="og:description" content="6.7B tokens across 81 days — opus + fable + sonnet. 30-day burn line, ship notes from git log.">
+<meta property="og:url" content="https://georgenijo.com/burn">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://georgenijo.com/og.png">
+<style>
+:root{
+  --bg:#f6f2e8;--surface:#fbf8f1;--fg:#1c1710;--muted:#6e6353;--faint:#a2957f;
+  --border:#1c1710;--hairline:#d9d0bd;--accent:#b5351c;--selbg:rgba(28,23,16,.045);
+  --wash:rgba(28,23,16,.03);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Cascadia Mono",monospace;
+  --serif:'Iowan Old Style','Charter',Georgia,serif;
+  --col:72ch;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#171310;--surface:#1f1a14;--fg:#e8e2d4;--muted:#a2957f;--faint:#6e6353;
+    --border:#e8e2d4;--hairline:#3a3126;--accent:#e06a50;
+    --selbg:rgba(232,226,212,.05);--wash:rgba(232,226,212,.035);
+  }
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scrollbar-gutter:stable;}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 100% at 50% 0%, var(--wash), transparent 55%);}
+.term{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;}
+header.bar{flex:none;display:flex;align-items:baseline;gap:14px;padding:12px clamp(16px,4vw,56px) 10px;border-bottom:2px solid var(--border);}
+.brand{font-family:var(--serif);font-style:italic;font-size:1.15em;white-space:nowrap;}
+.crumb{flex:1;min-width:0;color:var(--muted);font-size:.9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.crumb b{color:var(--fg);font-weight:400;}
+.crumb a{color:inherit;text-decoration:none;}
+.crumb a:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
+.conn{flex:none;color:var(--faint);font-size:.78em;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;}
+@media(max-width:600px){.conn{display:none;}}
+main.page{flex:1;min-width:0;padding:clamp(18px,3.5vw,44px) clamp(16px,4vw,56px) clamp(28px,5vw,64px);}
+.sheet{max-width:1060px;margin:0 auto;}
+.col{max-width:var(--col);width:100%;}
+.vkick{max-width:var(--col);color:var(--muted);font-size:.82em;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;}
+.vkick .n{color:var(--accent);}
+.vtitle{max-width:var(--col);font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(30px,4.5vw,52px);line-height:1.05;letter-spacing:-.02em;margin:0 0 26px;}
+.badge{display:inline-block;font-size:.62em;border:1px solid var(--border);padding:2px 8px;vertical-align:6px;text-transform:uppercase;letter-spacing:.07em;}
+.badge.live{color:var(--accent);border-color:var(--accent);}
+.slip{max-width:var(--col);width:100%;border:2px solid var(--border);background:var(--surface);padding:clamp(18px,3vw,28px) clamp(18px,3vw,32px);}
+.kv{display:flex;gap:12px;margin:5px 0;font-size:14px;line-height:1.45;}
+.kv .k{color:var(--faint);flex:none;min-width:11ch;}
+.dim{color:var(--muted);}
+.spark-wrap{max-width:var(--col);width:100%;border:1px solid var(--hairline);background:var(--bg);padding:14px 14px 10px;margin:22px 0 0;}
+.spark-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:.76em;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);}
+.spark-head b{color:var(--fg);font-weight:400;white-space:nowrap;}
+.spark-wrap svg{width:100%;height:68px;display:block;overflow:visible;}
+.spark-wrap .line{fill:none;stroke:var(--border);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.spark-wrap .area{fill:var(--selbg);}
+.spark-wrap .dot{fill:var(--accent);stroke:var(--bg);stroke-width:1.6;cursor:pointer;transition:r .12s ease;}
+.spark-wrap .dot:hover,.spark-wrap .dot.active{r:5.5;}
+.spark-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.68em;color:var(--faint);font-variant-numeric:tabular-nums;}
+.note{margin-top:10px;padding:10px 12px;border-left:2px solid var(--accent);background:var(--surface);font-size:12.5px;line-height:1.5;display:none;}
+.note.on{display:block;animation:ink .15s ease both;}
+.note .ndate{color:var(--accent);font-weight:600;}
+.note .nmsg{display:block;margin-top:3px;color:var(--fg);}
+.note .nmsg.dim{color:var(--muted);}
+.mbars{max-width:var(--col);width:100%;border-top:1px solid var(--hairline);padding-top:14px;margin-top:22px;}
+.mbars .vkick{max-width:none;margin-bottom:10px;}
+.mbar{display:grid;grid-template-columns:14ch 1fr 12ch;align-items:center;gap:12px;margin:10px 0;font-size:13px;line-height:1.4;}
+.mbar .ml{color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.mbar .track{height:5px;background:var(--hairline);position:relative;overflow:hidden;}
+.mbar .fill{display:block;height:100%;background:var(--fg);min-width:2px;transition:width .4s ease;}
+@media (prefers-color-scheme: dark){ .mbar .track{background:rgba(255,255,255,.14);} }
+.mbar.peak .fill{background:var(--accent);}
+.mbar:hover .fill{background:var(--accent);}
+.mbar .mv{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.foot-rule{max-width:var(--col);width:100%;border-top:2px solid var(--border);padding-top:10px;margin-top:26px;font-size:.82em;color:var(--muted);line-height:1.5;}
+.stamp{animation:stampIn .24s cubic-bezier(.2,.7,.3,1) both;transform-origin:18% 60%;}
+@keyframes stampIn{0%{opacity:0;transform:scale(1.06) rotate(-.5deg)}55%{opacity:1;transform:scale(.992) rotate(.15deg)}100%{opacity:1;transform:none}}
+.ink{animation:inkIn .15s ease both;}
+@keyframes inkIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ .stamp,.ink{animation:none;} }
+footer.status{flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:8px clamp(16px,4vw,56px);min-height:38px;border-top:2px solid var(--border);color:var(--faint);font-size:.84em;}
+footer.status kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);padding:0 6px;}
+</style>
+</head>
+<body>
+<div class="term">
+<header class="bar">
+  <span class="brand">George Nijo</span>
+  <span class="crumb"><a href="/">← back</a> ~ / <b>burn log</b></span>
+  <span class="conn">tokens · models · commits</span>
+</header>
+<main class="page"><div class="sheet" id="sheet"></div></main>
+<footer class="status" id="foot"></footer>
+</div>
+<script>
+(function(){
+"use strict";
+/* Inline fallback — replaced live by fetch('./burn.json') on load */
+const INLINE_FALLBACK = {"generatedAt": "2026-07-10T00:31:33.213583","totalTokens": 6726689035,"byModelTop": [{"short":"opus-4-8","model":"claude-opus-4-8","tokens":3144949323},{"short":"fable-5","model":"claude-fable-5","tokens":1267222218},{"short":"sonnet-5","model":"claude-sonnet-5","tokens":886347088},{"short":"5.5","model":"gpt-5.5","tokens":655743010},{"short":"sonnet-4-6","model":"claude-sonnet-4-6","tokens":357915837}],"last30": [{"date":"2026-06-08","tokens":14247978,"commits":1,"topRepos":["agent-mesh (1)"],"topMsgs":["[coordinator] Ticket intake: mesh submit + GitHub issue inge"]},{"date":"2026-06-09","tokens":113998288,"commits":50,"topRepos":["agent-mesh (50)"],"topMsgs":["feat(hooks): add Codex CLI adapter","Merge pull request #74 from georgenijo/issue/25-scheduler","docs(decisions): log #25 scheduler design decisions"]},{"date":"2026-06-10","tokens":164296062,"commits":44,"topRepos":["agent-mesh (43)","homelab (1)"],"topMsgs":["docs: add ticket lifecycle mockup (#90)","Merge pull request #87 from georgenijo/issue/80-reviewgate","docs(decisions): log the #80 review-gating transport and pol"]},{"date":"2026-06-11","tokens":510162340,"commits":51,"topRepos":["homelab (45)","agent-mesh (6)"],"topMsgs":["fix: homepage stuck loading — pull fallback + retry path","feat: basic HTML serializer for codebase views (read-only)","feat: repo tree explorer (static file browser)"]},{"date":"2026-06-12","tokens":130104812,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-13","tokens":186015754,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-14","tokens":175843846,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-15","tokens":2076738,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-18","tokens":989460,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-19","tokens":955526,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-06-21","tokens":23355526,"commits":7,"topRepos":["whoop-dashboard (7)"],"topMsgs":["Merge branch 'feat/ios-haptics' into develop"]},{"date":"2026-06-22","tokens":8087136,"commits":2,"topRepos":["whoop-dashboard (2)"],"topMsgs":["Merge branch 'feat/power' into develop"]},{"date":"2026-06-23","tokens":426863312,"commits":21,"topRepos":["homelab (21)"],"topMsgs":["feat(mesh): orchestrator v2 — file claims + presence","feat(web): control plane UI"]},{"date":"2026-06-24","tokens":159064052,"commits":9,"topRepos":["homelab (5)","agentos (4)"],"topMsgs":["feat: presence heartbeat + file locks","feat: agent blackboard"]},{"date":"2026-06-25","tokens":524885059,"commits":49,"topRepos":["agentos (29)","homelab (12)","agent-mesh (8)"],"topMsgs":["feat: mesh workers — 19f1249 spawn","feat: npm package for mesh client"]},{"date":"2026-06-26","tokens":370481197,"commits":47,"topRepos":["agentos (26)","agent-mesh (19)","whoop-dashboard (2)"],"topMsgs":["feat: mission queue + kill switch","feat: budget guard — $ cap per run","feat: audit log — every tool call"]},{"date":"2026-06-27","tokens":41325494,"commits":5,"topRepos":["agentos (5)"],"topMsgs":["feat: hangar supervisor live — 9 PRs shipped"]},{"date":"2026-06-28","tokens":262175835,"commits":61,"topRepos":["agent-mesh (34)","whoop-dashboard (22)","agentos (5)"],"topMsgs":["feat(ios): native Workout Detail screen + nav (#427)","feat(ios): native Stats screen + tab (#428)","feat(api): iOS workout-detail + stats endpoints (#427/#428 native)"]},{"date":"2026-06-29","tokens":385767495,"commits":24,"topRepos":["agentos (14)","agent-mesh (10)"],"topMsgs":["feat(#141): escalation primitive — worker can escalate ambiguous tasks (#150)","feat(#85): bounded re-dispatch with review feedback on re"]},{"date":"2026-06-30","tokens":68341182,"commits":13,"topRepos":["agentos (8)","agent-mesh (5)"],"topMsgs":["docs: revamp README — modern layout, badges, mermaid diagrams (#153)","docs: reorganize docs tree + add V1→V2 report (#152)"]},{"date":"2026-07-01","tokens":54033431,"commits":16,"topRepos":["agentos (16)"],"topMsgs":["feat: google senses live — brief → Orion card"]},{"date":"2026-07-02","tokens":241938471,"commits":47,"topRepos":["agentos (45)","georgenijo.com (2)"],"topMsgs":["feat: operate mode — drop optional creds per feature","feat: orion mesh dashboard"]},{"date":"2026-07-03","tokens":484206567,"commits":112,"topRepos":["agentos (104)","georgenijo.com (8)"],"topMsgs":["feat: site rebuild — paper v2 + ssh-tui","feat: fleet manifests + iptables redirect","feat: hangar UI — SvelteKit"]},{"date":"2026-07-04","tokens":583531916,"commits":89,"topRepos":["agentos (80)","georgenijo.com (7)","agent-mesh (2)"],"topMsgs":["feat: georgenijo.com — boot anim, viewfinder cursor, dark mode","fix: cloudflare DNS — apex NS cleanup","feat: social card + JSON-LD + 404"]},{"date":"2026-07-05","tokens":429117,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-06","tokens":47272323,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-07","tokens":859422405,"commits":69,"topRepos":["agentos (66)","agent-mesh (3)"],"topMsgs":["feat: AgentOS roadmap 0–5 shipped to main + google senses LIVE","feat: settings authority + operator settings screen (v1) (#156)","feat: brief→Orion card"]},{"date":"2026-07-08","tokens":5005817,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-09","tokens":10307006,"commits":0,"topRepos":[],"topMsgs":[]},{"date":"2026-07-10","tokens":1350824,"commits":0,"topRepos":[],"topMsgs":[]}]};
+
+function esc(s){
+  var d=document.createElement('div');
+  d.textContent=s==null?'':String(s);
+  return d.innerHTML;
+}
+
+function fmtTok(t){
+  if(t>=1e9) return `${(t/1e9).toFixed(2)}B`;
+  if(t>=1e6) return `${(t/1e6).toFixed(1)}M`;
+  if(t>=1e3) return `${(t/1e3).toFixed(0)}k`;
+  return `${t}`;
+}
+
+let DATA = INLINE_FALLBACK;
+let activeNote=-1;
+
+function showNote(i){
+  var d=DATA.last30[i];
+  var el=document.getElementById('note');
+  if(!el) return;
+  document.querySelectorAll('.dot').forEach(function(x){x.classList.remove('active');});
+  var dot=document.querySelector('.dot[data-idx="'+i+'"]');
+  if(dot) dot.classList.add('active');
+  if(activeNote===i && el.classList.contains('on')){ el.classList.remove('on'); activeNote=-1; return; }
+  activeNote=i;
+  if((d.commits||0)===0){
+    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · quiet day</span><span class="nmsg dim">no commits logged — background agents / codex</span>';
+  }else{
+    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · '+esc(String(d.commits))+' commits</span>'
+      +'<span class="nmsg dim">'+(d.topRepos||[]).map(esc).join(' · ')+'</span>'
+      +(d.topMsgs||[]).map(function(m){return '<span class="nmsg">· '+esc(m)+'</span>';}).join('');
+  }
+  el.classList.add('on');
+}
+window.showNote=showNote;
+
+function lineSVG(){
+  var data=DATA.last30;
+  if(!data || !data.length) return '<svg viewBox="0 0 720 68"></svg>';
+  var W=720,H=68,pad=4;
+  var vals=data.map(function(d){return d.tokens||0;});
+  var max=Math.max.apply(null,vals.concat([1]));
+  var step=(W-pad*2)/Math.max(vals.length-1,1);
+  function y(v){ return H-pad-(v/(max||1))*(H-pad*2); }
+  var path='M '+pad+' '+y(vals[0]);
+  for(var i=1;i<vals.length;i++) path+=' L '+(pad+i*step)+' '+y(vals[i]);
+  var area=path+' L '+(pad+(vals.length-1)*step)+' '+(H-pad)+' L '+pad+' '+(H-pad)+' Z';
+  var dots='';
+  data.forEach(function(d,i){
+    if((d.commits||0)>=20){
+      var x=pad+i*step, yy=y(d.tokens||0);
+      dots+='<circle class="dot" cx="'+x+'" cy="'+yy+'" r="3.6" data-idx="'+i+'" onclick="showNote('+i+')"><title>'+esc(d.date)+'</title></circle>';
+    }
+  });
+  var peakIdx=0; for(var k=1;k<data.length;k++) if((data[k].tokens||0)>(data[peakIdx].tokens||0)) peakIdx=k;
+  if((data[peakIdx].commits||0)<20){
+    var x2=pad+peakIdx*step, y2=y(data[peakIdx].tokens||0);
+    dots+='<circle class="dot" cx="'+x2+'" cy="'+y2+'" r="4.4" data-idx="'+peakIdx+'" onclick="showNote('+peakIdx+')"><title>'+esc(data[peakIdx].date)+' peak</title></circle>';
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><path class="area" d="'+area+'"/><path class="line" d="'+path+'"/>'+dots+'</svg>';
+}
+
+function render(){
+  var s=document.getElementById('sheet');
+  if(!s) return;
+  var total=fmtTok(DATA.totalTokens||0);
+  var last30Tok=(DATA.last30||[]).reduce(function(a,b){return a+(b.tokens||0);},0);
+  var maxModelTok=Math.max.apply(null, (DATA.byModelTop||[]).map(function(m){return m.tokens||0;}).concat([1]));
+  var peak=(DATA.last30||[]).reduce(function(a,b){return (a.tokens||0)>(b.tokens||0)?a:b;}, DATA.last30&&DATA.last30[0]||{tokens:0,date:''});
+  var gen=DATA.generatedAt? ' · updated '+new Date(DATA.generatedAt).toLocaleDateString(): '';
+
+  s.innerHTML=
+    '<p class="vkick stamp col">burn log · tokens · commits</p>'+
+    '<p class="vtitle stamp col">agents at work</p>'+
+
+    '<div class="slip ink col">'+
+      '<div class="kv"><span class="k">total</span><span>'+total+' tokens<span class="dim">'+gen+'</span></span></div>'+
+      '<div class="kv"><span class="k">last 30d</span><span>'+fmtTok(last30Tok)+' tokens</span></div>'+
+      '<div class="kv"><span class="k">models</span><span>'+(DATA.byModelTop||[]).map(function(m){return esc(m.short);}).join(', ')+'</span></div>'+
+    '</div>'+
+
+    '<div class="spark-wrap ink col" style="animation-delay:40ms">'+
+      '<div class="spark-head"><span>30-day burn</span><span><b>'+fmtTok(peak.tokens||0)+' peak · '+esc(peak.date||'')+'</b> · dot = release day</span></div>'+
+      lineSVG()+
+      '<div class="spark-labels"><span>'+esc((DATA.last30[0]&&DATA.last30[0].date)||'')+'</span><span>'+esc((DATA.last30[15]&&DATA.last30[15].date)||'')+'</span><span>'+esc((DATA.last30[DATA.last30.length-1]&&DATA.last30[DATA.last30.length-1].date)||'')+'</span></div>'+
+      '<div id="note" class="note"></div>'+
+    '</div>'+
+
+    '<div class="mbars ink col" style="animation-delay:60ms">'+
+      '<p class="vkick">by model · tokens</p>'+
+      (DATA.byModelTop||[]).map(function(m,i){
+        var w=((m.tokens||0)/maxModelTok*100).toFixed(1);
+        return '<div class="mbar '+(i===0?'peak':'')+'">'
+          +'<span class="ml">'+String(i+1).padStart(2,'0')+' '+esc(m.short)+'</span>'
+          +'<span class="track"><span class="fill" style="width:'+w+'%"></span></span>'
+          +'<span class="mv">'+fmtTok(m.tokens||0)+'</span>'
+        +'</div>';
+      }).join('')+
+    '</div>'+
+
+    '<div class="foot-rule col">click a dot → what shipped that day</div>';
+
+  var foot=document.getElementById('foot');
+  if(foot) foot.innerHTML='<span><kbd>'+total+'</kbd> total · <kbd>30d</kbd> '+fmtTok(last30Tok)+' · click dot → ship note</span><span style="margin-left:auto">paper v2 · live via burn.json</span>';
+}
+
+async function tryLoad(){
+  try{
+    var r=await fetch('./burn.json?'+Date.now(),{cache:'no-store'});
+    if(!r.ok) return;
+    var j=await r.json();
+    if(j && j.totalTokens && j.last30 && j.byModelTop){ DATA=j; render(); }
+  }catch(e){}
+}
+
+render();
+tryLoad();
+setInterval(tryLoad, 5*60*1000);
+})();
+</script>
+</body>
+</html>

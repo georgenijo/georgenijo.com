@@ -45,7 +45,51 @@ BIN="${BUILD_DIR}/ssh-tui"
 # Lowercase "month year" (e.g. "july 2026") to match the site's now-page stamp.
 STAMP="$(date +'%B %Y' | tr '[:upper:]' '[:lower:]')"
 
-echo "==> [1/6] Building ssh-tui for linux/amd64 (buildStamp=${STAMP})"
+echo "==> [0/7] Refreshing burn.json (fleet-wide if fleet is available)"
+# Optional live refresh of burn log data before baking the TUI binary.
+# If fleet is available, we aggregate across all nodes; otherwise local.
+# Collector failure never aborts deploy, but we warn when the embed is stale.
+BURN_FRESH=0
+collect_burn() {
+  local args=("$@")
+  local out rc
+  set +e
+  out="$(python3 "${SCRIPT_DIR}/scripts/collect-burn.py" "${args[@]}" 2>&1)"
+  rc=$?
+  set -e
+  printf '%s\n' "${out}" | sed 's/^/    burn: /'
+  return "${rc}"
+}
+if [ ! -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
+  echo "    burn: scripts/collect-burn.py not found, skipping"
+elif command -v fleet >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
+  if collect_burn --fleet; then
+    BURN_FRESH=1
+  else
+    echo "    burn: WARNING — fleet collect failed; keeping existing burn.json"
+  fi
+elif command -v npx >/dev/null 2>&1; then
+  if collect_burn; then
+    BURN_FRESH=1
+  else
+    echo "    burn: WARNING — local collect failed; keeping existing burn.json"
+  fi
+else
+  echo "    burn: npx not found, skipping collector"
+fi
+# Copy burn.json into ssh-tui/ so go:embed picks it up
+if [ -f "${SCRIPT_DIR}/burn.json" ]; then
+  cp "${SCRIPT_DIR}/burn.json" "${SRC_DIR}/burn.json"
+  if [ "${BURN_FRESH}" -eq 1 ]; then
+    echo "    burn: copied fresh burn.json -> ssh-tui/burn.json ($(wc -c < "${SCRIPT_DIR}/burn.json" | tr -d ' ') bytes)"
+  else
+    echo "    burn: WARNING — embedding possibly-stale burn.json ($(wc -c < "${SCRIPT_DIR}/burn.json" | tr -d ' ') bytes)"
+  fi
+else
+  echo "    burn: WARNING — no burn.json present; TUI burn view will be empty"
+fi
+
+echo "==> [1/7] Building ssh-tui for linux/amd64 (buildStamp=${STAMP})"
 (
   cd "${SRC_DIR}"
   GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build \
@@ -56,14 +100,14 @@ echo "==> [1/6] Building ssh-tui for linux/amd64 (buildStamp=${STAMP})"
 )
 echo "    built ${BIN}"
 
-echo "==> [2/6] Computing local md5sum"
+echo "==> [2/7] Computing local md5sum"
 LOCAL_MD5="$(md5sum "${BIN}" | awk '{print $1}')"
 echo "    local md5: ${LOCAL_MD5}"
 
-echo "==> [3/6] Copying binary to ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/ssh-tui.new"
+echo "==> [3/7] Copying binary to ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/ssh-tui.new"
 scp "${BIN}" "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/ssh-tui.new"
 
-echo "==> [4/6] Installing binary and restarting ${SERVICE} on whoop-vm"
+echo "==> [4/7] Installing binary and restarting ${SERVICE} on whoop-vm"
 REMOTE_OUT="$(ssh "${REMOTE_USER}@${REMOTE_HOST}" bash -s -- "${REMOTE_DIR}" "${SERVICE}" <<'REMOTE_SCRIPT'
 set -euo pipefail
 remote_dir="$1"
@@ -99,14 +143,14 @@ echo "${REMOTE_OUT//$'\n'/$'\n'    }" | sed '1s/^/    /'
 REMOTE_STATUS="$(echo "${REMOTE_OUT}" | grep -E '^STATUS=' | tail -1 | cut -d= -f2)"
 REMOTE_MD5="$(echo "${REMOTE_OUT}" | grep -E '^MD5=' | tail -1 | cut -d= -f2)"
 
-echo "==> [5/6] Verifying remote service is active"
+echo "==> [5/7] Verifying remote service is active"
 if [[ "${REMOTE_STATUS}" != "active" ]]; then
   echo "!!! DEPLOY FAILED: ${SERVICE} is not active on whoop-vm (systemctl --user is-active reported '${REMOTE_STATUS}')" >&2
   exit 1
 fi
 echo "    ${SERVICE} is active"
 
-echo "==> [6/6] Verifying local and remote binaries match (md5sum)"
+echo "==> [6/7] Verifying local and remote binaries match (md5sum)"
 echo "    local:  ${LOCAL_MD5}"
 echo "    remote: ${REMOTE_MD5}"
 if [[ "${REMOTE_MD5}" != "${LOCAL_MD5}" ]]; then
@@ -114,5 +158,10 @@ if [[ "${REMOTE_MD5}" != "${LOCAL_MD5}" ]]; then
   echo "!!! local=${LOCAL_MD5} remote=${REMOTE_MD5}" >&2
   exit 1
 fi
+
+echo "==> [7/7] Web assets: burn.json + burn.html are git-tracked"
+echo "    web: push this branch so nginx cron pull updates /burn (TUI embed is baked above;"
+echo "         without a push, ssh TUI and https://georgenijo.com/burn can diverge)"
+echo "    web: $(ls -lh "${SCRIPT_DIR}/burn.json" 2>/dev/null | awk '{print $5}') burn.json + $(ls -lh "${SCRIPT_DIR}/burn.html" 2>/dev/null | awk '{print $5}') burn.html"
 
 echo "==> Deploy complete: ${SERVICE}@whoop-vm running buildStamp=${STAMP} (md5 ${LOCAL_MD5})"
