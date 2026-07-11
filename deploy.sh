@@ -48,22 +48,45 @@ STAMP="$(date +'%B %Y' | tr '[:upper:]' '[:lower:]')"
 echo "==> [0/7] Refreshing burn.json (fleet-wide if fleet is available)"
 # Optional live refresh of burn log data before baking the TUI binary.
 # If fleet is available, we aggregate across all nodes; otherwise local.
-# Never fails the deploy — collector pipelines have targeted || true.
-if command -v fleet >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
-  if [ -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
-    python3 "${SCRIPT_DIR}/scripts/collect-burn.py" --fleet 2>&1 | sed 's/^/    burn: /' || true
+# Collector failure never aborts deploy, but we warn when the embed is stale.
+BURN_FRESH=0
+collect_burn() {
+  local args=("$@")
+  local out rc
+  set +e
+  out="$(python3 "${SCRIPT_DIR}/scripts/collect-burn.py" "${args[@]}" 2>&1)"
+  rc=$?
+  set -e
+  printf '%s\n' "${out}" | sed 's/^/    burn: /'
+  return "${rc}"
+}
+if [ ! -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
+  echo "    burn: scripts/collect-burn.py not found, skipping"
+elif command -v fleet >/dev/null 2>&1 && command -v npx >/dev/null 2>&1; then
+  if collect_burn --fleet; then
+    BURN_FRESH=1
   else
-    echo "    burn: scripts/collect-burn.py not found, skipping"
+    echo "    burn: WARNING — fleet collect failed; keeping existing burn.json"
   fi
-elif [ -f "${SCRIPT_DIR}/scripts/collect-burn.py" ]; then
-  python3 "${SCRIPT_DIR}/scripts/collect-burn.py" 2>&1 | sed 's/^/    burn: /' || true
+elif command -v npx >/dev/null 2>&1; then
+  if collect_burn; then
+    BURN_FRESH=1
+  else
+    echo "    burn: WARNING — local collect failed; keeping existing burn.json"
+  fi
 else
-  echo "    burn: no collector, skipping"
+  echo "    burn: npx not found, skipping collector"
 fi
-# Copy fresh burn.json into ssh-tui/ so go:embed picks it up
+# Copy burn.json into ssh-tui/ so go:embed picks it up
 if [ -f "${SCRIPT_DIR}/burn.json" ]; then
   cp "${SCRIPT_DIR}/burn.json" "${SRC_DIR}/burn.json"
-  echo "    burn: copied burn.json -> ssh-tui/burn.json ($(wc -c < "${SCRIPT_DIR}/burn.json" | tr -d ' ') bytes)"
+  if [ "${BURN_FRESH}" -eq 1 ]; then
+    echo "    burn: copied fresh burn.json -> ssh-tui/burn.json ($(wc -c < "${SCRIPT_DIR}/burn.json" | tr -d ' ') bytes)"
+  else
+    echo "    burn: WARNING — embedding possibly-stale burn.json ($(wc -c < "${SCRIPT_DIR}/burn.json" | tr -d ' ') bytes)"
+  fi
+else
+  echo "    burn: WARNING — no burn.json present; TUI burn view will be empty"
 fi
 
 echo "==> [1/7] Building ssh-tui for linux/amd64 (buildStamp=${STAMP})"
@@ -136,7 +159,9 @@ if [[ "${REMOTE_MD5}" != "${LOCAL_MD5}" ]]; then
   exit 1
 fi
 
-echo "==> [7/7] Web assets: burn.json + burn.html are git-tracked (push to update nginx cron pull)"
+echo "==> [7/7] Web assets: burn.json + burn.html are git-tracked"
+echo "    web: push this branch so nginx cron pull updates /burn (TUI embed is baked above;"
+echo "         without a push, ssh TUI and https://georgenijo.com/burn can diverge)"
 echo "    web: $(ls -lh "${SCRIPT_DIR}/burn.json" 2>/dev/null | awk '{print $5}') burn.json + $(ls -lh "${SCRIPT_DIR}/burn.html" 2>/dev/null | awk '{print $5}') burn.html"
 
 echo "==> Deploy complete: ${SERVICE}@whoop-vm running buildStamp=${STAMP} (md5 ${LOCAL_MD5})"

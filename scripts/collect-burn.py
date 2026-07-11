@@ -3,17 +3,15 @@
 collect-burn.py — build public-safe burn.json from ccusage + git log
 
 Sources:
-  - ccusage: npx ccusage@latest daily -j  +  monthly -j  (all agents)
-  - git log: --since 45 days in ~/Documents/code/*
+  - ccusage: npx ccusage@latest daily -j  (+ monthly fallback)
+  - git log: --since 45 days in ~/Documents/code/* (public repos only)
 
 Output: burn.json (minimal, public-safe):
   {
-    totalTokens: int,
+    totalTokens: int,          # all-time (ccusage totals), same for local + fleet
     byModelTop: [{short, tokens}],
-    last30: [{date, tokens, commits, topRepos, topMsgs}]
+    last30: [{date, tokens, commits, topRepos, topMsgs}]  # calendar 30d
   }
-
-Also generates usage-fleet.json (private, full) for fleet aggregates.
 
 Run: python3 scripts/collect-burn.py
       python3 scripts/collect-burn.py --fleet   # also fleet exec --all (slow, ~30s)
@@ -21,44 +19,148 @@ Run: python3 scripts/collect-burn.py
 import json, subprocess, sys, os
 from pathlib import Path
 from collections import Counter, defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import argparse
 
 CODE_ROOT = Path.home() / "Documents" / "code"
 CUTOFF_DAYS = 45
+CALENDAR_DAYS = 30
+
+# Only annotate commits from repos already listed on the public site (+ site itself).
+PUBLIC_REPOS = frozenset({
+    "agent-mesh", "usher", "hangar", "ghosthands", "murmur-app",
+    "fleetmap", "gauge", "whoop-dashboard", "aperture",
+    "georgenijo.com", "agentos",
+})
+
 
 def run(cmd, cwd=None, timeout=20):
     try:
-        return subprocess.check_output(cmd, cwd=cwd, text=True, stderr=subprocess.DEVNULL, timeout=timeout, shell=isinstance(cmd, str))
+        return subprocess.check_output(
+            cmd, cwd=cwd, text=True, stderr=subprocess.DEVNULL,
+            timeout=timeout, shell=isinstance(cmd, str),
+        )
     except Exception:
         return ""
+
+
+def parse_json_loose(s):
+    """Parse JSON, tolerating leading/trailing non-JSON noise."""
+    if not s:
+        raise ValueError("empty")
+    s = s.strip()
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        i, j = s.find("{"), s.rfind("}")
+        if i >= 0 and j > i:
+            return json.loads(s[i : j + 1])
+        raise
+
+
+def short_model(m):
+    return (
+        m.replace("claude-", "")
+        .replace("gpt-", "")
+        .replace("-20251001", "")
+        .replace("-20250929", "")
+    )
+
+
+def model_tokens(mb):
+    toks = mb.get("totalTokens")
+    if toks is None:
+        toks = (
+            mb.get("inputTokens", 0)
+            + mb.get("outputTokens", 0)
+            + mb.get("cacheCreationTokens", 0)
+            + mb.get("cacheReadTokens", 0)
+        )
+    return int(toks or 0)
+
 
 def collect_local_ccusage():
     """Run ccusage daily -j on local host"""
     out = run(["npx", "--yes", "ccusage@latest", "daily", "-j"], timeout=30)
     try:
-        return json.loads(out) if out else {}
-    except:
+        return parse_json_loose(out) if out else {}
+    except Exception:
         return {}
 
+
 def collect_commits_local():
+    """Commits keyed by date, newest-first within each day (by unix time)."""
     commits_by_date = defaultdict(list)
-    repos = [p for p in CODE_ROOT.iterdir() if p.is_dir() and (p / ".git").exists()] if CODE_ROOT.exists() else []
+    if not CODE_ROOT.exists():
+        return commits_by_date
+    repos = [
+        p for p in CODE_ROOT.iterdir()
+        if p.is_dir() and (p / ".git").exists() and p.name in PUBLIC_REPOS
+    ]
     for repo in repos:
         out = run(
-            ["git", "log", f"--since={CUTOFF_DAYS} days ago", "--pretty=format:%cd|%h|%s", "--date=short", "--all"],
-            cwd=repo, timeout=8
+            [
+                "git", "log", f"--since={CUTOFF_DAYS} days ago",
+                "--pretty=format:%cd|%ct|%h|%s", "--date=short", "--all",
+            ],
+            cwd=repo, timeout=8,
         )
         if not out:
             continue
         for line in out.splitlines():
-            if not line.strip(): continue
+            if not line.strip():
+                continue
             try:
-                date, h, msg = line.split("|", 2)
-                commits_by_date[date].append({"repo": repo.name, "hash": h, "msg": msg[:80]})
+                d, ts, h, msg = line.split("|", 3)
+                commits_by_date[d].append({
+                    "repo": repo.name,
+                    "hash": h,
+                    "msg": msg[:80],
+                    "ts": int(ts),
+                })
             except ValueError:
                 continue
+    for d in commits_by_date:
+        commits_by_date[d].sort(key=lambda c: c["ts"], reverse=True)
     return commits_by_date
+
+
+def day_annotation(commits):
+    c_counter = Counter(c["repo"] for c in commits)
+    top_repos = [f"{repo} ({cnt})" for repo, cnt in c_counter.most_common(3)]
+    top_msgs = [c["msg"][:70] for c in commits[:3]]
+    top_msgs = [
+        m.replace("Merge pull request", "Merge PR").replace("Merge branch", "Merge")
+        for m in top_msgs
+    ]
+    return len(commits), top_repos, top_msgs
+
+
+def calendar_last30(tokens_by_date, commits_by_date, end=None):
+    """Build exactly CALENDAR_DAYS entries ending at end (default: today)."""
+    if end is None:
+        end = date.today()
+    last30 = []
+    for i in range(CALENDAR_DAYS - 1, -1, -1):
+        d = end - timedelta(days=i)
+        date_str = d.isoformat()
+        commits = commits_by_date.get(date_str, [])
+        n, top_repos, top_msgs = day_annotation(commits)
+        last30.append({
+            "date": date_str,
+            "tokens": int(tokens_by_date.get(date_str, 0)),
+            "commits": n,
+            "topRepos": top_repos,
+            "topMsgs": top_msgs,
+        })
+    return last30
+
+
+def accumulate_models(daily, per_model_tokens):
+    for d in daily:
+        for mb in d.get("modelBreakdowns", []):
+            per_model_tokens[mb.get("modelName", "")] += model_tokens(mb)
+
 
 def build_burn_from_local(code_host_commits=None):
     if code_host_commits is None:
@@ -66,146 +168,120 @@ def build_burn_from_local(code_host_commits=None):
     cc = collect_local_ccusage()
     daily = cc.get("daily", [])
     totals = cc.get("totals", {})
-    total_tokens = totals.get("totalTokens", sum(d.get("totalTokens",0) for d in daily))
-
-    # Aggregate tokens per model from breakdowns (all time)
-    per_model_tokens = Counter()
-    for d in daily:
-        for mb in d.get("modelBreakdowns", []):
-            m = mb.get("modelName","")
-            # ccusage modelBreakdown does not have totalTokens per model in some versions, sum components
-            toks = mb.get("totalTokens")
-            if toks is None:
-                toks = mb.get("inputTokens",0)+mb.get("outputTokens",0)+mb.get("cacheCreationTokens",0)+mb.get("cacheReadTokens",0)
-            per_model_tokens[m]+=toks
-
-    # Fallback to monthly for totals if daily empty
+    total_tokens = int(totals.get("totalTokens") or 0)
     if not total_tokens:
-        out_m = run(["npx","--yes","ccusage@latest","monthly","-j"], timeout=30)
+        total_tokens = sum(int(d.get("totalTokens", 0) or 0) for d in daily)
+
+    per_model_tokens = Counter()
+    accumulate_models(daily, per_model_tokens)
+
+    if not total_tokens:
+        out_m = run(["npx", "--yes", "ccusage@latest", "monthly", "-j"], timeout=30)
         try:
-            mj = json.loads(out_m)
-            total_tokens = mj.get("totals",{}).get("totalTokens",0)
-            for mon in mj.get("monthly",[]):
-                for mb in mon.get("modelBreakdowns",[]):
-                    m=mb.get("modelName","")
-                    toks=mb.get("totalTokens") or (mb.get("inputTokens",0)+mb.get("outputTokens",0)+mb.get("cacheCreationTokens",0)+mb.get("cacheReadTokens",0))
-                    per_model_tokens[m]+=toks
+            mj = parse_json_loose(out_m)
+            total_tokens = int(mj.get("totals", {}).get("totalTokens", 0) or 0)
+            for mon in mj.get("monthly", []):
+                for mb in mon.get("modelBreakdowns", []):
+                    per_model_tokens[mb.get("modelName", "")] += model_tokens(mb)
         except Exception:
             pass
 
-    # top 5 by tokens
-    top5 = per_model_tokens.most_common(5)
-    def short_model(m):
-        return m.replace("claude-","").replace("gpt-","").replace("-20251001","").replace("-20250929","")
-    by_model_top = [{"short": short_model(k), "model": k, "tokens": int(v)} for k,v in top5]
+    tokens_by_date = {}
+    for d in daily:
+        date_str = d.get("date") or d.get("period", "")
+        if date_str:
+            tokens_by_date[date_str] = int(d.get("totalTokens", 0) or 0)
 
-    # last 30 days
-    # daily may be sorted by date ascending already? sort to be safe
-    daily_sorted = sorted(daily, key=lambda x: x.get("date","") or x.get("period",""))
-    last30_raw = daily_sorted[-30:] if len(daily_sorted)>=30 else daily_sorted
+    by_model_top = [
+        {"short": short_model(k), "model": k, "tokens": int(v)}
+        for k, v in per_model_tokens.most_common(5)
+    ]
 
-    last30=[]
-    for d in last30_raw:
-        date = d.get("date") or d.get("period","")
-        toks = d.get("totalTokens",0)
-        commits = code_host_commits.get(date, [])
-        c_counter = Counter(c["repo"] for c in commits)
-        top_repos = [f"{repo} ({cnt})" for repo,cnt in c_counter.most_common(3)]
-        top_msgs = [c["msg"][:70] for c in commits[:3]]
-        # shorten common msgs
-        top_msgs = [m.replace("Merge pull request","Merge PR").replace("Merge branch","Merge") for m in top_msgs]
-        last30.append({
-            "date": date,
-            "tokens": int(toks),
-            "commits": len(commits),
-            "topRepos": top_repos,
-            "topMsgs": top_msgs
-        })
-
-    # if we have fewer than 30 entries (new host), pad with zeros? Keep as is.
     return {
         "generatedAt": datetime.now().isoformat(),
         "totalTokens": int(total_tokens),
         "byModelTop": by_model_top,
-        "last30": last30,
+        "last30": calendar_last30(tokens_by_date, code_host_commits),
     }
 
+
 def collect_fleet_and_merge():
-    """Attempt fleet exec --all ccusage daily -j + monthly -j, aggregate"""
-    # try fleet command
-    fleet_cmd = 'bash -lc "export PATH=$HOME/.local/bin:$HOME/.nvm/versions/node/v20.20.2/bin:/opt/homebrew/bin:/usr/local/bin:$PATH; [ -f $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh 2>/dev/null; npx --yes ccusage@latest daily -j 2>&1"'
+    """fleet exec --all ccusage daily -j, aggregate all-time totals + calendar last30."""
+    # No 2>&1 — npm noise must not pollute JSON stdout.
+    # No hardcoded nvm version — source nvm.sh if present, else rely on PATH.
+    fleet_cmd = (
+        'bash -lc \''
+        'export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"; '
+        '[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh" >/dev/null 2>&1; '
+        'npx --yes ccusage@latest daily -j'
+        '\''
+    )
     out = run(["fleet", "exec", "--all", "--json", fleet_cmd], timeout=120)
     if not out:
         print("fleet exec not available or timed out, skipping fleet aggregate", file=sys.stderr)
         return None
     try:
-        nodes = json.loads(out)
+        nodes = parse_json_loose(out)
     except Exception as e:
         print(f"fleet parse failed: {e}\n{out[:1000]}", file=sys.stderr)
         return None
 
-    # aggregate daily across nodes, summing tokens per date
-    by_day = {}
+    tokens_by_date = defaultdict(int)
     per_model_tokens = Counter()
-    total_tokens=0
+    total_tokens = 0
+    nodes_ok = 0
+
     for node in nodes:
-        if not node.get("ok"): continue
-        try:
-            j = json.loads(node.get("stdout",""))
-        except:
+        if not node.get("ok"):
             continue
-        for d in j.get("daily",[]):
-            date = d.get("date") or d.get("period","")
-            if not date: continue
-            if date not in by_day:
-                by_day[date]=defaultdict(int)
-                by_day[date]["_totalTokens"]=0
-                by_day[date]["_models"]={}
-            by_day[date]["_totalTokens"]+=int(d.get("totalTokens",0))
-            total_tokens+=int(d.get("totalTokens",0))
-            for mb in d.get("modelBreakdowns",[]):
-                mn=mb.get("modelName","")
-                toks=mb.get("totalTokens") or (mb.get("inputTokens",0)+mb.get("outputTokens",0)+mb.get("cacheCreationTokens",0)+mb.get("cacheReadTokens",0))
-                per_model_tokens[mn]+=toks
-                by_day[date]["_models"][mn]=by_day[date]["_models"].get(mn,0)+toks
+        try:
+            j = parse_json_loose(node.get("stdout", ""))
+        except Exception:
+            print(
+                f"  fleet node: {node.get('node', '?')} → bad JSON (dropped)",
+                file=sys.stderr,
+            )
+            continue
+        nodes_ok += 1
+        # Prefer ccusage all-time totals so fleet matches local semantics.
+        node_total = int((j.get("totals") or {}).get("totalTokens") or 0)
+        daily = j.get("daily", [])
+        if not node_total:
+            node_total = sum(int(d.get("totalTokens", 0) or 0) for d in daily)
+        total_tokens += node_total
+        accumulate_models(daily, per_model_tokens)
+        for d in daily:
+            date_str = d.get("date") or d.get("period", "")
+            if date_str:
+                tokens_by_date[date_str] += int(d.get("totalTokens", 0) or 0)
 
-    # build similar to local
-    sorted_days = sorted(by_day.items(), key=lambda x: x[0])
-    def short_model(m): return m.replace("claude-","").replace("gpt-","").replace("-20251001","")
+    if nodes_ok == 0:
+        print("fleet: no nodes returned parseable ccusage JSON", file=sys.stderr)
+        return None
 
-    # also collect commits only from ubuntu (this host) for annotations — best effort
     commits = collect_commits_local()
+    by_model_top = [
+        {"short": short_model(k), "model": k, "tokens": int(v)}
+        for k, v in per_model_tokens.most_common(5)
+    ]
 
-    last30=[]
-    for date, info in sorted_days[-30:]:
-        toks=info["_totalTokens"]
-        comms=commits.get(date,[])
-        cnt=Counter(c["repo"] for c in comms)
-        top_repos=[f"{r} ({c})" for r,c in cnt.most_common(3)]
-        top_msgs=[c["msg"][:70] for c in comms[:3]]
-        top_msgs=[m.replace("Merge pull request","Merge PR").replace("Merge branch","Merge") for m in top_msgs]
-        last30.append({"date":date,"tokens":int(toks),"commits":len(comms),"topRepos":top_repos,"topMsgs":top_msgs})
-
-    by_model_top=[{"short":short_model(k),"model":k,"tokens":int(v)} for k,v in per_model_tokens.most_common(5)]
-
-    # Do NOT include per-node hostnames in public burn.json — log them to stderr instead
     for n in nodes:
         status = "ok" if n.get("ok") else n.get("error", "fail")
-        print(f"  fleet node: {n.get('node','?')} → {status}", file=sys.stderr)
+        print(f"  fleet node: {n.get('node', '?')} → {status}", file=sys.stderr)
 
     return {
         "generatedAt": datetime.now().isoformat(),
         "totalTokens": int(total_tokens),
         "byModelTop": by_model_top,
-        "last30": last30,
+        "last30": calendar_last30(tokens_by_date, commits),
     }
 
+
 def main():
-    parser=argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument("--fleet", action="store_true", help="also aggregate fleet-wide (fleet exec --all)")
     parser.add_argument("--out", default="burn.json", help="output file (public safe)")
-    parser.add_argument("--full", action="store_true", help="also write full usage-fleet.json")
-    args=parser.parse_args()
+    args = parser.parse_args()
 
     out_dir = Path(__file__).parent.parent
     os.chdir(out_dir)
@@ -226,17 +302,20 @@ def main():
     out_path = out_dir / args.out
     with open(out_path, "w") as f:
         json.dump(burn, f, indent=2)
-    print(f"Wrote {out_path} — {len(burn.get('last30',[]))} days, {burn.get('totalTokens',0)/1e9:.2f}B tokens")
+        f.write("\n")
+    print(f"Wrote {out_path} — {len(burn.get('last30', []))} days, {burn.get('totalTokens', 0)/1e9:.2f}B tokens")
 
-    # For TUI embed: also write a compact Go-embed friendly version
-    # burn.tui.json with same data, but also a Go file if requested
     tui_json = out_dir / "ssh-tui" / "burn.json"
     try:
         with open(tui_json, "w") as f:
             json.dump(burn, f)
+            f.write("\n")
         print(f"Wrote {tui_json}")
     except Exception as e:
         print(f"Could not write TUI burn.json: {e}", file=sys.stderr)
+        return 1
+    return 0
 
-if __name__=="__main__":
-    main()
+
+if __name__ == "__main__":
+    sys.exit(main())

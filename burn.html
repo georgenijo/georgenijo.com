@@ -152,13 +152,13 @@ function lineSVG(){
   data.forEach(function(d,i){
     if((d.commits||0)>=20){
       var x=pad+i*step, yy=y(d.tokens||0);
-      dots+='<circle class="dot" cx="'+x+'" cy="'+yy+'" r="3.6" data-idx="'+i+'" onclick="showNote('+i+')"><title>'+d.date+'</title></circle>';
+      dots+='<circle class="dot" cx="'+x+'" cy="'+yy+'" r="3.6" data-idx="'+i+'" onclick="showNote('+i+')"><title>'+esc(d.date)+'</title></circle>';
     }
   });
   var peakIdx=0; for(var k=1;k<data.length;k++) if((data[k].tokens||0)>(data[peakIdx].tokens||0)) peakIdx=k;
   if((data[peakIdx].commits||0)<20){
     var x2=pad+peakIdx*step, y2=y(data[peakIdx].tokens||0);
-    dots+='<circle class="dot" cx="'+x2+'" cy="'+y2+'" r="4.4" data-idx="'+peakIdx+'" onclick="showNote('+peakIdx+')"><title>'+data[peakIdx].date+' peak</title></circle>';
+    dots+='<circle class="dot" cx="'+x2+'" cy="'+y2+'" r="4.4" data-idx="'+peakIdx+'" onclick="showNote('+peakIdx+')"><title>'+esc(data[peakIdx].date)+' peak</title></circle>';
   }
   return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><path class="area" d="'+area+'"/><path class="line" d="'+path+'"/>'+dots+'</svg>';
 }
@@ -183,9 +183,9 @@ function render(){
     '</div>'+
 
     '<div class="spark-wrap ink col" style="animation-delay:40ms">'+
-      '<div class="spark-head"><span>30-day burn</span><span><b>'+fmtTok(peak.tokens||0)+' peak · '+(peak.date||'')+'</b> · dot = release day</span></div>'+
+      '<div class="spark-head"><span>30-day burn</span><span><b>'+fmtTok(peak.tokens||0)+' peak · '+esc(peak.date||'')+'</b> · dot = release day</span></div>'+
       lineSVG()+
-      '<div class="spark-labels"><span>'+((DATA.last30[0]&&DATA.last30[0].date)||'')+'</span><span>'+((DATA.last30[15]&&DATA.last30[15].date)||'')+'</span><span>'+((DATA.last30[DATA.last30.length-1]&&DATA.last30[DATA.last30.length-1].date)||'')+'</span></div>'+
+      '<div class="spark-labels"><span>'+esc((DATA.last30[0]&&DATA.last30[0].date)||'')+'</span><span>'+esc((DATA.last30[15]&&DATA.last30[15].date)||'')+'</span><span>'+esc((DATA.last30[DATA.last30.length-1]&&DATA.last30[DATA.last30.length-1].date)||'')+'</span></div>'+
       '<div id="note" class="note"></div>'+
     '</div>'+
 

@@ -349,6 +349,29 @@ func burnPeakDay() burnDay {
 	return peak
 }
 
+// burnDateLabels lays out first/mid/last dates into a fixed-width line
+// without overshooting: first left-aligned, last right-aligned, mid centered
+// only when it fits between them.
+func burnDateLabels(first, mid, last string, width int) string {
+	if width <= 0 {
+		return ""
+	}
+	buf := make([]rune, width)
+	for i := range buf {
+		buf[i] = ' '
+	}
+	fr, mr, lr := []rune(first), []rune(mid), []rune(last)
+	copy(buf, fr)
+	if len(lr) <= width {
+		copy(buf[width-len(lr):], lr)
+	}
+	midStart := (width - len(mr)) / 2
+	if midStart >= len(fr)+1 && midStart+len(mr) <= width-len(lr)-1 {
+		copy(buf[midStart:], mr)
+	}
+	return string(buf)
+}
+
 func burnText(st *styles, cw int) string {
 	if burnError != "" {
 		return st.dim.Render("burn data unavailable: "+burnError) + "\n" +
@@ -406,11 +429,11 @@ func burnChartBlock(st *styles, cw int) string {
 	lineH := 6
 	lineChart := burnLineChart(burnData.Last30, chartW, lineH)
 
-	// labels
+	// labels: first left, mid centered (if room), last right — never overshoot chartW
 	first := burnData.Last30[0].Date
 	mid := burnData.Last30[len(burnData.Last30)/2].Date
 	last := burnData.Last30[len(burnData.Last30)-1].Date
-	labelLine := st.faint.Render(padTo(first, 12) + padTo(mid, chartW-20) + last)
+	labelLine := st.faint.Render(burnDateLabels(first, mid, last, chartW))
 
 	// combine
 	peak := burnPeakDay()
@@ -448,11 +471,11 @@ func burnChartBlock(st *styles, cw int) string {
 		barsBlock = "\n" + strings.Join(lines, "\n")
 	}
 
-	// ship note for peak or most commits day
+	// ship note: same release threshold as ● dots (>=20)
 	var shipDay *burnDay
 	for i := range burnData.Last30 {
 		d := &burnData.Last30[i]
-		if d.Commits >= 30 {
+		if d.Commits >= 20 {
 			if shipDay == nil || d.Commits > shipDay.Commits {
 				shipDay = d
 			}
@@ -537,7 +560,8 @@ func (m model) body(h int) string {
 		add(st.title.Render("burn log"), "")
 		add(slip(burnText(st, slipW)), "")
 		// chart and bars live outside slip so they breathe
-		add("", st.dim.Render(burnChartBlock(st, cw)))
+		// Do not wrap in dim.Render — that would restyle accent model #1 bars.
+		add("", burnChartBlock(st, cw))
 		add(m.renderRows(cw, 0))
 	}
 

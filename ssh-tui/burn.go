@@ -185,7 +185,8 @@ func burnLineChart(days []burnDay, width, height int) string {
 			}
 		}
 	}
-	// Mark release days with ●
+	// Mark release days with ●. On narrow terminals many days map to the
+	// same x — don't overwrite an existing ●; nudge ±1/±2 if free.
 	for i, d := range days {
 		if d.Commits < 20 {
 			continue
@@ -196,8 +197,19 @@ func burnLineChart(days []burnDay, width, height int) string {
 		}
 		ratio := float64(d.Tokens) / float64(maxV)
 		y := int(math.Round((1 - ratio) * float64(height-1)))
-		if y >= 0 && y < height && x >= 0 && x < width {
-			grid[y][x] = '●'
+		if y < 0 || y >= height {
+			continue
+		}
+		for _, ox := range []int{0, 1, -1, 2, -2} {
+			nx := x + ox
+			if nx < 0 || nx >= width {
+				continue
+			}
+			if grid[y][nx] == '●' {
+				continue // try a neighboring column
+			}
+			grid[y][nx] = '●'
+			break
 		}
 	}
 
