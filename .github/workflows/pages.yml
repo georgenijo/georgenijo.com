@@ -1,13 +1,8 @@
 name: Deploy Pages
 
-# Deploys the static site (index.html, 404.html, og.png, CNAME,
-# concept-5-ssh.html) to GitHub Pages on every push to main, stamping the
+# Deploys the static site to GitHub Pages on every push to main, stamping the
 # "updated <month> <year>" text in index.html with the date of the commit
 # actually being deployed, so it never goes stale.
-#
-# NOTE: after this workflow is merged, the repo's Pages source must be
-# switched from "deploy from branch" to "GitHub Actions", e.g.:
-#   gh api repos/georgenijo/georgenijo.com/pages -X PUT -f build_type=workflow
 
 on:
   push:
@@ -52,7 +47,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp index.html 404.html og.png CNAME concept-5-ssh.html _site/
+          cp index.html 404.html og.png CNAME concept-5-ssh.html lab-health.js _site/
+          cp -R data _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
