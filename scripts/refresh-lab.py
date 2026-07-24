@@ -2,9 +2,11 @@
 """Refresh the checked-in George Lab snapshot from the GitHub REST API."""
 
 import argparse
+import http.client
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -47,18 +49,27 @@ PROJECTS = [
 ]
 
 
-def request_json(path, token):
-    request = urllib.request.Request(
-        "https://api.github.com" + path,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "georgenijo.com-lab-refresh",
-            "X-GitHub-Api-Version": "2022-11-28",
-            **({"Authorization": f"Bearer {token}"} if token else {}),
-        },
-    )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+def request_json(path, token, attempts=3):
+    for attempt in range(attempts):
+        request = urllib.request.Request(
+            "https://api.github.com" + path,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "georgenijo.com-lab-refresh",
+                "X-GitHub-Api-Version": "2022-11-28",
+                **({"Authorization": f"Bearer {token}"} if token else {}),
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as error:
+            if error.code < 500 or attempt == attempts - 1:
+                raise
+        except (urllib.error.URLError, http.client.RemoteDisconnected, TimeoutError):
+            if attempt == attempts - 1:
+                raise
+        time.sleep(2**attempt)
 
 
 def latest_release(repo, token):
