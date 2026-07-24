@@ -1,5 +1,46 @@
 {
   "schema_version": 1,
-  "generated_at": "1970-01-01T00:00:00Z",
-  "nodes": []
+  "generated_at": "2026-07-24T20:01:42Z",
+  "nodes": [
+    {
+      "name": "mac-mini",
+      "online": true,
+      "reachable": true,
+      "role": "node only \u2014 runs nothing",
+      "load": "low",
+      "health": "healthy"
+    },
+    {
+      "name": "macbook",
+      "online": false,
+      "reachable": false,
+      "role": "dev \u2014 primary workstation",
+      "load": "unknown",
+      "health": "unreachable"
+    },
+    {
+      "name": "opti",
+      "online": true,
+      "reachable": true,
+      "role": "helper + workloads",
+      "load": "low",
+      "health": "healthy"
+    },
+    {
+      "name": "ubuntu",
+      "online": true,
+      "reachable": true,
+      "role": "workloads",
+      "load": "low",
+      "health": "healthy"
+    },
+    {
+      "name": "whoop-vm",
+      "online": true,
+      "reachable": true,
+      "role": "whoop dashboard VM",
+      "load": "unknown",
+      "health": "unknown"
+    }
+  ]
 }
