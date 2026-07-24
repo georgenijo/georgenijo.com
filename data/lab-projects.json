@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-24T19:38:15.859310Z",
+  "generatedAt": "2026-07-24T20:00:23.983785Z",
   "source": "github-api",
   "projects": [
     {
@@ -19,7 +19,7 @@
       },
       "openIssues": 3,
       "openPullRequests": 0,
-      "lastActivityAt": "2026-07-24T19:02:40Z",
+      "lastActivityAt": "2026-07-24T19:44:08Z",
       "metadataAvailable": true
     },
     {
@@ -31,10 +31,10 @@
       "category": "agent platform",
       "note": "A personal and home agent operating system bringing long-running agents under one control plane.",
       "latestRelease": null,
-      "openIssues": null,
-      "openPullRequests": null,
-      "lastActivityAt": null,
-      "metadataAvailable": false
+      "openIssues": 11,
+      "openPullRequests": 2,
+      "lastActivityAt": "2026-07-24T17:08:43Z",
+      "metadataAvailable": true
     },
     {
       "id": "agent-mesh",
@@ -59,10 +59,10 @@
       "category": "developer infrastructure",
       "note": "Tools for running commands and agent work across George's machines as a small fleet.",
       "latestRelease": null,
-      "openIssues": null,
-      "openPullRequests": null,
-      "lastActivityAt": null,
-      "metadataAvailable": false
+      "openIssues": 1,
+      "openPullRequests": 0,
+      "lastActivityAt": "2026-07-24T19:58:08Z",
+      "metadataAvailable": true
     },
     {
       "id": "ghosthands",
