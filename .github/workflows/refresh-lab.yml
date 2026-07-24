@@ -1,0 +1,56 @@
+name: Refresh George Lab
+
+on:
+  repository_dispatch:
+    types: [george-lab-project-updated]
+  workflow_dispatch:
+    inputs:
+      project:
+        description: Optional project id that caused the refresh
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-george-lab
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Validate event and refresh snapshot
+        env:
+          GH_TOKEN: ${{ secrets.LAB_GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_PROJECT: ${{ github.event.client_payload.project || inputs.project }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "repository_dispatch" && -z "$EVENT_PROJECT" ]]; then
+            echo "repository_dispatch requires client_payload.project" >&2
+            exit 1
+          fi
+          args=()
+          if [[ -n "$EVENT_PROJECT" ]]; then args+=(--project "$EVENT_PROJECT"); fi
+          python3 scripts/refresh-lab.py "${args[@]}"
+
+      - name: Commit changed snapshot
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/lab-projects.json; then
+            echo "George Lab snapshot is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lab-projects.json
+          git commit -m "chore(lab): refresh project metadata"
+          git pull --rebase origin main
+          git push origin HEAD:main

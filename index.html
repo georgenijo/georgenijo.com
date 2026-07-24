@@ -273,6 +273,34 @@
   .rows.ledger .row.sel .t{color:var(--accent);}
   .rows.ledger .row.sel .num{color:var(--accent);}
 
+  /* ── George Lab — generated project-status ledger ── */
+  .lab-meta{
+    display:flex;gap:10px 22px;flex-wrap:wrap;
+    margin:-14px 0 22px;color:var(--muted);font-size:.82em;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .lab-meta .live{color:var(--accent);}
+  .lab-grid{border-top:2px solid var(--border);}
+  .lab-card{
+    display:grid;grid-template-columns:minmax(150px,1.1fr) minmax(260px,2fr);
+    gap:14px 30px;padding:18px 6px;border-bottom:1px solid var(--hairline);
+  }
+  .lab-card h2{
+    margin:0;font-family:var(--serif);font-style:italic;
+    font-size:clamp(22px,2.6vw,30px);line-height:1.1;
+  }
+  .lab-card h2 a{color:inherit;text-decoration:none;}
+  .lab-card h2 a:hover{color:var(--accent);}
+  .lab-kind{margin-top:6px;color:var(--faint);font-size:.76em;text-transform:uppercase;letter-spacing:.07em;}
+  .lab-status{color:var(--accent);}
+  .lab-note{margin:0 0 10px;max-width:62ch;font-family:var(--serif);font-size:16px;line-height:1.4;}
+  .lab-facts{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--muted);font-size:.82em;}
+  .lab-facts b{color:var(--fg);font-weight:400;}
+  .lab-empty{padding:24px 6px;color:var(--muted);border-bottom:1px solid var(--hairline);}
+  @media (max-width:650px){
+    .lab-card{grid-template-columns:1fr;gap:10px;}
+  }
+
   /* ── actions (underlined mono links) ── */
   .acts{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border-top:0;}
   .acts .row{
@@ -348,6 +376,7 @@
 
 <div id="cur" hidden aria-hidden="true"><span class="core"></span><span class="fr"><i></i><i></i><i></i><i></i></span></div>
 
+<script src="./lab-health.js"></script>
 <script>
 (function(){
 "use strict";
@@ -410,6 +439,7 @@ var PROJECTS = [
 var MENU = [
   {id:"about",    t:"about",    d:"who's at the keyboard"},
   {id:"projects", t:"projects", d:"nine repos, five languages"},
+  {id:"lab",      t:"George Lab",d:"five projects · event-updated"},
   {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
   {id:"burn",     t:"burn log", d:"tokens · models · commits", href:"./burn.html"},
   {id:"guestbook",t:"guestbook",d:"leave a line over ssh", href:"./guestbook.html"},
@@ -472,7 +502,7 @@ function skipBoot(){ bootSkip=true; }
 var pageEl=document.getElementById("page"), crumbEl=document.getElementById("crumb"),
     statusEl=document.getElementById("status");
 var ST={view:"menu",proj:null,rows:[],cursor:0,cursors:{}};
-var PARENT={about:"menu",projects:"menu",now:"menu",contact:"menu",project:"projects",menu:null,closed:null};
+var PARENT={about:"menu",projects:"menu",lab:"menu",now:"menu",contact:"menu",project:"projects",menu:null,closed:null};
 
 function projByName(n){for(var i=0;i<PROJECTS.length;i++)if(PROJECTS[i].name===n)return PROJECTS[i];return null;}
 function projDetailHTML(p){
@@ -596,6 +626,7 @@ function render(){
     case "menu":vMenu();break;
     case "about":vSheet("about","whoami",ABOUT_HTML);break;
     case "projects":vProjects();break;
+    case "lab":vLab();break;
     case "project":vProject();break;
     case "now":vSheet("now","updated july 2026",NOW_HTML);break;
     case "contact":vContact();break;
@@ -647,6 +678,80 @@ function vProjects(){
             on:function(){go("project",{proj:p.name});}};
   }),"projects","ledger");
   setStatus(stdHints(true));
+}
+function fmtDate(value){
+  if(!value)return "unknown";
+  var d=new Date(value);
+  if(isNaN(d.getTime()))return value;
+  return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+}
+function metric(value){return value==null?"—":value;}
+function fleetStateCopy(state){
+  return {
+    current:"current",
+    stale:"stale snapshot",
+    unsupported:"unsupported snapshot",
+    malformed:"invalid snapshot"
+  }[state]||"snapshot unavailable";
+}
+function renderFleet(grid,data){
+  var parsed=GeorgeLabHealth.parse(data);
+  var section=h("section","lab-card");
+  var heading='<div><h2>fleet health</h2><div class="lab-kind"><span class="lab-status">'+
+    esc(fleetStateCopy(parsed.state))+'</span> · privacy-safe</div></div>';
+  if(parsed.state!=="current"){
+    section.innerHTML=heading+'<div><p class="lab-note">Live fleet status is unavailable. No cached node details are shown.</p></div>';
+  }else{
+    var healthy=parsed.nodes.filter(function(n){return n.health==="healthy";}).length;
+    var reachable=parsed.nodes.filter(function(n){return n.reachable;}).length;
+    section.innerHTML=heading+'<div><p class="lab-note">Short-lived collector snapshot; no resident agent or listener.</p>'+
+      '<div class="lab-facts"><span>nodes <b>'+parsed.nodes.length+'</b></span>'+
+      '<span>reachable <b>'+reachable+'</b></span><span>healthy <b>'+healthy+'</b></span>'+
+      '<span>collected <b>'+fmtDate(parsed.generatedAt)+'</b></span></div></div>';
+  }
+  grid.insertBefore(section,grid.firstChild);
+}
+function vLab(){
+  var w=frame([{t:"~",go:"menu"},{t:"lab"}]);
+  w.appendChild(h("p","vkick","George Lab · project telemetry"));
+  w.appendChild(h("p","vtitle stamp","five builds, one bench"));
+  var meta=h("div","lab-meta",'<span id="lab-state">loading snapshot…</span><span>event-driven · no resident agent</span>');
+  var grid=h("div","lab-grid",'<p class="lab-empty">Reading the latest checked-in project snapshot…</p>');
+  w.appendChild(meta);w.appendChild(grid);
+  fetch("./data/lab-projects.json",{cache:"no-cache"}).then(function(res){
+    if(!res.ok)throw new Error("status "+res.status);
+    return res.json();
+  }).then(function(data){
+    var state=document.getElementById("lab-state");
+    if(state)state.innerHTML='<span class="live">snapshot</span> · '+fmtDate(data.generatedAt);
+    grid.innerHTML="";
+    if(!data||data.schemaVersion!==1||!Array.isArray(data.projects))throw new Error("invalid project snapshot");
+    data.projects.forEach(function(p){
+      var release=p.latestRelease&&p.latestRelease.tag?esc(String(p.latestRelease.tag)):"no release";
+      var card=h("article","lab-card");
+      card.innerHTML=
+        '<div><h2><a href="'+p.repositoryUrl+'" target="_blank" rel="noopener">'+esc(String(p.name))+' ↗</a></h2>'+
+        '<div class="lab-kind"><span class="lab-status">'+esc(String(p.status))+'</span> · '+esc(String(p.category))+'</div></div>'+
+        '<div><p class="lab-note">'+esc(String(p.note))+'</p>'+
+        '<div class="lab-facts"><span>release <b>'+release+'</b></span>'+
+        '<span>issues <b>'+metric(p.openIssues)+'</b></span><span>PRs <b>'+metric(p.openPullRequests)+'</b></span>'+
+        '<span>activity <b>'+fmtDate(p.lastActivityAt)+'</b></span></div></div>';
+      grid.appendChild(card);
+    });
+    fetch("./data/fleet-health.json",{cache:"no-cache"}).then(function(res){
+      if(!res.ok)throw new Error("status "+res.status);
+      return res.json();
+    }).then(function(fleet){renderFleet(grid,fleet);}).catch(function(){
+      renderFleet(grid,null);
+    });
+  }).catch(function(){
+    var state=document.getElementById("lab-state");
+    if(state)state.textContent="snapshot unavailable";
+    grid.innerHTML='<p class="lab-empty">The project snapshot could not be loaded. Try opening the site through a web server.</p>';
+  });
+  addRows(w,[{t:"back to index",on:back}],"lab","acts");
+  inkIn(w);
+  setStatus(stdHints(false));
 }
 function vProject(){
   var p=projByName(ST.proj);

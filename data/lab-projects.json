@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-24T19:38:15.859310Z",
+  "source": "github-api",
+  "projects": [
+    {
+      "id": "murmur-app",
+      "name": "murmur-app",
+      "repository": "georgenijo/murmur-app",
+      "repositoryUrl": "https://github.com/georgenijo/murmur-app",
+      "status": "active",
+      "category": "macOS utility",
+      "note": "Local, offline voice-to-text for macOS, built around a hold-to-talk workflow.",
+      "latestRelease": {
+        "tag": "v0.21.2",
+        "name": "v0.21.2",
+        "url": "https://github.com/georgenijo/murmur-app/releases/tag/v0.21.2",
+        "publishedAt": "2026-07-24T19:00:13Z"
+      },
+      "openIssues": 3,
+      "openPullRequests": 0,
+      "lastActivityAt": "2026-07-24T19:02:40Z",
+      "metadataAvailable": true
+    },
+    {
+      "id": "agentos",
+      "name": "agentos",
+      "repository": "georgenijo/agentos",
+      "repositoryUrl": "https://github.com/georgenijo/agentos",
+      "status": "active",
+      "category": "agent platform",
+      "note": "A personal and home agent operating system bringing long-running agents under one control plane.",
+      "latestRelease": null,
+      "openIssues": null,
+      "openPullRequests": null,
+      "lastActivityAt": null,
+      "metadataAvailable": false
+    },
+    {
+      "id": "agent-mesh",
+      "name": "agent-mesh",
+      "repository": "georgenijo/agent-mesh",
+      "repositoryUrl": "https://github.com/georgenijo/agent-mesh",
+      "status": "active",
+      "category": "agent coordination",
+      "note": "Coordination infrastructure for multiple coding agents sharing tasks, files, and decisions.",
+      "latestRelease": null,
+      "openIssues": 15,
+      "openPullRequests": 4,
+      "lastActivityAt": "2026-07-08T22:11:11Z",
+      "metadataAvailable": true
+    },
+    {
+      "id": "fleet",
+      "name": "fleet",
+      "repository": "georgenijo/fleet",
+      "repositoryUrl": "https://github.com/georgenijo/fleet",
+      "status": "active",
+      "category": "developer infrastructure",
+      "note": "Tools for running commands and agent work across George's machines as a small fleet.",
+      "latestRelease": null,
+      "openIssues": null,
+      "openPullRequests": null,
+      "lastActivityAt": null,
+      "metadataAvailable": false
+    },
+    {
+      "id": "ghosthands",
+      "name": "ghosthands",
+      "repository": "georgenijo/ghosthands",
+      "repositoryUrl": "https://github.com/georgenijo/ghosthands",
+      "status": "active",
+      "category": "macOS automation",
+      "note": "Local computer-use for native macOS apps through the accessibility tree.",
+      "latestRelease": null,
+      "openIssues": 32,
+      "openPullRequests": 2,
+      "lastActivityAt": "2026-07-04T06:30:04Z",
+      "metadataAvailable": true
+    }
+  ]
+}
