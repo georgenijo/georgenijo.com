@@ -24,9 +24,10 @@ Do not put it in a file, command example, issue, pull request, or Actions
 variable.
 
 The refresh workflow uses this token only to read project metadata, releases,
-issues, and pull requests. Its built-in `GITHUB_TOKEN`—scoped by the workflow to
-`contents: write`—performs the snapshot commit. The personal token does not
-need write access.
+issues, and pull requests. Its built-in `GITHUB_TOKEN`—scoped to
+`contents: write` and `actions: write`—performs the snapshot commit and starts
+the existing Pages workflow when the snapshot changes. The personal token does
+not need write access.
 
 ## Satellite event contract
 
