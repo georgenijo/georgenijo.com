@@ -11,6 +11,7 @@ on:
         type: string
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -42,10 +43,12 @@ jobs:
           python3 scripts/refresh-lab.py "${args[@]}"
 
       - name: Commit changed snapshot
+        id: snapshot
         run: |
           set -euo pipefail
           if git diff --quiet -- data/lab-projects.json; then
             echo "George Lab snapshot is already current."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -54,3 +57,10 @@ jobs:
           git commit -m "chore(lab): refresh project metadata"
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy changed snapshot through existing Pages workflow
+        if: steps.snapshot.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
