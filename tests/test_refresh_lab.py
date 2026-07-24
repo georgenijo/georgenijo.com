@@ -1,6 +1,7 @@
 """Network-free tests for event/manual George Lab refresh behavior."""
 
 import importlib.util
+import http.client
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -55,6 +56,22 @@ class RefreshLabTests(unittest.TestCase):
         )
         self.assertTrue(all(project["metadataAvailable"] for project in snapshot["projects"]))
         self.assertTrue(all(project["openIssues"] == 2 for project in snapshot["projects"]))
+
+    def test_github_request_retries_transient_disconnect(self):
+        response = mock.MagicMock()
+        response.__enter__.return_value = ["ok"]
+        with mock.patch.object(
+            refresh_lab.urllib.request,
+            "urlopen",
+            side_effect=[http.client.RemoteDisconnected(), response],
+        ) as urlopen, mock.patch.object(refresh_lab.json, "load", return_value={"ok": True}), mock.patch.object(
+            refresh_lab.time, "sleep"
+        ) as sleep:
+            result = refresh_lab.request_json("/test", None)
+
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(urlopen.call_count, 2)
+        sleep.assert_called_once_with(1)
 
 
 if __name__ == "__main__":
