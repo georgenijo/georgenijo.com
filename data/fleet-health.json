@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-03T19:27:18Z",
+  "generated_at": "2026-08-03T19:37:21Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -31,12 +31,12 @@
       "online": true,
       "reachable": true,
       "role": "workloads",
-      "load": "high",
-      "health": "degraded"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "whoop-vm",
-      "online": true,
+      "online": false,
       "reachable": true,
       "role": "whoop dashboard VM",
       "load": "unknown",
