@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-06T23:56:21Z",
+  "generated_at": "2026-08-07T00:06:24Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -15,7 +15,7 @@
       "online": true,
       "reachable": true,
       "role": "dev \u2014 primary workstation",
-      "load": "moderate",
+      "load": "low",
       "health": "healthy"
     },
     {
