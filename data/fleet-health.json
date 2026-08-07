@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-07T04:28:12Z",
+  "generated_at": "2026-08-07T04:38:16Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "node only \u2014 runs nothing",
-      "load": "low",
-      "health": "healthy"
+      "load": "high",
+      "health": "degraded"
     },
     {
       "name": "macbook",
