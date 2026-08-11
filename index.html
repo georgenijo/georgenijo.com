@@ -12,7 +12,7 @@
 <meta property="og:image" content="https://georgenijo.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="George Nijo — software engineer, boston, agent infrastructure. Terminal-styled card reading ssh georgenijo.com">
+<meta property="og:image:alt" content="George Nijo — software engineer, boston, agent infrastructure. Terminal-styled card reading ssh ssh.georgenijo.com">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="George Nijo">
 <meta name="twitter:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
@@ -463,15 +463,15 @@ var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById
     appEl=document.getElementById("app"), booting=false, bootSkip=false;
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 var BOOT_LINES=[
-  {h:'<span class="b-dim">Connecting to georgenijo.com port 22.</span>',w:240},
+  {h:'<span class="b-dim">Connecting to ssh.georgenijo.com port 22.</span>',w:240},
   {h:'<span class="b-dim">Host key:</span> ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU <span class="b-ok">✓ known</span>',w:300},
-  {h:'<span class="b-ok">Authenticated to georgenijo.com (via publickey).</span>',w:340}
+  {h:'<span class="b-ok">Authenticated to ssh.georgenijo.com (via publickey).</span>',w:340}
 ];
 function sleep(ms){return new Promise(function(res){ if(bootSkip||RM) return res(); setTimeout(res,ms); });}
 function runBoot(){
   booting=true; bootSkip=false;
   appEl.hidden=true; bootWrap.hidden=false; bootPre.innerHTML="";
-  var CMD="ssh georgenijo.com", html='<span class="prompt-sig">➜ ~ $</span> ';
+  var CMD="ssh ssh.georgenijo.com", html='<span class="prompt-sig">➜ ~ $</span> ';
   bootPre.innerHTML=html+'<span class="cur-b"></span>';
   var p=Promise.resolve();
   CMD.split("").forEach(function(ch,i){
@@ -771,9 +771,9 @@ function vClosed(){
   crumbEl.innerHTML="";appEl.hidden=true;
   bootWrap.hidden=false;
   bootWrap.innerHTML='<div class="closed reveal">'+
-    '<p class="msg">Connection to georgenijo.com closed.</p>'+
+    '<p class="msg">Connection to ssh.georgenijo.com closed.</p>'+
     '<p>Thanks for stopping by.</p>'+
-    '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh georgenijo.com  (reconnect)</button></div>';
+    '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh ssh.georgenijo.com  (reconnect)</button></div>';
   var b=document.getElementById("reconn");
   b.addEventListener("click",restart);b.focus();
 }

@@ -1,6 +1,6 @@
 # ssh-tui
 
-The real thing behind `ssh georgenijo.com` — a Go SSH server ([Wish](https://github.com/charmbracelet/wish)) that drops visitors into a [Bubbletea](https://github.com/charmbracelet/bubbletea) TUI. The website (`../index.html`) is a simulation of this; this is the actual server.
+The real thing behind `ssh ssh.georgenijo.com` — a Go SSH server ([Wish](https://github.com/charmbracelet/wish)) that drops visitors into a [Bubbletea](https://github.com/charmbracelet/bubbletea) TUI. The website (`../index.html`) is a simulation of this; this is the actual server.
 
 ## Build
 
@@ -16,11 +16,17 @@ CGO_ENABLED=0 go build -ldflags="-s -w" -o ssh-tui .
 
 The host key is generated on first run if missing. Never commit it.
 
-## Deployment (Oracle box)
+## Deployment (opti)
 
-- Binary + host key live in `~/ssh-tui/`, run as the `ubuntu` user via a systemd user unit (`ssh-tui.service`, MemoryMax=256M, lingering enabled).
-- Public port 22 is redirected to 23231 by an iptables PREROUTING rule scoped to `ens3`, so tailnet admin SSH is unaffected.
-- Host key fingerprint is published in the boot sequence on https://georgenijo.com.
+The apex is a Cloudflare-proxied tunnel now, and that proxy is HTTP-only — raw SSH
+can't ride it. The public entry point is `ssh.georgenijo.com`, a dns-only A record.
+
+- Binary + host key live in `/home/george/ssh-tui/`, run as `george` via the system unit `/etc/systemd/system/ssh-tui.service` (MemoryMax=256M, Restart=always).
+- `ssh.georgenijo.com` resolves to the home IP; the router forwards external 22 → opti:23231.
+- Host key fingerprint is published in the boot sequence on https://georgenijo.com — it survived the move off the Oracle box, so it stays truthful.
+
+The old Oracle box redirected public :22 → :23231 with an iptables PREROUTING rule on
+`ens3` and ran as a systemd *user* unit under `ubuntu`; both are retired.
 
 ## Tests
 

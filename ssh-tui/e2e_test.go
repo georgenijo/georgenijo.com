@@ -117,7 +117,7 @@ func TestEndToEnd(t *testing.T) {
 	case <-time.After(10 * time.Second):
 		t.Fatalf("session did not close after q; got:\n%s", snapshot())
 	}
-	if !strings.Contains(snapshot(), "Connection to georgenijo.com closed.") {
+	if !strings.Contains(snapshot(), "Connection to ssh.georgenijo.com closed.") {
 		t.Fatalf("missing goodbye message; got tail:\n%s", tail(snapshot(), 600))
 	}
 }
