@@ -6,7 +6,7 @@ const (
 	ghBase   = "https://github.com/georgenijo"
 	liURL    = "https://www.linkedin.com/in/georgenijo/"
 	email    = "george.nijo8@gmail.com"
-	hostName = "georgenijo.com"
+	hostName = "ssh.georgenijo.com"
 )
 
 type project struct {
@@ -74,8 +74,8 @@ const tagline = "software engineer · boston · agent infrastructure"
 
 // Boot sequence lines, mirroring the site's fake-ssh boot.
 const (
-	bootCmd         = "ssh georgenijo.com"
-	bootConnLine    = "Connecting to georgenijo.com port 22."
+	bootCmd         = "ssh ssh.georgenijo.com"
+	bootConnLine    = "Connecting to ssh.georgenijo.com port 22."
 	bootFingerprint = "ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU"
-	bootAuthLine    = "Authenticated to georgenijo.com (via publickey)."
+	bootAuthLine    = "Authenticated to ssh.georgenijo.com (via publickey)."
 )
