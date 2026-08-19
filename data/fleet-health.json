@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-19T13:50:56Z",
+  "generated_at": "2026-08-19T14:01:06Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "node only \u2014 runs nothing",
-      "load": "low",
+      "load": "moderate",
       "health": "healthy"
     },
     {
       "name": "macbook",
-      "online": false,
-      "reachable": false,
+      "online": true,
+      "reachable": true,
       "role": "dev \u2014 primary workstation",
       "load": "unknown",
-      "health": "unreachable"
+      "health": "unknown"
     },
     {
       "name": "opti",
