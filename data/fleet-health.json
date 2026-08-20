@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-20T02:51:33Z",
+  "generated_at": "2026-08-20T03:01:43Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "node only \u2014 runs nothing",
-      "load": "low",
+      "load": "moderate",
       "health": "healthy"
     },
     {
