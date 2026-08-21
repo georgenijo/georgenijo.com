@@ -318,6 +318,14 @@
     padding:clamp(18px,3vw,30px) clamp(18px,3vw,32px);
   }
   .slip p{margin:0 0 12px;max-width:58ch;font-size:15px;}
+  .slip h2{
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    font-size:1.15em;margin:20px 0 8px;
+  }
+  .static-list{margin:0 0 12px;padding-left:1.4em;}
+  .static-list li{margin:3px 0;font-size:15px;}
+  .static-list a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
+  .static-list a:hover{color:var(--accent);}
   .slip p:last-child{margin-bottom:0;}
   .slip .hl{color:var(--accent);}
   .slip .dim{color:var(--muted);}
@@ -362,14 +370,42 @@
 <body>
 
 <div class="term" id="term">
-  <div class="boot" id="boot" aria-live="polite"><pre id="bootpre"></pre></div>
-  <div class="app" id="app" hidden>
+  <div class="boot" id="boot" aria-live="polite" hidden><pre id="bootpre"></pre></div>
+  <div class="app" id="app">
     <header class="bar">
       <span class="brand">George Nijo</span>
       <span class="crumb" id="crumb">~</span>
       <span class="conn">ssh · ed25519 · paper</span>
     </header>
-    <main class="page" id="page" tabindex="-1"></main>
+    <main class="page" id="page" tabindex="-1">
+      <div class="sheet" id="static-content">
+        <h1 class="vtitle">George Nijo</h1>
+        <p class="vkick">software engineer · boston · agent infrastructure</p>
+        <div class="slip">
+          <p><strong>George Nijo</strong> is a software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building AgentOS, a personal + home agent operating system.</p>
+          <p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing.</p>
+          <h2>Projects</h2>
+          <ul class="static-list">
+            <li><a href="https://github.com/georgenijo/agent-mesh">agent-mesh</a> — Go — agents orchestrating themselves</li>
+            <li><a href="https://github.com/georgenijo/usher">usher</a> — Go — MCP broker</li>
+            <li><a href="https://github.com/georgenijo/hangar">hangar</a> — Rust — agent control plane</li>
+            <li><a href="https://github.com/georgenijo/ghosthands">ghosthands</a> — Python — local computer-use for macOS</li>
+            <li><a href="https://github.com/georgenijo/murmur-app">murmur-app</a> — Rust — local voice-to-text for macOS</li>
+            <li><a href="https://github.com/georgenijo/fleetmap">fleetmap</a> — Swift — live map of what your Mac runs</li>
+            <li><a href="https://github.com/georgenijo/gauge">gauge</a> — Swift — Claude usage in the menu bar</li>
+            <li><a href="https://github.com/georgenijo/whoop-dashboard">whoop-dashboard</a> — TypeScript — health analytics with an AI coach</li>
+            <li><a href="https://github.com/georgenijo/aperture">aperture</a> — Swift — iOS film camera</li>
+          </ul>
+          <h2>Contact</h2>
+          <ul class="static-list">
+            <li><a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a></li>
+            <li><a href="https://github.com/georgenijo">github.com/georgenijo</a></li>
+            <li><a href="https://www.linkedin.com/in/georgenijo/">linkedin.com/in/georgenijo</a></li>
+          </ul>
+          <p>This site works without JavaScript. For agents: <a href="/llms.txt">/llms.txt</a> lists markdown versions of every page.</p>
+        </div>
+      </div>
+    </main>
     <footer class="status" id="status"></footer>
   </div>
 </div>
@@ -382,6 +418,9 @@
 "use strict";
 var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 var FINE = matchMedia("(pointer:fine)").matches;
+
+var staticContent=document.getElementById("static-content");
+if(staticContent)staticContent.remove();
 
 /* ── live layer: cursor takeover ────────────────────────────────
    One fixed element, lerped toward the pointer each frame. Default

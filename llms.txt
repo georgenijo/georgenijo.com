@@ -1,0 +1,20 @@
+# George Nijo
+
+> Software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes. Currently building AgentOS, a personal + home agent operating system. Local-first, honesty-first.
+
+This site is a terminal-styled single-page app. Every page below has a markdown variant served from the same path with a `.md` extension. Markdown is also available via content negotiation where the origin supports it (`Accept: text/markdown`, responses carry `Vary: Accept`).
+
+## Pages
+
+- [Home](https://georgenijo.com/index.md): who George is, what he builds, and how to reach him.
+- [About](https://georgenijo.com/about.md): background, principles, and languages (Python, Go, Rust, Swift).
+- [Projects](https://georgenijo.com/projects.md): nine repos across five languages — agent-mesh, usher, hangar, ghosthands, murmur-app, fleetmap, gauge, whoop-dashboard, aperture.
+- [Now](https://georgenijo.com/now.md): current focus — AgentOS, hangar, usher, agent-mesh.
+- [Burn log](https://georgenijo.com/burn.md): tokens, models, and commits over the last 30 days.
+- [Contact](https://georgenijo.com/contact.md): email, GitHub, LinkedIn.
+
+## Machine-readable files
+
+- [Sitemap](https://georgenijo.com/sitemap.xml): XML sitemap of all pages.
+- [Lab projects snapshot](https://georgenijo.com/data/lab-projects.json): project telemetry (schema version 1).
+- [Fleet health snapshot](https://georgenijo.com/data/fleet-health.json): short-lived privacy-safe collector snapshot.

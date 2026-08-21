@@ -63,6 +63,16 @@
   .home:hover{color:var(--accent);border-bottom-color:var(--accent);}
   .home .sig{margin-right:.4em;}
   .footline{color:var(--faint);font-size:.82em;margin-top:26px;}
+  .recover{margin-top:18px;border-top:1px solid var(--hairline);padding-top:14px;}
+  .recover h2{
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    font-size:.95em;margin:0 0 8px;
+  }
+  .recover ul{margin:0;padding-left:1.3em;}
+  .recover li{margin:4px 0;font-size:.9em;}
+  .recover a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
+  .recover a:hover{color:var(--accent);}
+  .recover p{color:var(--muted);font-size:.85em;margin:0 0 8px;}
   @media (max-width:400px){ body{font-size:13px;} }
   @media (prefers-reduced-motion: reduce){
     .wrap{animation:none;}
@@ -78,6 +88,17 @@
   <p class="exit">exit 127</p>
   <pre><span class="sig">➜ ~ $</span> <a class="home" href="/"><span class="sig">cd</span>&nbsp;~</a><span class="cur" aria-hidden="true"></span></pre>
   <p class="footline">404 — nothing lives at that path.</p>
+  <div class="recover">
+    <h2>Where to look next</h2>
+    <ul>
+      <li><a href="/">/</a> — home</li>
+      <li><a href="/llms.txt">/llms.txt</a> — index of every page in markdown for AI agents</li>
+      <li><a href="/sitemap.xml">/sitemap.xml</a> — sitemap of real paths</li>
+      <li><a href="/index.md">/index.md</a> — home page as markdown</li>
+      <li><a href="/projects.md">/projects.md</a> — projects as markdown</li>
+      <li><a href="/contact.md">/contact.md</a> — contact as markdown</li>
+    </ul>
+  </div>
 </div>
 <script>
 (function(){
