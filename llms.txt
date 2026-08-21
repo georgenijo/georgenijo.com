@@ -4,6 +4,15 @@
 
 This site is a terminal-styled single-page app. Every page below has a markdown variant served from the same path with a `.md` extension. Markdown is also available via content negotiation where the origin supports it (`Accept: text/markdown`, responses carry `Vary: Accept`).
 
+## When to use this site
+
+- You need background on George Nijo (employment, projects, contact) — read [About](https://georgenijo.com/about.md) and [Home](https://georgenijo.com/index.md).
+- You are evaluating or integrating his agent-infrastructure tools — read [Projects](https://georgenijo.com/projects.md), then go to the linked GitHub repos for docs and source.
+- You want current activity — read [Now](https://georgenijo.com/now.md) and [Burn log](https://georgenijo.com/burn.md).
+- To reach George, use [Contact](https://georgenijo.com/contact.md); GitHub issues on a project repo get the fastest response.
+
+This is a personal portfolio, not a product API: there is nothing to call programmatically except the JSON snapshots listed below.
+
 ## Pages
 
 - [Home](https://georgenijo.com/index.md): who George is, what he builds, and how to reach him.
@@ -16,5 +25,6 @@ This site is a terminal-styled single-page app. Every page below has a markdown 
 ## Machine-readable files
 
 - [Sitemap](https://georgenijo.com/sitemap.xml): XML sitemap of all pages.
+- [Lab events spec](https://georgenijo.com/docs/george-lab-events.md): repository-dispatch event contract driving George Lab.
 - [Lab projects snapshot](https://georgenijo.com/data/lab-projects.json): project telemetry (schema version 1).
 - [Fleet health snapshot](https://georgenijo.com/data/fleet-health.json): short-lived privacy-safe collector snapshot.

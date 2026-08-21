@@ -5,6 +5,18 @@
     <changefreq>weekly</changefreq>
   </url>
   <url>
+    <loc>https://georgenijo.com/about/</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://georgenijo.com/contact/</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://georgenijo.com/privacy/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
     <loc>https://georgenijo.com/burn.html</loc>
     <changefreq>daily</changefreq>
   </url>

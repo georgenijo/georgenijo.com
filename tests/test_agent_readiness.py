@@ -5,6 +5,7 @@ content, crawler allowlist, agent 404 recovery body, llms.txt/sitemap
 consistency, and the acceptmarkdown.com negotiation artifacts.
 """
 
+import json
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -100,9 +101,49 @@ def test_sitemap_xml_is_valid_and_urls_exist():
     assert locs, "sitemap.xml has no URLs"
     for loc in locs:
         assert loc.startswith("https://georgenijo.com/")
-        path = loc.replace("https://georgenijo.com/", "") or "index.html"
-        if not path.startswith("http"):
+        path = loc.replace("https://georgenijo.com/", "")
+        if not path or path.endswith("/"):
+            assert (ROOT / f"{path}index.html").is_file(), (
+                f"sitemap lists missing page {loc}"
+            )
+        else:
             assert (ROOT / path).is_file(), f"sitemap lists missing file {path}"
+
+
+def test_homepage_metadata_is_complete():
+    html = (ROOT / "index.html").read_text()
+    assert '<link rel="canonical" href="https://georgenijo.com/">' in html
+    assert '<html lang="en">' in html
+    assert 'property="og:image"' in html
+    assert 'property="og:type"' in html
+
+
+def test_jsonld_person_has_identity_fields():
+    html = (ROOT / "index.html").read_text()
+    match = re.search(
+        r'<script type="application/ld\+json">(.*?)</script>', html, re.S
+    )
+    assert match, "homepage must carry JSON-LD"
+    data = json.loads(match.group(1))
+    for field in ["name", "description", "url", "jobTitle", "sameAs"]:
+        assert data.get(field), f"JSON-LD Person missing {field}"
+
+
+def test_llms_txt_has_when_to_use_guidance():
+    llms = (ROOT / "llms.txt").read_text()
+    assert "## When to use this site" in llms
+    guidance = llms.split("## When to use this site")[1]
+    assert len(guidance.strip()) >= 200, "when-to-use guidance too thin"
+
+
+def test_trust_anchor_pages_exist_with_substance():
+    for slug in ["about", "contact", "privacy"]:
+        page = ROOT / slug / "index.html"
+        assert page.is_file(), f"missing trust anchor page /{slug}/"
+        html = page.read_text()
+        assert "<h1" in html
+        assert len(visible_text(html)) >= 500, f"/{slug}/ has less than 500 chars"
+        assert 'rel="canonical"' in html
 
 
 def test_404_has_agent_recovery_body():
