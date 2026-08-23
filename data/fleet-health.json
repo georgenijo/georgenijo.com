@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-23T01:45:13Z",
+  "generated_at": "2026-08-23T01:55:20Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
-      "role": "node only \u2014 runs nothing",
+      "role": "worker + workloads (M4 24GB)",
       "load": "low",
       "health": "healthy"
     },
@@ -14,9 +14,17 @@
       "name": "macbook",
       "online": true,
       "reachable": true,
-      "role": "dev \u2014 primary workstation",
-      "load": "unknown",
-      "health": "unknown"
+      "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
+      "load": "low",
+      "health": "healthy"
+    },
+    {
+      "name": "macbook-old",
+      "online": true,
+      "reachable": true,
+      "role": "migration source \u2014 retire after verification",
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "opti",
@@ -38,7 +46,7 @@
       "name": "whoop-vm",
       "online": false,
       "reachable": false,
-      "role": "whoop dashboard VM",
+      "role": "whoop dashboard (Oracle Cloud VM) \u2014 coach.georgenijo.com",
       "load": "unknown",
       "health": "unreachable"
     }
