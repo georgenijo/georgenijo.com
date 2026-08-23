@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-23T19:39:08Z",
+  "generated_at": "2026-08-23T19:49:15Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "worker + workloads (M4 24GB)",
-      "load": "moderate",
+      "load": "low",
       "health": "healthy"
     },
     {
@@ -20,7 +20,7 @@
     },
     {
       "name": "macbook-old",
-      "online": false,
+      "online": true,
       "reachable": false,
       "role": "migration source \u2014 retire after verification",
       "load": "unknown",
