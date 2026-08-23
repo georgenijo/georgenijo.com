@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-23T17:47:35Z",
+  "generated_at": "2026-08-23T17:57:42Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -13,18 +13,18 @@
     {
       "name": "macbook",
       "online": false,
-      "reachable": false,
+      "reachable": true,
       "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "moderate",
+      "health": "healthy"
     },
     {
       "name": "macbook-old",
-      "online": true,
-      "reachable": false,
+      "online": false,
+      "reachable": true,
       "role": "migration source \u2014 retire after verification",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "opti",
