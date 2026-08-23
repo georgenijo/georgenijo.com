@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-23T14:04:50Z",
+  "generated_at": "2026-08-23T14:14:57Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -20,7 +20,7 @@
     },
     {
       "name": "macbook-old",
-      "online": false,
+      "online": true,
       "reachable": false,
       "role": "migration source \u2014 retire after verification",
       "load": "unknown",
