@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-25T11:29:50Z",
+  "generated_at": "2026-08-25T11:39:58Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -12,7 +12,7 @@
     },
     {
       "name": "macbook",
-      "online": false,
+      "online": true,
       "reachable": false,
       "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
       "load": "unknown",
