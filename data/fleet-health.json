@@ -1,38 +1,38 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-04T19:20:23Z",
+  "generated_at": "2026-09-04T19:30:26Z",
   "nodes": [
     {
       "name": "mac-mini",
-      "online": false,
-      "reachable": false,
+      "online": true,
+      "reachable": true,
       "role": "worker + workloads (M4 24GB)",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "high",
+      "health": "degraded"
     },
     {
       "name": "macbook",
-      "online": false,
-      "reachable": false,
+      "online": true,
+      "reachable": true,
       "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "opti",
-      "online": false,
-      "reachable": false,
+      "online": true,
+      "reachable": true,
       "role": "helper + workloads",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "ubuntu",
-      "online": false,
-      "reachable": false,
+      "online": true,
+      "reachable": true,
       "role": "workloads",
-      "load": "unknown",
-      "health": "unreachable"
+      "load": "low",
+      "health": "healthy"
     }
   ]
 }
