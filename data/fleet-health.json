@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-05T16:22:34Z",
+  "generated_at": "2026-09-05T16:32:44Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "worker + workloads (M4 24GB)",
-      "load": "high",
-      "health": "degraded"
+      "load": "moderate",
+      "health": "healthy"
     },
     {
       "name": "macbook",
       "online": true,
       "reachable": true,
       "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
-      "load": "low",
+      "load": "moderate",
       "health": "healthy"
     },
     {
