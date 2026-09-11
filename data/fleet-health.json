@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-11T08:57:25Z",
+  "generated_at": "2026-09-11T09:07:29Z",
   "nodes": [
     {
       "name": "mac-mini",
       "online": true,
       "reachable": true,
       "role": "worker + workloads (M4 24GB)",
-      "load": "low",
+      "load": "moderate",
       "health": "healthy"
     },
     {
