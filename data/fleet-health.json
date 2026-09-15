@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-15T16:22:46Z",
+  "generated_at": "2026-09-15T16:33:33Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -15,16 +15,16 @@
       "online": true,
       "reachable": true,
       "role": "master controller \u2014 primary workstation (M5 Pro 48GB)",
-      "load": "unknown",
-      "health": "unknown"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "opti",
       "online": true,
       "reachable": true,
       "role": "helper + workloads",
-      "load": "unknown",
-      "health": "unknown"
+      "load": "low",
+      "health": "healthy"
     },
     {
       "name": "ubuntu",
