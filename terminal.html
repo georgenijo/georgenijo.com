@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>George Nijo</title>
+<meta name="description" content="George Nijo — software engineer building infrastructure for AI agents. ssh in and look around.">
+<link rel="canonical" href="https://georgenijo.com/">
+<meta property="og:title" content="George Nijo">
+<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
+<meta property="og:url" content="https://georgenijo.com">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://georgenijo.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="George Nijo — software engineer, boston, agent infrastructure. Terminal-styled card reading ssh ssh.georgenijo.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="George Nijo">
+<meta name="twitter:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
+<meta name="twitter:image" content="https://georgenijo.com/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "George Nijo",
+  "description": "Software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes.",
+  "url": "https://georgenijo.com",
+  "jobTitle": "Software Engineer",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Boston",
+    "addressRegion": "MA",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://github.com/georgenijo",
+    "https://www.linkedin.com/in/georgenijo/"
+  ],
+  "email": "mailto:george.nijo8@gmail.com"
+}
+</script>
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f2e8">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171310">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f2e8'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23b5351c' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
+<style>
+  /* ── Direction 3 · PAPER v2 ────────────────────────────────────
+     Single-page typographic index — no split panes. Menu is huge
+     serif lines like a book's table of contents; projects are a
+     printed ledger; details are full-page slips.
+     Live layer: the cursor itself. Native pointer hidden; a
+     blinking ink caret follows the mouse and morphs into a
+     crop-mark viewfinder frame over anything interactive. The
+     caret inverts what's under it (blend difference), so it never
+     hides content. */
+  :root{
+    --bg:#f6f2e8;
+    --surface:#fbf8f1;
+    --fg:#1c1710;
+    --muted:#6e6353;
+    --faint:#a2957f;
+    --border:#1c1710;
+    --hairline:#d9d0bd;
+    --accent:#b5351c;
+    --selbg:rgba(28,23,16,.045);
+    --wash:rgba(28,23,16,.03);
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Cascadia Mono",monospace;
+    --serif:'Iowan Old Style','Charter',Georgia,serif;
+  }
+  /* dark negative of the paper theme (media-query only, no JS toggle) */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171310;
+      --surface:#1f1a14;
+      --fg:#e8e2d4;
+      --muted:#a2957f;
+      --faint:#6e6353;
+      --border:#e8e2d4;
+      --hairline:#3a3126;
+      --accent:#e06a50;
+      --selbg:rgba(232,226,212,.05);
+      --wash:rgba(232,226,212,.035);
+    }
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--bg);color:var(--fg);
+    font-family:var(--mono);font-size:14px;line-height:1.55;
+    overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+  @media (max-width:600px){ body{font-size:13px;} }
+
+  /* paper wash */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 0%, var(--wash), transparent 55%);
+  }
+
+  /* ── cursor takeover (pointer:fine only) ── */
+  @media (pointer:fine){
+    body, a, button, input, .row{cursor:none;}
+  }
+  #cur{
+    position:fixed;top:0;left:0;z-index:2000;
+    pointer-events:none;
+  }
+  #cur[hidden]{display:none;}
+  #cur .core{
+    display:block;
+    width:11px;height:20px;
+    margin:-10px 0 0 -5px;
+    background:#fff;
+    mix-blend-mode:difference;
+    animation:carets 1.1s steps(1) infinite;
+    transition:opacity .12s ease,transform .12s ease;
+  }
+  @keyframes carets{50%{opacity:.35;}}
+  /* over links / rows / buttons: caret morphs into a crop-mark /
+     viewfinder frame — four corner brackets in the accent ink
+     (this is the cursor's share of the one-accent budget) */
+  #cur.on .core{opacity:0;transform:scale(.45);animation:none;}
+  #cur.down .core{transform:scale(.72);}
+  #cur .fr{
+    position:absolute;left:0;top:0;
+    width:30px;height:30px;margin:-15px 0 0 -15px;
+    opacity:0;transform:scale(.5);
+    transition:opacity .12s ease,transform .12s ease;
+  }
+  #cur.on .fr{opacity:1;transform:scale(1);}
+  #cur.on.down .fr{transform:scale(.78);} /* brackets tighten on press */
+  #cur .fr i{position:absolute;width:9px;height:9px;border:0 solid var(--accent);}
+  #cur .fr i:nth-child(1){left:0;top:0;border-top-width:2px;border-left-width:2px;}
+  #cur .fr i:nth-child(2){right:0;top:0;border-top-width:2px;border-right-width:2px;}
+  #cur .fr i:nth-child(3){left:0;bottom:0;border-bottom-width:2px;border-left-width:2px;}
+  #cur .fr i:nth-child(4){right:0;bottom:0;border-bottom-width:2px;border-right-width:2px;}
+  @media (prefers-reduced-motion: reduce){
+    #cur .core{animation:none;transition:none;}
+    #cur .fr{transition:none;}
+  }
+
+  .term{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+  :focus{outline:none;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ── boot ── */
+  .boot{flex:1;min-height:0;overflow-y:auto;padding:clamp(14px,3vw,32px);}
+  .boot pre{margin:0;font:inherit;white-space:pre-wrap;word-break:break-word;}
+  .b-dim{color:var(--muted);}
+  .b-ok{color:var(--accent);}
+  .prompt-sig{color:var(--accent);}
+  .cur-b{display:inline-block;width:.62em;height:1.1em;background:var(--fg);vertical-align:-.18em;animation:blink 1.06s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .masthead{
+    margin:18px 0 0;font-family:var(--serif);
+    font-size:clamp(44px,7.5vw,96px);line-height:1.02;
+    letter-spacing:-0.025em;font-weight:600;
+  }
+  .masthead em{font-style:italic;color:var(--accent);}
+  .motd-tag{
+    color:var(--muted);margin-top:10px;
+    text-transform:uppercase;letter-spacing:.08em;font-size:.82em;
+    border-top:2px solid var(--border);display:inline-block;padding-top:8px;
+  }
+
+  /* ── app frame ── */
+  .app{flex:1;min-height:0;display:flex;flex-direction:column;}
+  .app[hidden]{display:none;}
+  header.bar{
+    flex:none;display:flex;align-items:baseline;gap:14px;
+    padding:12px clamp(16px,4vw,56px) 10px;
+    border-bottom:2px solid var(--border);
+  }
+  .brand{font-family:var(--serif);font-style:italic;font-size:1.15em;white-space:nowrap;}
+  .crumb{
+    color:var(--muted);flex:1;min-width:0;font-size:.9em;
+    display:flex;align-items:center;white-space:nowrap;
+  }
+  .crumb .path{min-width:0;overflow:hidden;text-overflow:ellipsis;}
+  .crumb b{color:var(--fg);font-weight:400;}
+  .crumb-lnk{
+    background:none;border:none;font:inherit;color:var(--muted);
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:44px;padding:0 5px;margin:-13px 0;
+    text-decoration:none;
+  }
+  .crumb-back{flex:none;min-width:44px;padding:0 8px;margin-right:4px;}
+  .crumb-lnk:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
+  .conn{flex:none;color:var(--faint);font-size:.78em;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;}
+  @media (max-width:560px){ .conn{display:none;} }
+
+  main.page{
+    flex:1;min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;
+    padding:clamp(18px,3.5vw,44px) clamp(16px,4vw,56px) clamp(28px,5vw,64px);
+    scrollbar-width:thin;scrollbar-color:var(--hairline) transparent;
+  }
+  .sheet{max-width:1060px;margin:0 auto;}
+  .reveal{animation:fadeUp .18s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  /* slip "printing": lines rise in with a hair of ink bleed;
+     titles land like a rubber stamp. Entry-only — nothing loops. */
+  .ink{animation:inkIn .15s ease both;}
+  @keyframes inkIn{
+    from{opacity:0;transform:translateY(5px);text-shadow:0 0 .4px currentColor;}
+    to{opacity:1;transform:none;text-shadow:none;}
+  }
+  .stamp{animation:stampIn .24s cubic-bezier(.2,.7,.3,1) both;transform-origin:18% 60%;}
+  @keyframes stampIn{
+    0%{opacity:0;transform:scale(1.06) rotate(-.5deg);}
+    55%{opacity:1;transform:scale(.992) rotate(.15deg);}
+    100%{opacity:1;transform:none;}
+  }
+
+  .vkick{
+    color:var(--muted);font-size:.82em;
+    text-transform:uppercase;letter-spacing:.08em;
+    margin:0 0 6px;
+  }
+  .vkick .n{color:var(--accent);}
+  .vtitle{
+    font-family:var(--serif);font-weight:600;font-style:italic;
+    font-size:clamp(30px,4.5vw,52px);line-height:1.05;
+    letter-spacing:-0.02em;margin:0 0 26px;
+  }
+
+  /* ── index (menu) — table of contents in display type ── */
+  .rows{border-top:1px solid var(--hairline);}
+  .row{
+    display:grid;align-items:baseline;width:100%;
+    font:inherit;text-align:left;text-decoration:none;color:var(--fg);
+    background:none;border:none;border-bottom:1px solid var(--hairline);
+    padding:0;min-height:46px;
+  }
+  .row:hover{background:var(--selbg);}
+  .row.sel{background:var(--selbg);}
+  .row .tx{display:block;min-width:0;}
+
+  .rows.index .row{
+    grid-template-columns:5ch 1fr auto;gap:18px;
+    padding:clamp(14px,2.2vw,26px) 6px;
+  }
+  .rows.index .num{
+    color:var(--faint);font-size:.85em;
+    letter-spacing:.06em;align-self:center;
+  }
+  .rows.index .t{
+    font-family:var(--serif);font-weight:600;
+    font-size:clamp(32px,5.4vw,62px);line-height:1.04;
+    letter-spacing:-0.02em;
+    transition:transform .14s ease;
+  }
+  .rows.index .d{
+    color:var(--muted);font-size:.88em;align-self:center;
+    text-align:right;
+  }
+  @media (max-width:700px){ .rows.index .row{grid-template-columns:5ch 1fr;} .rows.index .d{display:none;} }
+  .rows.index .row.sel .t{font-style:italic;color:var(--accent);transform:translateX(10px);}
+  .rows.index .row.sel .num{color:var(--accent);}
+
+  /* ── ledger (projects) ── */
+  .rows.ledger .row{
+    grid-template-columns:4ch minmax(0,1fr) auto;gap:16px;
+    padding:13px 6px;
+  }
+  .rows.ledger .num{color:var(--faint);font-size:.82em;align-self:center;}
+  .rows.ledger .t{
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    font-size:clamp(19px,2.4vw,24px);letter-spacing:-0.01em;
+  }
+  .rows.ledger .d{color:var(--muted);font-size:.88em;display:block;}
+  .rows.ledger .aux{
+    color:var(--faint);font-size:.78em;align-self:center;
+    text-transform:uppercase;letter-spacing:.07em;
+  }
+  .rows.ledger .row.sel .t{color:var(--accent);}
+  .rows.ledger .row.sel .num{color:var(--accent);}
+
+  /* ── George Lab — generated project-status ledger ── */
+  .lab-meta{
+    display:flex;gap:10px 22px;flex-wrap:wrap;
+    margin:-14px 0 22px;color:var(--muted);font-size:.82em;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .lab-meta .live{color:var(--accent);}
+  .lab-grid{border-top:2px solid var(--border);}
+  .lab-card{
+    display:grid;grid-template-columns:minmax(150px,1.1fr) minmax(260px,2fr);
+    gap:14px 30px;padding:18px 6px;border-bottom:1px solid var(--hairline);
+  }
+  .lab-card h2{
+    margin:0;font-family:var(--serif);font-style:italic;
+    font-size:clamp(22px,2.6vw,30px);line-height:1.1;
+  }
+  .lab-card h2 a{color:inherit;text-decoration:none;}
+  .lab-card h2 a:hover{color:var(--accent);}
+  .lab-kind{margin-top:6px;color:var(--faint);font-size:.76em;text-transform:uppercase;letter-spacing:.07em;}
+  .lab-status{color:var(--accent);}
+  .lab-note{margin:0 0 10px;max-width:62ch;font-family:var(--serif);font-size:16px;line-height:1.4;}
+  .lab-facts{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--muted);font-size:.82em;}
+  .lab-facts b{color:var(--fg);font-weight:400;}
+  .lab-empty{padding:24px 6px;color:var(--muted);border-bottom:1px solid var(--hairline);}
+  @media (max-width:650px){
+    .lab-card{grid-template-columns:1fr;gap:10px;}
+  }
+
+  /* ── actions (underlined mono links) ── */
+  .acts{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border-top:0;}
+  .acts .row{
+    display:inline-flex;gap:8px;width:auto;min-height:44px;align-items:center;
+    border-bottom:none;padding:6px 4px;color:var(--fg);
+  }
+  .acts .row .t{text-decoration:underline;text-underline-offset:3px;}
+  .acts .row.sel .t{color:var(--accent);}
+  .acts .row.sel::before{content:"›";color:var(--accent);}
+
+  /* ── printed slip (detail body) ── */
+  .slip{
+    max-width:72ch;border:2px solid var(--border);
+    background:var(--surface);
+    padding:clamp(18px,3vw,30px) clamp(18px,3vw,32px);
+  }
+  .slip p{margin:0 0 12px;max-width:58ch;font-size:15px;}
+  .slip h2{
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    font-size:1.15em;margin:20px 0 8px;
+  }
+  .static-list{margin:0 0 12px;padding-left:1.4em;}
+  .static-list li{margin:3px 0;font-size:15px;}
+  .static-list a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
+  .static-list a:hover{color:var(--accent);}
+  .slip p:last-child{margin-bottom:0;}
+  .slip .hl{color:var(--accent);}
+  .slip .dim{color:var(--muted);}
+  .kv{display:flex;gap:12px;margin:3px 0;font-size:15px;}
+  .kv .k{color:var(--faint);flex:none;min-width:10ch;}
+  .row .k{color:var(--faint);flex:none;min-width:10ch;}
+  .rows.kvrows{margin-top:10px;}
+  .badge{
+    display:inline-block;font-size:.6em;color:var(--fg);
+    border:1px solid var(--border);padding:2px 8px;vertical-align:6px;
+    font-family:var(--mono);font-style:normal;font-weight:400;
+    text-transform:uppercase;letter-spacing:.07em;
+  }
+
+  footer.status{
+    flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:8px clamp(16px,4vw,56px);min-height:38px;
+    border-top:2px solid var(--border);
+    color:var(--faint);font-size:.84em;
+  }
+  .hint{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+  kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);padding:0 6px;}
+  button.hint{background:none;border:none;font:inherit;color:var(--faint);padding:2px;}
+  button.hint:hover kbd{background:var(--fg);color:var(--bg);}
+
+  .closed{padding:clamp(16px,4vw,36px);}
+  .closed p{margin:0 0 6px;color:var(--muted);}
+  .closed .msg{color:var(--fg);}
+  .reconnect{
+    margin-top:18px;font:inherit;color:var(--fg);
+    background:transparent;border:2px solid var(--border);
+    padding:9px 16px;
+  }
+  .reconnect:hover{background:var(--fg);color:var(--bg);}
+
+  @media (prefers-reduced-motion: reduce){
+    .cur-b,.reveal,.ink,.stamp{animation:none;}
+    .rows.index .t{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="term" id="term">
+  <div class="boot" id="boot" aria-live="polite" hidden><pre id="bootpre"></pre></div>
+  <div class="app" id="app">
+    <header class="bar">
+      <span class="brand">George Nijo</span>
+      <span class="crumb" id="crumb">~</span>
+      <span class="conn">ssh · ed25519 · paper</span>
+    </header>
+    <main class="page" id="page" tabindex="-1">
+      <div class="sheet" id="static-content">
+        <h1 class="vtitle">George Nijo</h1>
+        <p class="vkick">software engineer · boston · agent infrastructure</p>
+        <div class="slip">
+          <p><strong>George Nijo</strong> is a software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building AgentOS, a personal + home agent operating system.</p>
+          <p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing.</p>
+          <h2>Projects</h2>
+          <ul class="static-list">
+            <li><a href="https://github.com/georgenijo/agent-mesh">agent-mesh</a> — Go — agents orchestrating themselves</li>
+            <li><a href="https://github.com/georgenijo/usher">usher</a> — Go — MCP broker</li>
+            <li><a href="https://github.com/georgenijo/hangar">hangar</a> — Rust — agent control plane</li>
+            <li><a href="https://github.com/georgenijo/ghosthands">ghosthands</a> — Python — local computer-use for macOS</li>
+            <li><a href="https://github.com/georgenijo/murmur-app">murmur-app</a> — Rust — local voice-to-text for macOS</li>
+            <li><a href="https://github.com/georgenijo/fleetmap">fleetmap</a> — Swift — live map of what your Mac runs</li>
+            <li><a href="https://github.com/georgenijo/gauge">gauge</a> — Swift — Claude usage in the menu bar</li>
+            <li><a href="https://github.com/georgenijo/whoop-dashboard">whoop-dashboard</a> — TypeScript — health analytics with an AI coach</li>
+            <li><a href="https://github.com/georgenijo/aperture">aperture</a> — Swift — iOS film camera</li>
+          </ul>
+          <h2>Contact</h2>
+          <ul class="static-list">
+            <li><a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a></li>
+            <li><a href="https://github.com/georgenijo">github.com/georgenijo</a></li>
+            <li><a href="https://www.linkedin.com/in/georgenijo/">linkedin.com/in/georgenijo</a></li>
+          </ul>
+          <p>This site works without JavaScript. For agents: <a href="/llms.txt">/llms.txt</a> lists markdown versions of every page.</p>
+        </div>
+      </div>
+    </main>
+    <footer class="status" id="status"></footer>
+  </div>
+</div>
+
+<div id="cur" hidden aria-hidden="true"><span class="core"></span><span class="fr"><i></i><i></i><i></i><i></i></span></div>
+
+<script src="./lab-health.js"></script>
+<script>
+(function(){
+"use strict";
+var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+var FINE = matchMedia("(pointer:fine)").matches;
+
+var staticContent=document.getElementById("static-content");
+if(staticContent)staticContent.remove();
+
+/* ── live layer: cursor takeover ────────────────────────────────
+   One fixed element, lerped toward the pointer each frame. Default
+   state is a blinking ink caret (the terminal cursor escaped into
+   the page); over anything interactive it opens into a crop-mark /
+   viewfinder frame — four corner brackets in the accent ink. The
+   caret keeps mix-blend-mode:difference so it reads on cream, ink,
+   and vermilion alike. Touch devices keep the native cursor. */
+var curEl=document.getElementById("cur");
+if(FINE){
+  var cx=-100,cy=-100,px=-100,py=-100,shown=false;
+  addEventListener("pointermove",function(e){
+    cx=e.clientX;cy=e.clientY;
+    if(!shown){shown=true;px=cx;py=cy;curEl.hidden=false;}
+  },{passive:true});
+  document.addEventListener("pointerleave",function(){shown=false;curEl.hidden=true;});
+  addEventListener("pointerdown",function(){curEl.classList.add("down");});
+  addEventListener("pointerup",function(){curEl.classList.remove("down");});
+  document.addEventListener("pointerover",function(e){
+    var hit=e.target.closest&&e.target.closest("a,button,.row,input,kbd");
+    curEl.classList.toggle("on",!!hit);
+  });
+  (function curLoop(){
+    var k=RM?1:0.35;
+    px+=(cx-px)*k;py+=(cy-py)*k;
+    curEl.style.transform="translate("+px+"px,"+py+"px)";
+    requestAnimationFrame(curLoop);
+  })();
+}
+
+/* ── content (mirrors ssh-tui/content.go) ───────────────────── */
+var GH = "https://github.com/georgenijo";
+var LI = "https://www.linkedin.com/in/georgenijo/";
+var EMAIL = "george.nijo8@gmail.com";
+var PROJECTS = [
+  {name:"agent-mesh",  lang:"Go",         tag:"Agents orchestrating themselves",
+   desc:"Hand the mesh a vague goal and the agents work out the rest: who does what, who owns which file, what's already been answered. Presence, file claims, async questions, a shared blackboard — Claude Code, Codex, and Cursor acting like one team instead of five strangers."},
+  {name:"usher",       lang:"Go",         tag:"MCP broker",
+   desc:"One front desk every agent talks to: a single MCP endpoint that routes, trims, arbitrates, and audits tool calls across a fleet of servers. Auth, health, and name collisions are handled before the agent even notices."},
+  {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
+   desc:"Mission control for long-lived coding agents: scheduling, budgets, kill switches, and an audit log of every tool call a fleet makes. Where agents live between jobs — and answer for what they did."},
+  {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
+   desc:"Full computer-use with zero cloud: a local model reads the screen and drives native Mac apps through the accessibility tree — and never fakes success. A Swift-native sibling does the low-level driving. Nothing leaves the machine."},
+  {name:"murmur-app",  lang:"Rust",       tag:"Local voice-to-text for macOS",
+   desc:"Hold a key, speak, release — the words land in whatever app has focus before your hands find the keyboard. Whisper on the GPU, fully offline: no cloud, no subscription, no audio leaving the machine."},
+  {name:"fleetmap",    lang:"Swift",      tag:"Live map of what your Mac runs",
+   desc:"Your Mac as a living map: every process a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what's running; fleetmap shows what's talking to what."},
+  {name:"gauge",       lang:"Swift",      tag:"Claude usage in the menu bar",
+   desc:"A one-purpose menu-bar meter for Claude: session and weekly limits, pace until reset, and spend charted straight from local logs. Know the budget is gone before the model does."},
+  {name:"whoop-dashboard",lang:"TypeScript",tag:"Health analytics with an AI coach",
+   desc:"Sleep, strain, and recovery in one dashboard — with a Claude coach that reads months of WHOOP trends and talks back. Health data that finally answers questions."},
+  {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
+   desc:"A film camera in your pocket: fixed stocks, 36 exposures, and no preview until the roll is developed. A Metal pipeline paints the light leaks, grain, and date stamps. Patience as a feature."}
+];
+var MENU = [
+  {id:"about",    t:"about",    d:"who's at the keyboard"},
+  {id:"projects", t:"projects", d:"nine repos, five languages"},
+  {id:"lab",      t:"George Lab",d:"five projects · event-updated"},
+  {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
+  {id:"burn",     t:"burn log", d:"tokens · models · commits", href:"./burn.html"},
+  {id:"guestbook",t:"guestbook",d:"leave a line over ssh", href:"./guestbook.html"},
+  {id:"contact",  t:"contact",  d:"say hello"}
+];
+var ABOUT_HTML =
+  '<p><span class="hl">George Nijo</span> — software engineer in Boston. Supervisor of agents.</p>'+
+  '<p>I build infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>'+
+  '<p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing. Ship the menu bar app before the platform.</p>'+
+  '<p class="dim">Python · Go · Rust · Swift · a dash of TypeScript</p>';
+var NOW_HTML =
+  '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
+  '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
+  '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
+  '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>'+
+  '<p class="dim">→ <a href="./burn.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px">burn log</a> — tokens · models · commits — 30-day line · ship notes</p>';
+var CONTACT_INTRO = '<p class="dim">no forms, no funnels — just these three:</p>';
+
+/* ── boot ───────────────────────────────────────────────────── */
+var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById("boot"),
+    appEl=document.getElementById("app"), booting=false, bootSkip=false;
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+var BOOT_LINES=[
+  {h:'<span class="b-dim">Connecting to ssh.georgenijo.com port 22.</span>',w:240},
+  {h:'<span class="b-dim">Host key:</span> ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU <span class="b-ok">✓ known</span>',w:300},
+  {h:'<span class="b-ok">Authenticated to ssh.georgenijo.com (via publickey).</span>',w:340}
+];
+function sleep(ms){return new Promise(function(res){ if(bootSkip||RM) return res(); setTimeout(res,ms); });}
+function runBoot(){
+  booting=true; bootSkip=false;
+  appEl.hidden=true; bootWrap.hidden=false; bootPre.innerHTML="";
+  var CMD="ssh ssh.georgenijo.com", html='<span class="prompt-sig">➜ ~ $</span> ';
+  bootPre.innerHTML=html+'<span class="cur-b"></span>';
+  var p=Promise.resolve();
+  CMD.split("").forEach(function(ch,i){
+    p=p.then(function(){return sleep(30).then(function(){
+      html='<span class="prompt-sig">➜ ~ $</span> '+esc(CMD.slice(0,i+1));
+      bootPre.innerHTML=html+'<span class="cur-b"></span>';
+    });});
+  });
+  p=p.then(function(){return sleep(280);});
+  BOOT_LINES.forEach(function(line){
+    p=p.then(function(){return sleep(line.w).then(function(){
+      html+="\n"+line.h;
+      bootPre.innerHTML=html+'\n<span class="cur-b"></span>';
+    });});
+  });
+  p.then(function(){return sleep(260);}).then(function(){
+    bootPre.innerHTML=html+
+      '<div class="masthead">George <em>Nijo</em></div>'+
+      '<div class="motd-tag">software engineer · boston · agent infrastructure</div>';
+    return sleep(950);
+  }).then(function(){
+    booting=false; bootWrap.hidden=true; appEl.hidden=false; go("menu");
+  });
+}
+function skipBoot(){ bootSkip=true; }
+
+/* ── TUI state (same machine as production index.html) ──────── */
+var pageEl=document.getElementById("page"), crumbEl=document.getElementById("crumb"),
+    statusEl=document.getElementById("status");
+var ST={view:"menu",proj:null,rows:[],cursor:0,cursors:{}};
+var PARENT={about:"menu",projects:"menu",lab:"menu",now:"menu",contact:"menu",project:"projects",menu:null,closed:null};
+
+function projByName(n){for(var i=0;i<PROJECTS.length;i++)if(PROJECTS[i].name===n)return PROJECTS[i];return null;}
+function projDetailHTML(p){
+  return "<p>"+p.desc+"</p>"+
+    '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/'+p.name+'</span></div>'+
+    '<div class="kv"><span class="k">lang</span><span class="dim">'+p.lang+"</span></div>";
+}
+function go(view,opts){opts=opts||{};ST.cursors[viewKey()]=ST.cursor;ST.view=view;if("proj" in opts)ST.proj=opts.proj;render();}
+function viewKey(){return ST.view==="project"?"project:"+(ST.proj||""):ST.view;}
+function back(){var p=PARENT[ST.view];if(p)go(p);}
+function quit(){ST.cursors={};ST.view="closed";render();}
+
+function h(tag,cls,htmlStr){var el=document.createElement(tag);if(cls)el.className=cls;if(htmlStr!=null)el.innerHTML=htmlStr;return el;}
+function makeRow(spec,idx){
+  var el;
+  if(spec.href){
+    el=h("a","row");el.href=spec.href;
+    if(spec.href.indexOf("mailto:")!==0){el.target="_blank";el.rel="noopener";}
+  }
+  else{el=h("button","row");el.type="button";}
+  var inner="";
+  if(spec.num)inner+='<span class="num">'+spec.num+"</span>";
+  if(spec.k)inner+='<span class="k">'+spec.k+"</span>";
+  inner+='<span class="tx"><span class="t">'+spec.t+"</span>";
+  if(spec.d&&spec.dInline)inner+=' <span class="d">'+spec.d+"</span>";
+  inner+="</span>";
+  if(spec.d&&!spec.dInline)inner+='<span class="d">'+spec.d+"</span>";
+  if(spec.aux)inner+='<span class="aux">'+spec.aux+"</span>";
+  el.innerHTML=inner;
+  el.addEventListener("click",function(){
+    ST.cursor=idx;paintCursor();
+    if(!spec.href&&spec.on)spec.on();
+  });
+  el.addEventListener("focus",function(){ST.cursor=idx;paintCursor();});
+  return el;
+}
+function scrollNear(el){
+  var top=el.offsetTop-pageEl.offsetTop, bot=top+el.offsetHeight;
+  if(top<pageEl.scrollTop)pageEl.scrollTop=top;
+  else if(bot>pageEl.scrollTop+pageEl.clientHeight)pageEl.scrollTop=bot-pageEl.clientHeight;
+}
+function paintCursor(){
+  ST.rows.forEach(function(r,i){r.el.classList.toggle("sel",i===ST.cursor);});
+  var cur=ST.rows[ST.cursor];
+  if(cur)scrollNear(cur.el);
+}
+function setStatus(hints){
+  statusEl.innerHTML="";
+  hints.forEach(function(hnt){
+    if(hnt.on){
+      var b=h("button","hint");b.type="button";
+      b.innerHTML="<kbd>"+hnt.k+"</kbd> "+hnt.l;
+      b.addEventListener("click",hnt.on);statusEl.appendChild(b);
+    } else statusEl.appendChild(h("span","hint","<kbd>"+hnt.k+"</kbd> "+hnt.l));
+  });
+}
+function stdHints(list){
+  var hints=[];
+  if(list)hints.push({k:"↑/↓",l:"navigate"},{k:"enter",l:"select"});
+  if(PARENT[ST.view])hints.push({k:"esc",l:"back",on:back});
+  hints.push({k:"q",l:"quit",on:quit});
+  return hints;
+}
+/* frame(): builds the header crumb + a fresh sheet.
+   Pass a string for a static crumb (menu), or an array of
+   {t,go?} segments — segments with `go` become clickable, and a
+   "← back" control is prepended (esc keeps working as before). */
+function frame(crumb){
+  crumbEl.innerHTML="";
+  if(typeof crumb==="string"){
+    crumbEl.appendChild(h("span","path",crumb));
+  }else{
+    var bk=h("button","crumb-lnk crumb-back","← back");
+    bk.type="button";bk.setAttribute("aria-label","go back");
+    bk.addEventListener("click",back);
+    crumbEl.appendChild(bk);
+    var path=h("span","path");
+    crumb.forEach(function(seg,i){
+      if(i)path.appendChild(document.createTextNode(" / "));
+      if(seg.go){
+        var b=h("button","crumb-lnk",seg.t);b.type="button";
+        b.addEventListener("click",function(){go(seg.go);});
+        path.appendChild(b);
+      }else path.appendChild(h("b",null,seg.t));
+    });
+    crumbEl.appendChild(path);
+  }
+  pageEl.innerHTML="";ST.rows=[];
+  var wrap=h("div","reveal sheet");pageEl.appendChild(wrap);return wrap;
+}
+/* slip "printing": stagger the sheet's lines in, ~25ms apart,
+   capped so the whole entry settles well under 350ms. Entry only —
+   reduced-motion skips it entirely (CSS also disables .ink/.stamp). */
+function inkIn(wrap){
+  if(RM)return;
+  var els=wrap.querySelectorAll(".vkick:not(.stamp),.slip>*,.acts .row");
+  for(var i=0;i<els.length;i++){
+    els[i].classList.add("ink");
+    els[i].style.animationDelay=Math.min(i*25,180)+"ms";
+  }
+}
+function addRows(wrap,specs,restoreKey,cls){
+  var box=h("div","rows"+(cls?" "+cls:""));
+  specs.forEach(function(s){
+    var idx=ST.rows.length;
+    var el=makeRow(s,idx);
+    ST.rows.push({el:el,on:s.on,href:s.href});
+    box.appendChild(el);
+  });
+  wrap.appendChild(box);
+  var saved=ST.cursors[restoreKey];
+  ST.cursor=(typeof saved==="number"&&saved<ST.rows.length)?saved:0;
+  paintCursor();
+}
+function pad2(n){return (n<10?"0":"")+n;}
+
+/* ── views ──────────────────────────────────────────────────── */
+function render(){
+  pageEl.scrollTop=0;
+  switch(ST.view){
+    case "menu":vMenu();break;
+    case "about":vSheet("about","whoami",ABOUT_HTML);break;
+    case "projects":vProjects();break;
+    case "lab":vLab();break;
+    case "project":vProject();break;
+    case "now":vSheet("now","updated july 2026",NOW_HTML);break;
+    case "contact":vContact();break;
+    case "closed":vClosed();return;
+  }
+}
+function vMenu(){
+  var w=frame("<b>georgenijo.com</b> ~");
+  w.appendChild(h("p","vkick","index <span class='n'>·</span> software engineer · boston"));
+  addRows(w,MENU.map(function(m,i){
+    if(m.href) return {num:pad2(i+1),t:m.t,d:m.d,href:m.href};
+    return {num:pad2(i+1),t:m.t,d:m.d,on:function(){go(m.id);}};
+  }),"menu","index");
+  setStatus(stdHints(true));
+}
+function vContact(){
+  var w=frame([{t:"~",go:"menu"},{t:"contact"}]);
+  w.appendChild(h("p","vkick","say hello"));
+  w.appendChild(h("p","vtitle stamp","contact"));
+  var slip=h("div","slip",CONTACT_INTRO);
+  w.appendChild(slip);
+  addRows(slip,[
+    {k:"mailto",t:EMAIL,href:"mailto:"+EMAIL},
+    {k:"github",t:"github.com/georgenijo",href:GH},
+    {k:"linkedin",t:"linkedin.com/in/georgenijo",href:LI}
+  ],"contact","kvrows");
+  addRows(w,[{t:"back to index",on:back}],"contact","acts");
+  inkIn(w);
+  setStatus(stdHints(false));
+}
+function vSheet(id,sub,body,acts){
+  var w=frame([{t:"~",go:"menu"},{t:id}]);
+  w.appendChild(h("p","vkick",sub));
+  w.appendChild(h("p","vtitle stamp",id));
+  w.appendChild(h("div","slip",body));
+  addRows(w,acts||[
+    {t:"see the projects",on:function(){go("projects");}},
+    {t:"back to index",on:back}
+  ],id,"acts");
+  inkIn(w);
+  setStatus(stdHints(false));
+}
+function vProjects(){
+  var w=frame([{t:"~",go:"menu"},{t:"projects"}]);
+  w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · five languages"));
+  w.appendChild(h("p","vtitle","projects"));
+  addRows(w,PROJECTS.map(function(p,i){
+    return {num:pad2(i+1),t:p.name,d:p.tag,dInline:true,aux:p.lang,
+            on:function(){go("project",{proj:p.name});}};
+  }),"projects","ledger");
+  setStatus(stdHints(true));
+}
+function fmtDate(value){
+  if(!value)return "unknown";
+  var d=new Date(value);
+  if(isNaN(d.getTime()))return value;
+  return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+}
+function metric(value){return value==null?"—":value;}
+function fleetStateCopy(state){
+  return {
+    current:"current",
+    stale:"stale snapshot",
+    unsupported:"unsupported snapshot",
+    malformed:"invalid snapshot"
+  }[state]||"snapshot unavailable";
+}
+function renderFleet(grid,data){
+  var parsed=GeorgeLabHealth.parse(data);
+  var section=h("section","lab-card");
+  var heading='<div><h2>fleet health</h2><div class="lab-kind"><span class="lab-status">'+
+    esc(fleetStateCopy(parsed.state))+'</span> · privacy-safe</div></div>';
+  if(parsed.state!=="current"){
+    section.innerHTML=heading+'<div><p class="lab-note">Live fleet status is unavailable. No cached node details are shown.</p></div>';
+  }else{
+    var healthy=parsed.nodes.filter(function(n){return n.health==="healthy";}).length;
+    var reachable=parsed.nodes.filter(function(n){return n.reachable;}).length;
+    section.innerHTML=heading+'<div><p class="lab-note">Short-lived collector snapshot; no resident agent or listener.</p>'+
+      '<div class="lab-facts"><span>nodes <b>'+parsed.nodes.length+'</b></span>'+
+      '<span>reachable <b>'+reachable+'</b></span><span>healthy <b>'+healthy+'</b></span>'+
+      '<span>collected <b>'+fmtDate(parsed.generatedAt)+'</b></span></div></div>';
+  }
+  grid.insertBefore(section,grid.firstChild);
+}
+function vLab(){
+  var w=frame([{t:"~",go:"menu"},{t:"lab"}]);
+  w.appendChild(h("p","vkick","George Lab · project telemetry"));
+  w.appendChild(h("p","vtitle stamp","five builds, one bench"));
+  var meta=h("div","lab-meta",'<span id="lab-state">loading snapshot…</span><span>event-driven · no resident agent</span>');
+  var grid=h("div","lab-grid",'<p class="lab-empty">Reading the latest checked-in project snapshot…</p>');
+  w.appendChild(meta);w.appendChild(grid);
+  fetch("./data/lab-projects.json",{cache:"no-cache"}).then(function(res){
+    if(!res.ok)throw new Error("status "+res.status);
+    return res.json();
+  }).then(function(data){
+    var state=document.getElementById("lab-state");
+    if(state)state.innerHTML='<span class="live">snapshot</span> · '+fmtDate(data.generatedAt);
+    grid.innerHTML="";
+    if(!data||data.schemaVersion!==1||!Array.isArray(data.projects))throw new Error("invalid project snapshot");
+    data.projects.forEach(function(p){
+      var release=p.latestRelease&&p.latestRelease.tag?esc(String(p.latestRelease.tag)):"no release";
+      var card=h("article","lab-card");
+      card.innerHTML=
+        '<div><h2><a href="'+p.repositoryUrl+'" target="_blank" rel="noopener">'+esc(String(p.name))+' ↗</a></h2>'+
+        '<div class="lab-kind"><span class="lab-status">'+esc(String(p.status))+'</span> · '+esc(String(p.category))+'</div></div>'+
+        '<div><p class="lab-note">'+esc(String(p.note))+'</p>'+
+        '<div class="lab-facts"><span>release <b>'+release+'</b></span>'+
+        '<span>issues <b>'+metric(p.openIssues)+'</b></span><span>PRs <b>'+metric(p.openPullRequests)+'</b></span>'+
+        '<span>activity <b>'+fmtDate(p.lastActivityAt)+'</b></span></div></div>';
+      grid.appendChild(card);
+    });
+    fetch("./data/fleet-health.json",{cache:"no-cache"}).then(function(res){
+      if(!res.ok)throw new Error("status "+res.status);
+      return res.json();
+    }).then(function(fleet){renderFleet(grid,fleet);}).catch(function(){
+      renderFleet(grid,null);
+    });
+  }).catch(function(){
+    var state=document.getElementById("lab-state");
+    if(state)state.textContent="snapshot unavailable";
+    grid.innerHTML='<p class="lab-empty">The project snapshot could not be loaded. Try opening the site through a web server.</p>';
+  });
+  addRows(w,[{t:"back to index",on:back}],"lab","acts");
+  inkIn(w);
+  setStatus(stdHints(false));
+}
+function vProject(){
+  var p=projByName(ST.proj);
+  if(!p)return go("projects");
+  var w=frame([{t:"~",go:"menu"},{t:"projects",go:"projects"},{t:p.name}]);
+  w.appendChild(h("p","vkick stamp",pad2(PROJECTS.indexOf(p)+1)+" · "+p.tag));
+  w.appendChild(h("p","vtitle stamp",p.name+' <span class="badge">'+p.lang+"</span>"));
+  w.appendChild(h("div","slip",projDetailHTML(p)));
+  addRows(w,[
+    {t:"open github.com/georgenijo/"+p.name+" ↗",href:GH+"/"+p.name},
+    {t:"back to projects",on:back}
+  ],"project:"+p.name,"acts");
+  inkIn(w);
+  setStatus(stdHints(false));
+}
+function vClosed(){
+  crumbEl.innerHTML="";appEl.hidden=true;
+  bootWrap.hidden=false;
+  bootWrap.innerHTML='<div class="closed reveal">'+
+    '<p class="msg">Connection to ssh.georgenijo.com closed.</p>'+
+    '<p>Thanks for stopping by.</p>'+
+    '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh ssh.georgenijo.com  (reconnect)</button></div>';
+  var b=document.getElementById("reconn");
+  b.addEventListener("click",restart);b.focus();
+}
+function restart(){
+  bootWrap.innerHTML="";
+  var pre=document.createElement("pre");pre.id="bootpre";
+  bootWrap.appendChild(pre);bootPre=pre;
+  ST.view="menu";ST.cursors={};runBoot();
+}
+
+/* ── input ──────────────────────────────────────────────────── */
+bootWrap.addEventListener("click",function(){if(booting)skipBoot();});
+window.addEventListener("keydown",function(e){
+  if(booting){skipBoot();return;}
+  if(ST.view==="closed"){
+    if(e.key==="Enter"||e.key.toLowerCase()==="r"){e.preventDefault();restart();}
+    return;
+  }
+  var k=e.key;
+  if(k==="ArrowDown"||k==="j"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.min(ST.cursor+1,ST.rows.length-1);paintCursor();}}
+  else if(k==="ArrowUp"||k==="k"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.max(ST.cursor-1,0);paintCursor();}}
+  else if(k==="Enter"){
+    if(document.activeElement&&document.activeElement.closest&&
+       document.activeElement.closest(".crumb"))return; // crumb link focused: let it activate
+    var r=ST.rows[ST.cursor];if(!r)return;
+    if(document.activeElement===r.el)return;
+    e.preventDefault();
+    if(r.href)r.el.click();else if(r.on)r.on();
+  }
+  else if(k==="Escape"){e.preventDefault();back();}
+  else if(k==="q"&&!e.metaKey&&!e.ctrlKey&&!e.altKey){e.preventDefault();quit();}
+});
+
+runBoot();
+})();
+</script>
+</body>
+</html>

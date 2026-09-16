@@ -2,7 +2,9 @@
 
 > Software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes. Currently building AgentOS, a personal + home agent operating system. Local-first, honesty-first.
 
-This site is a terminal-styled single-page app. Every page below has a markdown variant served from the same path with a `.md` extension. Markdown is also available via content negotiation where the origin supports it (`Accept: text/markdown`, responses carry `Vary: Accept`).
+The home page is a one-page rendered-document resume: headline delivery metrics, a monthly ship-rate chart, the agent-orchestration doctrine behind it, tool and product cards, and a timeline. The older terminal-styled single-page app now lives at https://georgenijo.com/terminal.html.
+
+Every page below has a markdown variant served from the same path with a `.md` extension. Markdown is also available via content negotiation where the origin supports it (`Accept: text/markdown`, responses carry `Vary: Accept`).
 
 ## When to use this site
 
@@ -15,7 +17,8 @@ This is a personal portfolio, not a product API: there is nothing to call progra
 
 ## Pages
 
-- [Home](https://georgenijo.com/index.md): who George is, what he builds, and how to reach him.
+- [Home](https://georgenijo.com/index.md): the resume dossier — headline delivery metrics with their qualifiers, monthly ship-rate and model-mix tables, the six-rule agent-orchestration doctrine, tool and product entries, a 2025–2026 timeline, and a note on how to read the numbers. Snapshot dated 2026-09-16.
+- [Terminal site](https://georgenijo.com/terminal.html): the interactive terminal-simulation version of this site, with client-side routes for about, projects, now, burn, and contact.
 - [About](https://georgenijo.com/about.md): background, principles, and languages (Python, Go, Rust, Swift).
 - [Projects](https://georgenijo.com/projects.md): nine repos across five languages — agent-mesh, usher, hangar, ghosthands, murmur-app, fleetmap, gauge, whoop-dashboard, aperture.
 - [Now](https://georgenijo.com/now.md): current focus — AgentOS, hangar, usher, agent-mesh.

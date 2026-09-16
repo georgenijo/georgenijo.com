@@ -4,19 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>George Nijo</title>
-<meta name="description" content="George Nijo — software engineer building infrastructure for AI agents. ssh in and look around.">
+<meta name="description" content="George Nijo — software engineer in Boston who builds the factory that builds the software: agent-orchestrated delivery, model routing, and the tooling underneath it.">
 <link rel="canonical" href="https://georgenijo.com/">
+<meta name="robots" content="index,follow">
 <meta property="og:title" content="George Nijo">
-<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
-<meta property="og:url" content="https://georgenijo.com">
-<meta property="og:type" content="website">
+<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. 6,300 commits and 1,105 pull requests across 18 repos so far in 2026.">
+<meta property="og:url" content="https://georgenijo.com/">
+<meta property="og:type" content="profile">
 <meta property="og:image" content="https://georgenijo.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="George Nijo — software engineer, boston, agent infrastructure. Terminal-styled card reading ssh ssh.georgenijo.com">
+<meta property="og:image:alt" content="George Nijo — software engineer, boston, agent infrastructure. Terminal-styled card reading ssh georgenijo.com">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="George Nijo">
-<meta name="twitter:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. ssh in and look around.">
+<meta name="twitter:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes.">
 <meta name="twitter:image" content="https://georgenijo.com/og.png">
 <script type="application/ld+json">
 {
@@ -32,6 +33,7 @@
     "addressRegion": "MA",
     "addressCountry": "US"
   },
+  "knowsAbout": ["AI agent infrastructure", "Model Context Protocol", "Python", "Go", "Rust", "Swift"],
   "sameAs": [
     "https://github.com/georgenijo",
     "https://www.linkedin.com/in/georgenijo/"
@@ -39,816 +41,1104 @@
   "email": "mailto:george.nijo8@gmail.com"
 }
 </script>
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f2e8">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ece6d8">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171310">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f2e8'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23b5351c' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script>document.documentElement.className += " js";</script>
 <style>
-  /* ── Direction 3 · PAPER v2 ────────────────────────────────────
-     Single-page typographic index — no split panes. Menu is huge
-     serif lines like a book's table of contents; projects are a
-     printed ledger; details are full-page slips.
-     Live layer: the cursor itself. Native pointer hidden; a
-     blinking ink caret follows the mouse and morphs into a
-     crop-mark viewfinder frame over anything interactive. The
-     caret inverts what's under it (blend difference), so it never
-     hides content. */
+/* ── georgenijo.com · rendered document ──────────────────────────
+   Palette continuity with PAPER v2: cream paper, ink, brick red.
+   Single file, inline CSS + vanilla JS, no build step.           */
+
+:root{
+  --desk:#ece6d8;
+  --paper:#fbf8f1;
+  --fg:#1c1710;
+  --muted:#5d5342;
+  --rule:#ddd4c2;
+  --grid:#e5ddcb;
+  --accent:#b5351c;
+  --accent-wash:rgba(181,53,28,.10);
+  --shadow:0 1px 2px rgba(40,30,15,.10), 0 18px 46px -18px rgba(40,30,15,.30);
+  --serif:"Iowan Old Style","Charter","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --display:"Instrument Serif",var(--serif);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
   :root{
-    --bg:#f6f2e8;
-    --surface:#fbf8f1;
-    --fg:#1c1710;
-    --muted:#6e6353;
-    --faint:#a2957f;
-    --border:#1c1710;
-    --hairline:#d9d0bd;
-    --accent:#b5351c;
-    --selbg:rgba(28,23,16,.045);
-    --wash:rgba(28,23,16,.03);
-    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Cascadia Mono",monospace;
-    --serif:'Iowan Old Style','Charter',Georgia,serif;
+    --desk:#171310;
+    --paper:#1f1a16;
+    --fg:#ece5d9;
+    --muted:#a99d8e;
+    --rule:#352d25;
+    --grid:#2e2721;
+    --accent:#e06a50;
+    --accent-wash:rgba(224,106,80,.13);
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 20px 50px -20px rgba(0,0,0,.7);
   }
-  /* dark negative of the paper theme (media-query only, no JS toggle) */
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#171310;
-      --surface:#1f1a14;
-      --fg:#e8e2d4;
-      --muted:#a2957f;
-      --faint:#6e6353;
-      --border:#e8e2d4;
-      --hairline:#3a3126;
-      --accent:#e06a50;
-      --selbg:rgba(232,226,212,.05);
-      --wash:rgba(232,226,212,.035);
-    }
-  }
-  *,*::before,*::after{box-sizing:border-box;}
-  html,body{margin:0;padding:0;height:100%;}
-  body{
-    background:var(--bg);color:var(--fg);
-    font-family:var(--mono);font-size:14px;line-height:1.55;
-    overflow:hidden;-webkit-font-smoothing:antialiased;
-  }
-  @media (max-width:600px){ body{font-size:13px;} }
+}
 
-  /* paper wash */
-  body::after{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background:radial-gradient(120% 100% at 50% 0%, var(--wash), transparent 55%);
-  }
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--desk);
+  color:var(--fg);
+  font-family:var(--serif);
+  font-size:17px;
+  line-height:1.62;
+  font-kerning:normal;
+  text-rendering:optimizeLegibility;
+  hanging-punctuation:first last;
+}
+::selection{background:var(--accent-wash)}
 
-  /* ── cursor takeover (pointer:fine only) ── */
-  @media (pointer:fine){
-    body, a, button, input, .row{cursor:none;}
-  }
-  #cur{
-    position:fixed;top:0;left:0;z-index:2000;
-    pointer-events:none;
-  }
-  #cur[hidden]{display:none;}
-  #cur .core{
-    display:block;
-    width:11px;height:20px;
-    margin:-10px 0 0 -5px;
-    background:#fff;
-    mix-blend-mode:difference;
-    animation:carets 1.1s steps(1) infinite;
-    transition:opacity .12s ease,transform .12s ease;
-  }
-  @keyframes carets{50%{opacity:.35;}}
-  /* over links / rows / buttons: caret morphs into a crop-mark /
-     viewfinder frame — four corner brackets in the accent ink
-     (this is the cursor's share of the one-accent budget) */
-  #cur.on .core{opacity:0;transform:scale(.45);animation:none;}
-  #cur.down .core{transform:scale(.72);}
-  #cur .fr{
-    position:absolute;left:0;top:0;
-    width:30px;height:30px;margin:-15px 0 0 -15px;
-    opacity:0;transform:scale(.5);
-    transition:opacity .12s ease,transform .12s ease;
-  }
-  #cur.on .fr{opacity:1;transform:scale(1);}
-  #cur.on.down .fr{transform:scale(.78);} /* brackets tighten on press */
-  #cur .fr i{position:absolute;width:9px;height:9px;border:0 solid var(--accent);}
-  #cur .fr i:nth-child(1){left:0;top:0;border-top-width:2px;border-left-width:2px;}
-  #cur .fr i:nth-child(2){right:0;top:0;border-top-width:2px;border-right-width:2px;}
-  #cur .fr i:nth-child(3){left:0;bottom:0;border-bottom-width:2px;border-left-width:2px;}
-  #cur .fr i:nth-child(4){right:0;bottom:0;border-bottom-width:2px;border-right-width:2px;}
-  @media (prefers-reduced-motion: reduce){
-    #cur .core{animation:none;transition:none;}
-    #cur .fr{transition:none;}
-  }
+a{color:inherit;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:1px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 
-  .term{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
-  :focus{outline:none;}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+/* ── the ruler ─────────────────────────────────────────────── */
+#ruler{
+  position:fixed;top:0;left:0;height:3px;width:100%;
+  transform:scaleX(0);transform-origin:0 50%;
+  background:var(--accent);z-index:50;
+}
 
-  /* ── boot ── */
-  .boot{flex:1;min-height:0;overflow-y:auto;padding:clamp(14px,3vw,32px);}
-  .boot pre{margin:0;font:inherit;white-space:pre-wrap;word-break:break-word;}
-  .b-dim{color:var(--muted);}
-  .b-ok{color:var(--accent);}
-  .prompt-sig{color:var(--accent);}
-  .cur-b{display:inline-block;width:.62em;height:1.1em;background:var(--fg);vertical-align:-.18em;animation:blink 1.06s steps(1) infinite;}
-  @keyframes blink{50%{opacity:0;}}
-  .masthead{
-    margin:18px 0 0;font-family:var(--serif);
-    font-size:clamp(44px,7.5vw,96px);line-height:1.02;
-    letter-spacing:-0.025em;font-weight:600;
-  }
-  .masthead em{font-style:italic;color:var(--accent);}
-  .motd-tag{
-    color:var(--muted);margin-top:10px;
-    text-transform:uppercase;letter-spacing:.08em;font-size:.82em;
-    border-top:2px solid var(--border);display:inline-block;padding-top:8px;
-  }
+/* ── desk + sheet ──────────────────────────────────────────── */
+.desk{padding:clamp(18px,4vw,56px) clamp(10px,3vw,32px) 64px}
+.sheet{
+  position:relative;
+  max-width:880px;margin:0 auto;
+  background:var(--paper);
+  box-shadow:var(--shadow);
+  padding:clamp(28px,5vw,64px) clamp(20px,5vw,60px) clamp(36px,5vw,56px);
+  border:1px solid var(--rule);
+}
+/* paper grain */
+.sheet::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  opacity:.055;mix-blend-mode:multiply;
+}
+@media (prefers-color-scheme: dark){.sheet::before{mix-blend-mode:screen;opacity:.035}}
+.sheet > *{position:relative}
 
-  /* ── app frame ── */
-  .app{flex:1;min-height:0;display:flex;flex-direction:column;}
-  .app[hidden]{display:none;}
-  header.bar{
-    flex:none;display:flex;align-items:baseline;gap:14px;
-    padding:12px clamp(16px,4vw,56px) 10px;
-    border-bottom:2px solid var(--border);
-  }
-  .brand{font-family:var(--serif);font-style:italic;font-size:1.15em;white-space:nowrap;}
-  .crumb{
-    color:var(--muted);flex:1;min-width:0;font-size:.9em;
-    display:flex;align-items:center;white-space:nowrap;
-  }
-  .crumb .path{min-width:0;overflow:hidden;text-overflow:ellipsis;}
-  .crumb b{color:var(--fg);font-weight:400;}
-  .crumb-lnk{
-    background:none;border:none;font:inherit;color:var(--muted);
-    display:inline-flex;align-items:center;justify-content:center;
-    min-height:44px;padding:0 5px;margin:-13px 0;
-    text-decoration:none;
-  }
-  .crumb-back{flex:none;min-width:44px;padding:0 8px;margin-right:4px;}
-  .crumb-lnk:hover{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
-  .conn{flex:none;color:var(--faint);font-size:.78em;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;}
-  @media (max-width:560px){ .conn{display:none;} }
+/* ── typography ────────────────────────────────────────────── */
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(3.1rem,10vw,5.6rem);line-height:.92;letter-spacing:-.025em}
+h2{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.05}
+h3{font-size:1.16rem;line-height:1.3}
+p{margin:0 0 1em}
+.label{
+  font-family:var(--mono);font-size:.66rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1}
+.vh{
+  position:absolute!important;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+}
 
-  main.page{
-    flex:1;min-width:0;min-height:0;overflow-y:auto;overflow-x:hidden;
-    padding:clamp(18px,3.5vw,44px) clamp(16px,4vw,56px) clamp(28px,5vw,64px);
-    scrollbar-width:thin;scrollbar-color:var(--hairline) transparent;
-  }
-  .sheet{max-width:1060px;margin:0 auto;}
-  .reveal{animation:fadeUp .18s ease both;}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+/* section frame */
+section{margin-top:clamp(40px,7vw,72px)}
+.sechead{
+  display:flex;align-items:baseline;gap:14px;
+  border-top:1px solid var(--fg);padding-top:10px;margin-bottom:22px;
+}
+.sechead .n{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.14em}
+.deck{max-width:62ch;color:var(--muted);font-size:1.02rem;margin:-6px 0 26px}
 
-  /* slip "printing": lines rise in with a hair of ink bleed;
-     titles land like a rubber stamp. Entry-only — nothing loops. */
-  .ink{animation:inkIn .15s ease both;}
-  @keyframes inkIn{
-    from{opacity:0;transform:translateY(5px);text-shadow:0 0 .4px currentColor;}
-    to{opacity:1;transform:none;text-shadow:none;}
-  }
-  .stamp{animation:stampIn .24s cubic-bezier(.2,.7,.3,1) both;transform-origin:18% 60%;}
-  @keyframes stampIn{
-    0%{opacity:0;transform:scale(1.06) rotate(-.5deg);}
-    55%{opacity:1;transform:scale(.992) rotate(.15deg);}
-    100%{opacity:1;transform:none;}
-  }
+/* ── masthead ──────────────────────────────────────────────── */
+.masthead{border-bottom:1px solid var(--fg);padding-bottom:26px}
+.topline{
+  display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;
+  justify-content:space-between;margin-bottom:22px;
+}
+.btn{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  background:none;color:var(--fg);border:1px solid var(--rule);
+  padding:7px 13px;cursor:pointer;border-radius:2px;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.titleline{
+  font-family:var(--mono);font-size:.82rem;color:var(--muted);
+  margin:16px 0 18px;letter-spacing:.01em;
+}
+.titleline strong{color:var(--fg);font-weight:500}
+.lede{
+  font-size:clamp(1.06rem,2.2vw,1.24rem);max-width:66ch;
+  margin:0 0 24px;
+}
+.lede .hl{
+  background:linear-gradient(transparent 62%,var(--accent-wash) 62%);
+}
+.contact{
+  list-style:none;display:flex;flex-wrap:wrap;gap:6px 0;
+  padding:0;margin:0;font-family:var(--mono);font-size:.8rem;
+}
+.contact li{display:flex;align-items:center}
+.contact li + li::before{content:"·";color:var(--muted);margin:0 10px}
+.contact a{border-bottom-color:var(--rule)}
+.contact a:hover{border-bottom-color:var(--accent)}
+#sshcopy{
+  font:inherit;background:none;border:0;padding:0;cursor:copy;
+  color:var(--accent);border-bottom:1px dotted var(--accent);
+}
+#sshcopy .hint{font-size:.72em;letter-spacing:.1em;color:var(--muted);margin-left:7px}
 
-  .vkick{
-    color:var(--muted);font-size:.82em;
-    text-transform:uppercase;letter-spacing:.08em;
-    margin:0 0 6px;
-  }
-  .vkick .n{color:var(--accent);}
-  .vtitle{
-    font-family:var(--serif);font-weight:600;font-style:italic;
-    font-size:clamp(30px,4.5vw,52px);line-height:1.05;
-    letter-spacing:-0.02em;margin:0 0 26px;
-  }
+/* ── stat tiles ────────────────────────────────────────────── */
+.stats{
+  display:grid;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,196px),1fr));
+}
+.tile{background:var(--paper);padding:16px 16px 15px}
+.tile .v{
+  font-family:var(--display);font-size:clamp(2rem,4.4vw,2.65rem);
+  line-height:1.05;display:block;letter-spacing:-.015em;
+}
+.tile .v .arrow{color:var(--accent);font-size:.72em;padding:0 .12em}
+.tile .l{display:block;margin:6px 0 7px}
+.tile .f{font-size:.72rem;line-height:1.45;color:var(--muted);font-family:var(--mono)}
 
-  /* ── index (menu) — table of contents in display type ── */
-  .rows{border-top:1px solid var(--hairline);}
-  .row{
-    display:grid;align-items:baseline;width:100%;
-    font:inherit;text-align:left;text-decoration:none;color:var(--fg);
-    background:none;border:none;border-bottom:1px solid var(--hairline);
-    padding:0;min-height:46px;
-  }
-  .row:hover{background:var(--selbg);}
-  .row.sel{background:var(--selbg);}
-  .row .tx{display:block;min-width:0;}
+/* ── charts ────────────────────────────────────────────────── */
+figure{margin:0}
+figcaption{font-size:.84rem;color:var(--muted);margin-top:12px;max-width:70ch}
+.chartbox{border:1px solid var(--rule);padding:18px 14px 12px;background:var(--paper)}
+.charttitle{font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.02em;margin:0 0 3px;padding:0 6px}
+.chartsub{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:0 0 14px;padding:0 6px}
+.chartscroll{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+svg.chart{display:block;width:100%;min-width:600px;height:auto;overflow:visible}
+.ax{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+.axv{font-family:var(--mono);font-size:10px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.gridline{stroke:var(--grid);stroke-width:1}
+.baseline{stroke:var(--rule);stroke-width:1}
+.series{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.wash{fill:var(--accent-wash)}
+.dot{fill:var(--accent);stroke:var(--paper);stroke-width:2}
+.dot-open{fill:var(--paper);stroke:var(--accent);stroke-width:2}
+.dlabel{font-family:var(--mono);font-size:10.5px;font-weight:700;fill:var(--fg);font-variant-numeric:tabular-nums}
+.dnote{font-family:var(--mono);font-size:9.5px;fill:var(--muted)}
+.inflect{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 3;opacity:.75}
+.hit{fill:transparent;cursor:crosshair}
+/* The crosshair and the follow dot are painted under the cursor; without this
+   they swallow the pointer and the hit rect never sees mouseleave. */
+.crosshair,.hoverdot{pointer-events:none}
+.crosshair{stroke:var(--fg);stroke-width:1;opacity:.28}
+.bar{fill:var(--accent)}
+.barlabel{font-family:var(--mono);font-size:11px;fill:var(--fg)}
+.barval{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--fg);font-variant-numeric:tabular-nums}
+#tip{
+  position:fixed;z-index:60;pointer-events:none;opacity:0;
+  background:var(--fg);color:var(--paper);
+  font-family:var(--mono);font-size:.7rem;line-height:1.45;
+  padding:6px 9px;border-radius:3px;transform:translate(-50%,-140%);
+  white-space:nowrap;transition:opacity .12s ease;
+}
+/* exact values, reachable by keyboard and readable by sighted users */
+.dtable{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:12px}
+.dtable > summary{
+  cursor:pointer;list-style:none;display:inline-block;
+  letter-spacing:.1em;text-transform:uppercase;font-size:.66rem;
+  border-bottom:1px dotted var(--rule);padding-bottom:2px;
+}
+.dtable > summary::-webkit-details-marker{display:none}
+.dtable > summary::before{content:"▸ ";color:var(--accent)}
+.dtable[open] > summary::before{content:"▾ "}
+.dtable > summary:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.dtable table{border-collapse:collapse;margin-top:10px;font-variant-numeric:tabular-nums}
+.dtable caption{text-align:left;padding-bottom:6px;max-width:64ch;line-height:1.5}
+.dtable th,.dtable td{
+  border-bottom:1px solid var(--rule);padding:3px 16px 3px 0;
+  text-align:left;font-weight:400;white-space:nowrap;
+}
+.dtable thead th{color:var(--fg)}
 
-  .rows.index .row{
-    grid-template-columns:5ch 1fr auto;gap:18px;
-    padding:clamp(14px,2.2vw,26px) 6px;
-  }
-  .rows.index .num{
-    color:var(--faint);font-size:.85em;
-    letter-spacing:.06em;align-self:center;
-  }
-  .rows.index .t{
-    font-family:var(--serif);font-weight:600;
-    font-size:clamp(32px,5.4vw,62px);line-height:1.04;
-    letter-spacing:-0.02em;
-    transition:transform .14s ease;
-  }
-  .rows.index .d{
-    color:var(--muted);font-size:.88em;align-self:center;
-    text-align:right;
-  }
-  @media (max-width:700px){ .rows.index .row{grid-template-columns:5ch 1fr;} .rows.index .d{display:none;} }
-  .rows.index .row.sel .t{font-style:italic;color:var(--accent);transform:translateX(10px);}
-  .rows.index .row.sel .num{color:var(--accent);}
+.note{
+  border-left:2px solid var(--accent);padding:2px 0 2px 16px;
+  margin:26px 0 0;max-width:68ch;
+}
+.note b{font-weight:400;font-family:var(--display);font-size:1.18rem}
 
-  /* ── ledger (projects) ── */
-  .rows.ledger .row{
-    grid-template-columns:4ch minmax(0,1fr) auto;gap:16px;
-    padding:13px 6px;
-  }
-  .rows.ledger .num{color:var(--faint);font-size:.82em;align-self:center;}
-  .rows.ledger .t{
-    font-family:var(--serif);font-style:italic;font-weight:600;
-    font-size:clamp(19px,2.4vw,24px);letter-spacing:-0.01em;
-  }
-  .rows.ledger .d{color:var(--muted);font-size:.88em;display:block;}
-  .rows.ledger .aux{
-    color:var(--faint);font-size:.78em;align-self:center;
-    text-transform:uppercase;letter-spacing:.07em;
-  }
-  .rows.ledger .row.sel .t{color:var(--accent);}
-  .rows.ledger .row.sel .num{color:var(--accent);}
+/* ── doctrine ──────────────────────────────────────────────── */
+.rules{list-style:none;counter-reset:r;padding:0;margin:0;display:grid;gap:22px}
+.rules li{counter-increment:r;padding-left:52px;position:relative;max-width:70ch}
+.rules li::before{
+  content:counter(r,decimal-leading-zero);
+  position:absolute;left:0;top:2px;
+  font-family:var(--mono);font-size:.78rem;color:var(--accent);
+  border-top:1px solid var(--accent);padding-top:6px;width:34px;
+}
+.rules h3{font-family:var(--display);font-size:1.3rem;margin-bottom:3px}
+.rules p{color:var(--muted);margin:0;font-size:.98rem}
 
-  /* ── George Lab — generated project-status ledger ── */
-  .lab-meta{
-    display:flex;gap:10px 22px;flex-wrap:wrap;
-    margin:-14px 0 22px;color:var(--muted);font-size:.82em;
-    text-transform:uppercase;letter-spacing:.06em;
-  }
-  .lab-meta .live{color:var(--accent);}
-  .lab-grid{border-top:2px solid var(--border);}
-  .lab-card{
-    display:grid;grid-template-columns:minmax(150px,1.1fr) minmax(260px,2fr);
-    gap:14px 30px;padding:18px 6px;border-bottom:1px solid var(--hairline);
-  }
-  .lab-card h2{
-    margin:0;font-family:var(--serif);font-style:italic;
-    font-size:clamp(22px,2.6vw,30px);line-height:1.1;
-  }
-  .lab-card h2 a{color:inherit;text-decoration:none;}
-  .lab-card h2 a:hover{color:var(--accent);}
-  .lab-kind{margin-top:6px;color:var(--faint);font-size:.76em;text-transform:uppercase;letter-spacing:.07em;}
-  .lab-status{color:var(--accent);}
-  .lab-note{margin:0 0 10px;max-width:62ch;font-family:var(--serif);font-size:16px;line-height:1.4;}
-  .lab-facts{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--muted);font-size:.82em;}
-  .lab-facts b{color:var(--fg);font-weight:400;}
-  .lab-empty{padding:24px 6px;color:var(--muted);border-bottom:1px solid var(--hairline);}
-  @media (max-width:650px){
-    .lab-card{grid-template-columns:1fr;gap:10px;}
-  }
+/* ── cards ─────────────────────────────────────────────────── */
+.cards{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.card{background:var(--paper);padding:18px 18px 16px;transition:transform .18s ease,box-shadow .18s ease;min-width:0;overflow-wrap:anywhere}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);z-index:2;position:relative}
+.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--accent);margin:4px 0 9px;display:block}
+.card p{font-size:.93rem;color:var(--muted);margin:0 0 12px}
+.meta{
+  display:flex;flex-wrap:wrap;gap:4px 10px;font-family:var(--mono);
+  font-size:.68rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:9px;
+  overflow-wrap:anywhere;word-break:break-word;
+}
+.meta .st{color:var(--accent);overflow-wrap:anywhere}
+.meta a{overflow-wrap:anywhere}
 
-  /* ── actions (underlined mono links) ── */
-  .acts{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border-top:0;}
-  .acts .row{
-    display:inline-flex;gap:8px;width:auto;min-height:44px;align-items:center;
-    border-bottom:none;padding:6px 4px;color:var(--fg);
-  }
-  .acts .row .t{text-decoration:underline;text-underline-offset:3px;}
-  .acts .row.sel .t{color:var(--accent);}
-  .acts .row.sel::before{content:"›";color:var(--accent);}
+/* ── timeline ──────────────────────────────────────────────── */
+.rail{list-style:none;padding:0;margin:0;border-left:1px solid var(--rule)}
+.rail li{position:relative;padding:0 0 26px 26px}
+.rail li::before{
+  content:"";position:absolute;left:-4.5px;top:9px;width:8px;height:8px;
+  background:var(--accent);border-radius:50%;
+  box-shadow:0 0 0 3px var(--paper);
+}
+.rail .d{font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.08em}
+.rail .h{font-family:var(--display);font-size:1.22rem;line-height:1.25;display:block;margin:1px 0 2px}
+.rail p{font-size:.95rem;color:var(--muted);margin:0;max-width:66ch}
 
-  /* ── printed slip (detail body) ── */
-  .slip{
-    max-width:72ch;border:2px solid var(--border);
-    background:var(--surface);
-    padding:clamp(18px,3vw,30px) clamp(18px,3vw,32px);
-  }
-  .slip p{margin:0 0 12px;max-width:58ch;font-size:15px;}
-  .slip h2{
-    font-family:var(--serif);font-style:italic;font-weight:600;
-    font-size:1.15em;margin:20px 0 8px;
-  }
-  .static-list{margin:0 0 12px;padding-left:1.4em;}
-  .static-list li{margin:3px 0;font-size:15px;}
-  .static-list a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;}
-  .static-list a:hover{color:var(--accent);}
-  .slip p:last-child{margin-bottom:0;}
-  .slip .hl{color:var(--accent);}
-  .slip .dim{color:var(--muted);}
-  .kv{display:flex;gap:12px;margin:3px 0;font-size:15px;}
-  .kv .k{color:var(--faint);flex:none;min-width:10ch;}
-  .row .k{color:var(--faint);flex:none;min-width:10ch;}
-  .rows.kvrows{margin-top:10px;}
-  .badge{
-    display:inline-block;font-size:.6em;color:var(--fg);
-    border:1px solid var(--border);padding:2px 8px;vertical-align:6px;
-    font-family:var(--mono);font-style:normal;font-weight:400;
-    text-transform:uppercase;letter-spacing:.07em;
-  }
+/* ── footer ────────────────────────────────────────────────── */
+footer{margin-top:clamp(44px,7vw,72px);border-top:1px solid var(--fg);padding-top:18px}
+footer p{font-size:.95rem}
+.integrity{font-size:.78rem;line-height:1.6;color:var(--muted);max-width:76ch;margin:18px 0 0}
+.integrity b{color:var(--fg);font-weight:400;font-family:var(--mono);font-size:.94em}
+.colophon{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:20px;letter-spacing:.04em}
 
-  footer.status{
-    flex:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-    padding:8px clamp(16px,4vw,56px);min-height:38px;
-    border-top:2px solid var(--border);
-    color:var(--faint);font-size:.84em;
-  }
-  .hint{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-  kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);padding:0 6px;}
-  button.hint{background:none;border:none;font:inherit;color:var(--faint);padding:2px;}
-  button.hint:hover kbd{background:var(--fg);color:var(--bg);}
+/* ── print-in animation (progressive enhancement) ──────────── */
+.js .reveal{opacity:0;transform:translateY(14px)}
+.js .reveal.in{opacity:1;transform:none;transition:opacity .62s ease,transform .62s cubic-bezier(.22,.61,.36,1)}
+.js .series{stroke-dasharray:var(--len,2600);stroke-dashoffset:var(--len,2600)}
+.js .in .series,.js .series.in{stroke-dashoffset:0;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)}
+.js .anno{opacity:0}
+.js .in .anno{opacity:1;transition:opacity .5s ease .9s}
+.js .barwrap{transform:scaleX(0);transform-box:view-box;transform-origin:152px 0}
+.js .in .barwrap{transform:none;transition:transform .9s cubic-bezier(.22,.61,.36,1)}
+.js .barwrap:nth-of-type(2){transition-delay:.06s}
+.js .barwrap:nth-of-type(3){transition-delay:.12s}
+.js .barwrap:nth-of-type(4){transition-delay:.18s}
+.js .barwrap:nth-of-type(5){transition-delay:.24s}
 
-  .closed{padding:clamp(16px,4vw,36px);}
-  .closed p{margin:0 0 6px;color:var(--muted);}
-  .closed .msg{color:var(--fg);}
-  .reconnect{
-    margin-top:18px;font:inherit;color:var(--fg);
-    background:transparent;border:2px solid var(--border);
-    padding:9px 16px;
-  }
-  .reconnect:hover{background:var(--fg);color:var(--bg);}
+@media (prefers-reduced-motion: reduce){
+  #ruler{display:none}
+  .js .reveal,.js .reveal.in{opacity:1;transform:none;transition:none}
+  .js .series,.js .anno,.js .barwrap{stroke-dashoffset:0;opacity:1;transform:none;transition:none}
+  .card:hover{transform:none}
+  *{animation:none!important;scroll-behavior:auto!important}
+}
 
-  @media (prefers-reduced-motion: reduce){
-    .cur-b,.reveal,.ink,.stamp{animation:none;}
-    .rows.index .t{transition:none;}
-  }
+@media (max-width:560px){
+  body{font-size:16px}
+  .contact{flex-direction:column}
+  .contact li + li::before{display:none}
+}
+
+/* ── narrow-screen chart variant ───────────────────────────────
+   On a phone the line chart must show the whole series without a
+   horizontal scroll, so the SVG is allowed to shrink to the container.
+   Shrinking it also shrinks the type, so the narrow variant uses much
+   larger viewBox font sizes (28 units ≈ 9px on a 390px screen) and
+   fewer x ticks. The wide/narrow label sets are swapped, not scaled. */
+.narrow-only{display:none}
+@media screen and (max-width:700px){
+  .chartfit{overflow:visible}
+  .chartfit svg.chart{min-width:0;width:100%;height:auto;margin-bottom:10px}
+  .chartfit .wide-only{display:none}
+  .chartfit .narrow-only{display:inline}
+  .chartfit .ax{font-size:28px}
+  .chartfit .axv{font-size:28px}
+  .chartfit .dlabel{font-size:30px}
+  .chartfit .dnote{font-size:28px}
+  .chartfit .series{stroke-width:4}
+  .chartfit .inflect{stroke-width:2}
+  .chartfit .dot,.chartfit .dot-open{r:9;stroke-width:4}
+  .chartbox{padding-left:10px;padding-right:10px}
+}
+
+/* ── print ─────────────────────────────────────────────────── */
+@media print{
+  @page{size:Letter portrait;margin:14mm}
+  :root{--desk:#fff;--paper:#fff;--fg:#000;--muted:#333;--rule:#bbb;--grid:#ddd;--accent:#9d2f18;--accent-wash:rgba(157,47,24,.12);--shadow:none}
+  #ruler,#tip,.noprint{display:none!important}
+  body{background:#fff;font-size:10.5pt;line-height:1.42}
+  .desk{padding:0}
+  .sheet{box-shadow:none;border:0;padding:0;max-width:none}
+  .sheet::before{display:none}
+  .js .reveal,.js .series,.js .anno,.js .barwrap{opacity:1!important;transform:none!important;stroke-dashoffset:0!important;transition:none!important}
+  h1{font-size:34pt}
+  h2{font-size:16pt}
+  section{margin-top:16pt;break-inside:auto}
+  .sechead{break-after:avoid}
+  .tile,.card,.rules li,.rail li,figure{break-inside:avoid}
+  .card:hover{transform:none;box-shadow:none}
+  a{border-bottom:0;text-decoration:underline}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .tile .v{font-size:17pt}
+  .chartbox{break-inside:avoid}
+  .chartscroll{overflow:visible}
+  svg.chart{min-width:0}
+}
 </style>
 </head>
 <body>
+<div id="ruler" aria-hidden="true"></div>
+<div id="tip" role="status" aria-live="off"></div>
 
-<div class="term" id="term">
-  <div class="boot" id="boot" aria-live="polite" hidden><pre id="bootpre"></pre></div>
-  <div class="app" id="app">
-    <header class="bar">
-      <span class="brand">George Nijo</span>
-      <span class="crumb" id="crumb">~</span>
-      <span class="conn">ssh · ed25519 · paper</span>
-    </header>
-    <main class="page" id="page" tabindex="-1">
-      <div class="sheet" id="static-content">
-        <h1 class="vtitle">George Nijo</h1>
-        <p class="vkick">software engineer · boston · agent infrastructure</p>
-        <div class="slip">
-          <p><strong>George Nijo</strong> is a software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building AgentOS, a personal + home agent operating system.</p>
-          <p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing.</p>
-          <h2>Projects</h2>
-          <ul class="static-list">
-            <li><a href="https://github.com/georgenijo/agent-mesh">agent-mesh</a> — Go — agents orchestrating themselves</li>
-            <li><a href="https://github.com/georgenijo/usher">usher</a> — Go — MCP broker</li>
-            <li><a href="https://github.com/georgenijo/hangar">hangar</a> — Rust — agent control plane</li>
-            <li><a href="https://github.com/georgenijo/ghosthands">ghosthands</a> — Python — local computer-use for macOS</li>
-            <li><a href="https://github.com/georgenijo/murmur-app">murmur-app</a> — Rust — local voice-to-text for macOS</li>
-            <li><a href="https://github.com/georgenijo/fleetmap">fleetmap</a> — Swift — live map of what your Mac runs</li>
-            <li><a href="https://github.com/georgenijo/gauge">gauge</a> — Swift — Claude usage in the menu bar</li>
-            <li><a href="https://github.com/georgenijo/whoop-dashboard">whoop-dashboard</a> — TypeScript — health analytics with an AI coach</li>
-            <li><a href="https://github.com/georgenijo/aperture">aperture</a> — Swift — iOS film camera</li>
-          </ul>
-          <h2>Contact</h2>
-          <ul class="static-list">
-            <li><a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a></li>
-            <li><a href="https://github.com/georgenijo">github.com/georgenijo</a></li>
-            <li><a href="https://www.linkedin.com/in/georgenijo/">linkedin.com/in/georgenijo</a></li>
-          </ul>
-          <p>This site works without JavaScript. For agents: <a href="/llms.txt">/llms.txt</a> lists markdown versions of every page.</p>
-        </div>
-      </div>
-    </main>
-    <footer class="status" id="status"></footer>
+<div class="desk">
+<main class="sheet" id="top">
+
+<!-- ═══ MASTHEAD ═══════════════════════════════════════════ -->
+<header class="masthead reveal">
+  <div class="topline">
+    <span class="label">Snapshot · 2026-09-16 · Boston, MA</span>
+    <button class="btn noprint" id="printbtn" type="button">Print / save PDF</button>
   </div>
+
+  <h1>George Nijo</h1>
+
+  <p class="titleline">
+    <strong>Software engineer</strong> · Boston · builds the factory that builds the software
+  </p>
+
+  <p class="lede">
+    I turned agent-orchestrated delivery into a repeatable system: explicit model routing,
+    fanned-out subagents, one independent cross-model review, and verification against the
+    running build. The output is measurable — <span class="hl num">6,300 commits and 1,105
+    pull requests across 18 repos</span> so far in 2026, against 129 commits in all of 2025.
+  </p>
+
+  <ul class="contact">
+    <li><a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a></li>
+    <li><a href="https://github.com/georgenijo" rel="me noopener">github.com/georgenijo</a></li>
+    <li><a href="https://www.linkedin.com/in/georgenijo" rel="me noopener">linkedin.com/in/georgenijo</a></li>
+    <li><button type="button" id="sshcopy" data-ssh="ssh georgenijo.com" aria-label="Copy ssh georgenijo.com to clipboard">ssh georgenijo.com<span class="hint">copy</span></button></li>
+  </ul>
+</header>
+
+<!-- ═══ STATS ══════════════════════════════════════════════ -->
+<section aria-labelledby="h-stats" class="reveal">
+  <div class="sechead"><span class="n">01</span><h2 id="h-stats">By the numbers</h2></div>
+  <div class="stats">
+    <div class="tile">
+      <span class="v num" data-count="73" data-suffix="×">73×</span>
+      <span class="l label">Monthly commit rate, after vs. before</span>
+      <span class="f">(6,266 ÷ 8) ÷ (129 ÷ 12) ≈ 72.9 — Feb–Sep 2026 averages 783 commits/mo against a 2025 average of 10.8/mo. Bot commits excluded.</span>
+    </div>
+    <div class="tile">
+      <span class="v num" data-count="6300" data-group="1">6,300</span>
+      <span class="l label">Commits in 2026 so far</span>
+      <span class="f">Jan 1 – Sep 16, 2026. Excludes 7,609 automated Fleet health-snapshot commits.</span>
+    </div>
+    <div class="tile">
+      <span class="v num">3<span class="arrow">→</span><span data-count="1105" data-group="1">1,105</span></span>
+      <span class="l label">Pull requests opened, 2025 → 2026</span>
+      <span class="f">PRs opened, not merged. 2026 figure is through Sep 16.</span>
+    </div>
+    <div class="tile">
+      <span class="v num">2<span class="arrow">→</span><span data-count="18">18</span></span>
+      <span class="l label">Repos with commits, 2025 → 2026</span>
+      <span class="f">70 repositories exist on GitHub; these are the ones actually receiving work.</span>
+    </div>
+    <div class="tile">
+      <span class="v num" data-count="1.06" data-decimals="2" data-prefix="~" data-suffix="M">~1.06M</span>
+      <span class="l label">Lines changed, trailing 12 months</span>
+      <span class="f">Floor, not a total: ~925k added / ~134k deleted, measured across 14 locally cloned repos only.</span>
+    </div>
+    <div class="tile">
+      <span class="v num" data-count="6.2" data-decimals="1" data-suffix="B">6.2B</span>
+      <span class="l label">AI tokens burned</span>
+      <span class="f">Burn-log snapshot dated 2026-07-17, aggregated across machines via Fleet. Scope-dependent; treat as a floor.</span>
+    </div>
+    <div class="tile">
+      <span class="v num" data-count="101">101</span>
+      <span class="l label">GitHub releases of one app</span>
+      <span class="f">murmur-app, v0.1.0 → v0.50.0, latest 2026-09-14. Roughly one release every 1–2 days in Sep 2026.</span>
+    </div>
+    <div class="tile">
+      <span class="v num" data-count="77">77</span>
+      <span class="l label">Personal agent skills in use</span>
+      <span class="f">Installed skills in <span class="mono">~/.claude/skills</span>, plus 5 hook events wired into the agent loop.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SHIP RATE ══════════════════════════════════════════ -->
+<section aria-labelledby="h-ship" class="reveal" id="shipsec">
+  <div class="sechead"><span class="n">02</span><h2 id="h-ship">Ship rate</h2></div>
+
+  <figure class="chartbox">
+    <p class="charttitle">Clean commits per month</p>
+    <p class="chartsub">Bot commits excluded. Sep 2026 is partial (through the 16th).</p>
+
+    <div class="chartscroll chartfit">
+    <svg class="chart" id="linechart" viewBox="0 0 900 300" role="img" aria-labelledby="lc-t lc-d" preserveAspectRatio="xMidYMid meet">
+      <title id="lc-t">Clean commits per month, January 2025 through September 2026</title>
+      <desc id="lc-d">A line chart. Commits stay under 50 per month for all of 2025, rise to 230 in February 2026 when agent workflows were adopted, and peak at 1,338 in July 2026. September 2026 is partial at 708 through the 16th. The full monthly series is available in the data table below the chart.</desc>
+
+      <!-- gridlines + y axis -->
+      <g aria-hidden="true">
+        <line class="gridline" x1="56" y1="24" x2="856" y2="24"></line>
+        <line class="gridline" x1="56" y1="105.3" x2="856" y2="105.3"></line>
+        <line class="gridline" x1="56" y1="186.7" x2="856" y2="186.7"></line>
+        <line class="baseline" x1="56" y1="268" x2="856" y2="268"></line>
+        <g class="wide-only">
+          <text class="axv" x="48" y="27.5" text-anchor="end">1,500</text>
+          <text class="axv" x="48" y="108.8" text-anchor="end">1,000</text>
+          <text class="axv" x="48" y="190.2" text-anchor="end">500</text>
+          <text class="axv" x="48" y="271.5" text-anchor="end">0</text>
+          <text class="ax" x="56" y="12" text-anchor="start">commits / month</text>
+        </g>
+        <!-- narrow phones: the SVG is scaled down to fit, so the type is
+             scaled up and the labels move inside the plot to stay legible -->
+        <g class="narrow-only">
+          <text class="axv" x="62" y="52" text-anchor="start">1,500</text>
+          <text class="axv" x="62" y="133" text-anchor="start">1,000</text>
+          <text class="axv" x="62" y="215" text-anchor="start">500</text>
+        </g>
+      </g>
+
+      <!-- inflection rule -->
+      <g class="anno">
+        <line class="inflect" x1="576" y1="24" x2="576" y2="268"></line>
+        <g class="wide-only">
+          <text class="dnote" x="582" y="36">FEB 2026</text>
+          <text class="dnote" x="582" y="48">agent workflows adopted</text>
+        </g>
+        <g class="narrow-only">
+          <text class="dnote" x="582" y="118">FEB 2026</text>
+        </g>
+      </g>
+
+      <!-- area wash + series -->
+      <path class="wash anno" d="M56 268 L56 268 L96 268 L136 263.6 L176 268 L216 268 L256 268 L296 260.5 L336 267.8 L376 263 L416 267 L456 266.4 L496 266.7 L536 262.5 L576 230.6 L616 174 L656 193.2 L696 165 L736 76.5 L776 50.4 L816 82.2 L856 152.8 L856 268 Z"></path>
+      <path class="series" id="sline" d="M56 268 L96 268 L136 263.6 L176 268 L216 268 L256 268 L296 260.5 L336 267.8 L376 263 L416 267 L456 266.4 L496 266.7 L536 262.5 L576 230.6 L616 174 L656 193.2 L696 165 L736 76.5 L776 50.4 L816 82.2 L856 152.8"></path>
+
+      <!-- selective markers -->
+      <g class="anno">
+        <circle class="dot" cx="576" cy="230.6" r="4.5"></circle>
+        <circle class="dot" cx="776" cy="50.4" r="4.5"></circle>
+        <circle class="dot-open" cx="856" cy="152.8" r="4.5"></circle>
+        <g class="wide-only">
+          <text class="dlabel" x="776" y="40" text-anchor="middle">1,338</text>
+          <text class="dlabel" x="856" y="172" text-anchor="end">708</text>
+          <text class="dnote" x="856" y="184" text-anchor="end">partial</text>
+        </g>
+        <g class="narrow-only">
+          <text class="dlabel" x="776" y="36" text-anchor="middle">1,338</text>
+          <text class="dlabel" x="856" y="192" text-anchor="end">708</text>
+          <text class="dnote" x="856" y="224" text-anchor="end">partial</text>
+        </g>
+      </g>
+
+      <!-- x axis -->
+      <g aria-hidden="true">
+        <g class="wide-only">
+          <text class="ax" x="56" y="284" text-anchor="start">Jan 2025</text>
+          <text class="ax" x="296" y="284" text-anchor="middle">Jul 2025</text>
+          <text class="ax" x="536" y="284" text-anchor="middle">Jan 2026</text>
+          <text class="ax" x="656" y="284" text-anchor="middle">Apr</text>
+          <text class="ax" x="776" y="284" text-anchor="middle">Jul</text>
+          <text class="ax" x="856" y="284" text-anchor="end">Sep 2026</text>
+        </g>
+        <g class="narrow-only">
+          <text class="ax" x="56" y="296" text-anchor="start">Jan 2025</text>
+          <text class="ax" x="536" y="296" text-anchor="middle">Jan 2026</text>
+          <text class="ax" x="856" y="296" text-anchor="end">Sep 2026</text>
+        </g>
+      </g>
+
+      <!-- hover targets: native <title> works without JS -->
+      <g id="hits">
+        <rect class="hit" x="36"  y="24" width="40" height="244"><title>Jan 2025 · 0 commits</title></rect>
+        <rect class="hit" x="76"  y="24" width="40" height="244"><title>Feb 2025 · 0 commits</title></rect>
+        <rect class="hit" x="116" y="24" width="40" height="244"><title>Mar 2025 · 27 commits</title></rect>
+        <rect class="hit" x="156" y="24" width="40" height="244"><title>Apr 2025 · 0 commits</title></rect>
+        <rect class="hit" x="196" y="24" width="40" height="244"><title>May 2025 · 0 commits</title></rect>
+        <rect class="hit" x="236" y="24" width="40" height="244"><title>Jun 2025 · 0 commits</title></rect>
+        <rect class="hit" x="276" y="24" width="40" height="244"><title>Jul 2025 · 46 commits</title></rect>
+        <rect class="hit" x="316" y="24" width="40" height="244"><title>Aug 2025 · 1 commit</title></rect>
+        <rect class="hit" x="356" y="24" width="40" height="244"><title>Sep 2025 · 31 commits</title></rect>
+        <rect class="hit" x="396" y="24" width="40" height="244"><title>Oct 2025 · 6 commits</title></rect>
+        <rect class="hit" x="436" y="24" width="40" height="244"><title>Nov 2025 · 10 commits</title></rect>
+        <rect class="hit" x="476" y="24" width="40" height="244"><title>Dec 2025 · 8 commits</title></rect>
+        <rect class="hit" x="516" y="24" width="40" height="244"><title>Jan 2026 · 34 commits</title></rect>
+        <rect class="hit" x="556" y="24" width="40" height="244"><title>Feb 2026 · 230 commits</title></rect>
+        <rect class="hit" x="596" y="24" width="40" height="244"><title>Mar 2026 · 578 commits</title></rect>
+        <rect class="hit" x="636" y="24" width="40" height="244"><title>Apr 2026 · 460 commits</title></rect>
+        <rect class="hit" x="676" y="24" width="40" height="244"><title>May 2026 · 633 commits</title></rect>
+        <rect class="hit" x="716" y="24" width="40" height="244"><title>Jun 2026 · 1,177 commits</title></rect>
+        <rect class="hit" x="756" y="24" width="40" height="244"><title>Jul 2026 · 1,338 commits</title></rect>
+        <rect class="hit" x="796" y="24" width="40" height="244"><title>Aug 2026 · 1,142 commits</title></rect>
+        <rect class="hit" x="836" y="24" width="40" height="244"><title>Sep 2026 · 708 commits (partial)</title></rect>
+      </g>
+    </svg>
+    </div>
+
+    <details class="dtable">
+      <summary>Data table</summary>
+      <table>
+        <caption>Clean commits per month, January 2025 – September 2026. Bot commits excluded.</caption>
+        <thead><tr><th scope="col">Month</th><th scope="col">Commits</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">2025-01</th><td>0</td></tr>
+          <tr><th scope="row">2025-02</th><td>0</td></tr>
+          <tr><th scope="row">2025-03</th><td>27</td></tr>
+          <tr><th scope="row">2025-04</th><td>0</td></tr>
+          <tr><th scope="row">2025-05</th><td>0</td></tr>
+          <tr><th scope="row">2025-06</th><td>0</td></tr>
+          <tr><th scope="row">2025-07</th><td>46</td></tr>
+          <tr><th scope="row">2025-08</th><td>1</td></tr>
+          <tr><th scope="row">2025-09</th><td>31</td></tr>
+          <tr><th scope="row">2025-10</th><td>6</td></tr>
+          <tr><th scope="row">2025-11</th><td>10</td></tr>
+          <tr><th scope="row">2025-12</th><td>8</td></tr>
+          <tr><th scope="row">2026-01</th><td>34</td></tr>
+          <tr><th scope="row">2026-02</th><td>230</td></tr>
+          <tr><th scope="row">2026-03</th><td>578</td></tr>
+          <tr><th scope="row">2026-04</th><td>460</td></tr>
+          <tr><th scope="row">2026-05</th><td>633</td></tr>
+          <tr><th scope="row">2026-06</th><td>1177</td></tr>
+          <tr><th scope="row">2026-07</th><td>1338</td></tr>
+          <tr><th scope="row">2026-08</th><td>1142</td></tr>
+          <tr><th scope="row">2026-09</th><td>708 (partial, through Sep 16)</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </figure>
+
+  <p class="note">
+    <b>Feb 2026 — the method changed, not the hours.</b><br>
+    This is where I stopped typing code as the primary act and started running agents against
+    a written doctrine: fan work out to subagents, route each task to a model chosen on
+    difficulty, require one independent review before anything merges. Commits went from 34 in
+    January to 230 in February and have not returned to the old baseline since.
+  </p>
+</section>
+
+<!-- ═══ MODEL MIX ══════════════════════════════════════════ -->
+<section aria-labelledby="h-mix" class="reveal">
+  <div class="sechead"><span class="n">03</span><h2 id="h-mix">Model mix</h2></div>
+
+  <figure class="chartbox">
+    <p class="charttitle">Tokens by model</p>
+    <p class="chartsub">Top 5 models, burn-log snapshot 2026-07-17.</p>
+
+    <div class="chartscroll chartfit">
+    <svg class="chart" viewBox="0 0 900 214" role="img" aria-labelledby="bc-t bc-d" preserveAspectRatio="xMidYMid meet">
+      <title id="bc-t">Tokens burned by model, top five</title>
+      <desc id="bc-d">Horizontal bars. Opus 4.8 leads with 2.51 billion tokens, followed by Fable 5 at 1.06 billion, Sonnet 5 at 911 million, GPT-5.5 at 661 million and GPT-5.6 Sol at 434 million.</desc>
+
+      <text class="barlabel wide-only" x="140" y="38" text-anchor="end">Opus 4.8</text>
+      <text class="barlabel narrow-only" x="140" y="38" text-anchor="end">Opus 4.8</text>
+      <g class="barwrap"><path class="bar" d="M152 24 h556 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-556 z"><title>Opus 4.8 · 2,510,416,238 tokens</title></path></g>
+      <text class="barval" x="722" y="38">2.51B</text>
+
+      <text class="barlabel wide-only" x="140" y="76" text-anchor="end">Fable 5</text>
+      <text class="barlabel narrow-only" x="140" y="76" text-anchor="end">Fable 5</text>
+      <g class="barwrap"><path class="bar" d="M152 62 h233 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-233 z"><title>Fable 5 · 1,062,481,134 tokens</title></path></g>
+      <text class="barval" x="399" y="76">1.06B</text>
+
+      <text class="barlabel wide-only" x="140" y="114" text-anchor="end">Sonnet 5</text>
+      <text class="barlabel narrow-only" x="140" y="114" text-anchor="end">Sonnet 5</text>
+      <g class="barwrap"><path class="bar" d="M152 100 h199 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-199 z"><title>Sonnet 5 · 911,112,836 tokens</title></path></g>
+      <text class="barval" x="365" y="114">911M</text>
+
+      <text class="barlabel wide-only" x="140" y="152" text-anchor="end">GPT-5.5</text>
+      <text class="barlabel narrow-only" x="140" y="152" text-anchor="end">GPT-5.5</text>
+      <g class="barwrap"><path class="bar" d="M152 138 h143 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-143 z"><title>GPT-5.5 · 660,827,177 tokens</title></path></g>
+      <text class="barval" x="309" y="152">661M</text>
+
+      <text class="barlabel wide-only" x="140" y="190" text-anchor="end">GPT-5.6 Sol</text>
+      <text class="barlabel narrow-only" x="140" y="190" text-anchor="end">GPT-5.6</text>
+      <g class="barwrap"><path class="bar" d="M152 176 h93 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-93 z"><title>GPT-5.6 Sol · 434,067,143 tokens</title></path></g>
+      <text class="barval" x="259" y="190">434M</text>
+
+      <line class="baseline" x1="152" y1="14" x2="152" y2="204"></line>
+    </svg>
+    </div>
+
+    <figcaption>
+      Top 5 models by tokens, from the burn log at
+      <a href="./burn.html">georgenijo.com/burn</a>. Opus 4.8 is ~40% of the total — the hard
+      reasoning goes to the expensive model, the mechanical work does not.
+    </figcaption>
+    <details class="dtable">
+      <summary>Data table</summary>
+      <table>
+        <caption>Tokens by model, top five.</caption>
+        <thead><tr><th scope="col">Model</th><th scope="col">Tokens</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Opus 4.8</th><td>2,510,416,238</td></tr>
+          <tr><th scope="row">Fable 5</th><td>1,062,481,134</td></tr>
+          <tr><th scope="row">Sonnet 5</th><td>911,112,836</td></tr>
+          <tr><th scope="row">GPT-5.5</th><td>660,827,177</td></tr>
+          <tr><th scope="row">GPT-5.6 Sol</th><td>434,067,143</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </figure>
+</section>
+
+<!-- ═══ THE FACTORY ════════════════════════════════════════ -->
+<section aria-labelledby="h-factory" class="reveal">
+  <div class="sechead"><span class="n">04</span><h2 id="h-factory">The factory</h2></div>
+  <p class="deck">Six rules. They are written down, they are enforced by config, and they are why the chart above looks like that.</p>
+  <ol class="rules">
+    <li>
+      <h3>The orchestrator never leaves the chat.</h3>
+      <p>The model I am talking to plans, routes, and reviews. It does not disappear into a forty-minute solo implementation. Context stays where decisions get made.</p>
+    </li>
+    <li>
+      <h3>Research and implementation get fanned out.</h3>
+      <p>Anything that means reading across many files goes to a subagent that returns a conclusion, not a file dump. Independent workstreams run in parallel with separated edit scopes.</p>
+    </li>
+    <li>
+      <h3>Model choice is a routing decision, not a default.</h3>
+      <p>Hardest architecture, ambiguity, and reviews go to GPT-6 Astra. Lead implementation and debugging go to Sol. Ordinary parallel work goes to Terra. Narrow mechanical volume goes to Luna. Claude Opus for hard Claude-native reasoning, Sonnet for ordinary, Haiku for narrow. Labels are literal; nothing gets relabeled to look better.</p>
+    </li>
+    <li>
+      <h3>One independent review, different model, fresh context, high effort.</h3>
+      <p>Every meaningful behavior change gets reviewed by a model that did not write it, given the intended behavior, the diff, and the verification evidence — and nothing else. Read-only. If that review is unavailable, I report the missing gate rather than quietly substituting a weaker one.</p>
+    </li>
+    <li>
+      <h3>Verification is risk-based and happens against the running build.</h3>
+      <p>Reproduce the bug first where feasible. Exercise the affected user flow in a real browser or a real binary. Confirm the artifact actually contains the change. Tests are evidence, not the whole case.</p>
+    </li>
+    <li>
+      <h3>“Fix this” means finished, not started.</h3>
+      <p>A repository fix request authorizes the whole chain: implement, verify, review, commit, push, PR ready to merge, CI resolved, conflicts handled — without a second prompt. The inverse rule matters as much: a question authorizes nothing. Asking whether something could work never edits a file.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ═══ TOOLS ══════════════════════════════════════════════ -->
+<section aria-labelledby="h-tools" class="reveal">
+  <div class="sechead"><span class="n">05</span><h2 id="h-tools">Tools he built to make that possible</h2></div>
+  <div class="cards">
+
+    <article class="card">
+      <h3>Fleet</h3>
+      <span class="tag">Agent-native control plane for a personal Tailscale mesh</span>
+      <p>One manifest resolves who every box is; Tailscale supplies live IPs and online state, so neither I nor an agent ever hardcodes an address or guesses an SSH user. It covers discovery, remote exec, file transfer, service management, durable artifact publishing, shared skill distribution to every machine, and token-burn analytics. It is designed so agents, not only humans, can act across the mesh.</p>
+      <div class="meta"><span>Python</span><span>~9.5k LOC, 28 subcommands</span><span class="st">Private</span></div>
+    </article>
+
+    <article class="card">
+      <h3>Family Host</h3>
+      <span class="tag">A personal Vercel, invite-only, running on my own hardware</span>
+      <p>Push a GitHub repo or a container image and get an isolated HTTPS app on a real subdomain, plus persistent browser-based coding workspaces and managed Postgres. Tenants get scoped access without ever receiving SSH, Docker, LAN, or tailnet access. The ops surface is the point: systemd guard/monitor/backup timers, deploy locks, rollback, restore verification, secret scanning, synthetic checks.</p>
+      <div class="meta"><span>Python server + Node CLI (family-host-cli v0.7.0)</span><span>~37k LOC, 169 commits</span><span class="st">Private</span></div>
+    </article>
+
+    <article class="card">
+      <h3>CPA — personal AI gateway</h3>
+      <span class="tag">Every model provider behind one Anthropic-compatible API</span>
+      <p>A reverse proxy that fronts Anthropic Opus/Sonnet/Fable and OpenAI GPT-6 Astra and GPT-5.6 Sol/Terra/Luna behind a single endpoint, with per-client metering, quotas, and dashboards. Claude Code points at it through an alternate config profile, which is what makes rule 3 above mechanical rather than aspirational.</p>
+      <div class="meta"><span>Python</span><span>~19k LOC, 77 commits, plus six fleet-cpa-* extension modules</span><span class="st">Private</span></div>
+    </article>
+
+    <article class="card">
+      <h3>Burn log</h3>
+      <span class="tag">Tracks what the agents cost against what they shipped</span>
+      <p>A collector walks ccusage data and git history across every repo and every machine, aggregates through Fleet, and publishes a daily record correlating tokens spent to commits landed to repos touched. It is the accountability half of running agents at volume, and it is public.</p>
+      <div class="meta"><span>Python pipeline + static page</span><span>6.2B tokens recorded to date</span><span class="st">Public — <a href="./burn.html">georgenijo.com/burn</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>ssh-tui</h3>
+      <span class="tag"><span class="mono">ssh georgenijo.com</span> returns an interactive terminal, not a banner</span>
+      <p>A Wish + Bubbletea server on an Oracle Cloud box, reached over Tailscale, serving a full TUI mirror of this site on port 22. Separate deploy path from the web build.</p>
+      <div class="meta"><span>Go</span><span>~2,000 LOC</span><span class="st">Public endpoint — ssh georgenijo.com</span></div>
+    </article>
+
+    <article class="card">
+      <h3>Claude Code skills and hooks</h3>
+      <span class="tag">The agent loop itself, customized until it fits the doctrine</span>
+      <p>77 personal skills covering repo cleanup, TDD, blast-radius analysis, decision logging, artifact publishing, and video generation, plus 5 hook events — Obsidian vault sync on skill use, a Stop-hook chime routed to a notch overlay, token-budget warnings, and Fleet context injected on every prompt. Config, dotfiles, and pipeline live in their own repos.</p>
+      <div class="meta"><span>Markdown, Python, shell</span><span>77 skills, 5 hook events</span><span class="st">Private (claude-dotfiles, claude-pipeline)</span></div>
+    </article>
+
+    <article class="card">
+      <h3>agentos</h3>
+      <span class="tag">Collapses eleven scattered repos into one self-hosted agent OS</span>
+      <p>A single backend, one secrets ledger, and a <span class="mono">just</span>-driven dev loop unifying Claude Code, the Cursor bridge, Discord bots, Google and GitHub glue, the mesh nodes, and Home Assistant. Everything external is mocked in tests, so the whole stack runs and passes offline.</p>
+      <div class="meta"><span>Python</span><span>~96k lines changed in 12 months, 196 commits</span><span class="st">Private</span></div>
+    </article>
+
+    <article class="card">
+      <h3>agent-mesh</h3>
+      <span class="tag">A shared nervous system for agents that would otherwise collide</span>
+      <p>A local-first coordination fabric letting Claude Code, Codex CLI, Cursor CLI, and Aider discover each other, announce what they are touching, ask each other questions, and read a shared blackboard of decisions — through one <span class="mono">mesh</span> command. Zero external dependencies, Go stdlib only. Fully implemented through P2 plus Fleet automation.</p>
+      <div class="meta"><span>Go</span><span>~58k lines changed in 12 months, 209 commits</span><span class="st">Public — <a href="https://github.com/georgenijo/agent-mesh" rel="noopener">github.com/georgenijo/agent-mesh</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>usher</h3>
+      <span class="tag">The MCP broker — one front desk every agent talks to</span>
+      <p>Routes, trims, arbitrates, gates, and audits MCP traffic so agents face a single well-behaved surface instead of a sprawl of servers. Context trimming is the load-bearing feature: tool sprawl is a context-budget problem before it is an ergonomics problem.</p>
+      <div class="meta"><span>Go</span><span>created 2026-06-17</span><span class="st">Public — <a href="https://github.com/georgenijo/usher" rel="noopener">github.com/georgenijo/usher</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>hangar</h3>
+      <span class="tag">Multi-session control plane for Claude Code, Codex, and friends</span>
+      <p>Runs and supervises many agent sessions at once from one place, so parallel fan-out is an operation rather than a pile of terminal tabs.</p>
+      <div class="meta"><span>Rust</span><span>created 2026-04-17</span><span class="st">Public — <a href="https://github.com/georgenijo/hangar" rel="noopener">github.com/georgenijo/hangar</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>ghosthands</h3>
+      <span class="tag">Free, local computer-use for macOS, no cursor stolen</span>
+      <p>A small MLX model drives native macOS apps through the Accessibility tree, then replays the recorded flow with no model in the loop at all. Runs in the background, costs nothing per run, and does not take over the machine while it works. A native companion implementation exists alongside it.</p>
+      <div class="meta"><span>Python (plus ghosthands-native)</span><span>~32k lines changed in 12 months across both repos</span><span class="st">Public — <a href="https://github.com/georgenijo/ghosthands" rel="noopener">github.com/georgenijo/ghosthands</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>omen</h3>
+      <span class="tag">Code intelligence for AI agents, over MCP</span>
+      <p>A tree-sitter analysis CLI built for assistants rather than humans: complexity, hotspots, dead code, and tech-debt analysis across 13 languages and 18+ analyzers, exposed both as a CLI and as an MCP server. It is the tool agents call before they decide where to change something.</p>
+      <div class="meta"><span>Rust</span><span>omen-cli v4.29.0 on crates.io</span><span class="st">Published — <a href="https://crates.io/crates/omen-cli" rel="noopener">crates.io/crates/omen-cli</a>, <a href="https://github.com/georgenijo/omen" rel="noopener">github.com/georgenijo/omen</a></span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══ PRODUCTS ═══════════════════════════════════════════ -->
+<section aria-labelledby="h-products" class="reveal">
+  <div class="sechead"><span class="n">06</span><h2 id="h-products">Products and selected projects</h2></div>
+  <div class="cards">
+
+    <article class="card">
+      <h3>murmur-app</h3>
+      <span class="tag">Local voice-to-text dictation for macOS, nothing leaves the machine</span>
+      <p>A Tauri 2 app with a Rust core — whisper-rs on the Metal GPU, cpal audio capture, a global hotkey, clipboard paste — and a React/TypeScript front end. It is the largest thing I have built and the fastest-shipping: 101 GitHub releases (103 git tags) from v0.1.0 to v0.50.0, most of them in the last few months.</p>
+      <div class="meta"><span>Rust + React/TypeScript</span><span>~222k LOC, 1,358 commits, 101 GitHub releases (103 git tags)</span><span class="st">Public — <a href="https://github.com/georgenijo/murmur-app" rel="noopener">github.com/georgenijo/murmur-app</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>aperture</h3>
+      <span class="tag">iOS film camera with a real vintage emulation pipeline</span>
+      <p>An AVFoundation capture engine feeding a Core Image and Metal processing chain that emulates film stocks rather than applying a filter. SwiftUI throughout.</p>
+      <div class="meta"><span>Swift</span><span>created 2026-03-05</span><span class="st">Public — <a href="https://github.com/georgenijo/aperture" rel="noopener">github.com/georgenijo/aperture</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>omen</h3>
+      <span class="tag">Complexity, hotspots, and tech debt analysis over MCP</span>
+      <p>Listed again here because it is both a product and part of the factory: a published Rust crate that any agent can install and call. 13 languages, 18+ analyzers, MCP server included.</p>
+      <div class="meta"><span>Rust</span><span>omen-cli v4.29.0 on crates.io</span><span class="st">Published — <a href="https://crates.io/crates/omen-cli" rel="noopener">crates.io/crates/omen-cli</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>whoop-dashboard</h3>
+      <span class="tag">Personal health analytics with an AI coach on top</span>
+      <p>Pulls Whoop data into a dashboard that interprets rather than just plots, with a companion Oura version. Second-largest codebase by lines changed this year.</p>
+      <div class="meta"><span>TypeScript (Streamlit + Plotly origins)</span><span>~160k lines changed in 12 months, 282 commits</span><span class="st">Public — <a href="https://github.com/georgenijo/whoop-dashboard" rel="noopener">github.com/georgenijo/whoop-dashboard</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>St. Basil’s Boston</h3>
+      <span class="tag">Church website rebuild, run as an agent ticket workflow</span>
+      <p>Next.js 14 App Router with Sanity CMS, Supabase, and Resend. The interesting part is the process: work enters as tickets and is executed by agents against acceptance checks. Also the oldest thread here — its first commit is from March 2025, before any of this.</p>
+      <div class="meta"><span>TypeScript / Next.js</span><span>~86k lines changed in 12 months, 279 commits</span><span class="st">Private repo, live site</span></div>
+    </article>
+
+    <article class="card">
+      <h3>fleetmap</h3>
+      <span class="tag">Live map of what your Mac is actually running</span>
+      <p>A relationship-aware process and connection monitor — processes sized by RAM, colored by CPU, wired together by their live sockets. SwiftUI app with a Go CLI underneath.</p>
+      <div class="meta"><span>Swift + Go</span><span>created 2026-06-17</span><span class="st">Public — <a href="https://github.com/georgenijo/fleetmap" rel="noopener">github.com/georgenijo/fleetmap</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>Gauge</h3>
+      <span class="tag">Claude usage in the menu bar, and nothing else</span>
+      <p>A deliberately minimal macOS menu bar app showing Claude consumption at a glance. Built because the burn log answers the monthly question and this answers the right-now question.</p>
+      <div class="meta"><span>Swift</span><span>created 2026-06-14</span><span class="st">Public — <a href="https://github.com/georgenijo/Gauge" rel="noopener">github.com/georgenijo/Gauge</a></span></div>
+    </article>
+
+    <article class="card">
+      <h3>NotchPill</h3>
+      <span class="tag">Dynamic Island-style notch overlay for macOS</span>
+      <p>Turns the notch into a notification surface. It is also where my agent Stop-hook lands, so a finished agent run is visible without switching windows.</p>
+      <div class="meta"><span>Swift</span><span>created 2026-08-05</span><span class="st">Public — <a href="https://github.com/georgenijo/NotchPill" rel="noopener">github.com/georgenijo/NotchPill</a></span></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══ TIMELINE ═══════════════════════════════════════════ -->
+<section aria-labelledby="h-timeline" class="reveal">
+  <div class="sechead"><span class="n">07</span><h2 id="h-timeline">Timeline</h2></div>
+  <ol class="rail">
+    <li>
+      <span class="d num">2025-03</span>
+      <span class="h">First commit on St. Basil’s</span>
+      <p>27 commits in March, then nothing for three months. This is the old baseline: real projects, sporadic output.</p>
+    </li>
+    <li>
+      <span class="d num">2025-07 – 2025-12</span>
+      <span class="h">Sparse and manual</span>
+      <p>46, 1, 31, 6, 10, 8 commits across six months. Two repos received any work at all in the whole of 2025.</p>
+    </li>
+    <li>
+      <span class="d num">2026-01</span>
+      <span class="h">murmur-app starts</span>
+      <p>34 commits. Still hand-written, still one project at a time.</p>
+    </li>
+    <li>
+      <span class="d num">2026-02</span>
+      <span class="h">The inflection</span>
+      <p>230 commits. Agent workflows adopted as a standing method: written working agreements, subagent fan-out, explicit model routing.</p>
+    </li>
+    <li>
+      <span class="d num">2026-03</span>
+      <span class="h">Tooling for agents begins</span>
+      <p>omen and aperture both start within two days of each other. 578 commits. The tools start being built <em>for</em> the agents.</p>
+    </li>
+    <li>
+      <span class="d num">2026-04</span>
+      <span class="h">Control planes</span>
+      <p>hangar and whoop-dashboard begin. 460 commits, and the PR count starts climbing toward four figures.</p>
+    </li>
+    <li>
+      <span class="d num">2026-06</span>
+      <span class="h">Peak infrastructure month</span>
+      <p>agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks. 1,177 commits.</p>
+    </li>
+    <li>
+      <span class="d num">2026-07</span>
+      <span class="h">The factory measures itself</span>
+      <p>This site and the burn log go up; Fleet starts auto-publishing health snapshots to it. 1,338 commits — the highest month so far.</p>
+    </li>
+    <li>
+      <span class="d num">2026-09</span>
+      <span class="h">Steady state</span>
+      <p>murmur-app v0.50.0 on the 14th, <span class="mono">omen-cli</span> published to crates.io on the 15th. 708 commits through the 16th, with half the month left.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════ -->
+<footer class="reveal">
+  <p>
+    This page is a snapshot generated 2026-09-16. The usual site lives at
+    <a href="./terminal.html">/terminal.html</a>, or over SSH at
+    <span class="mono">ssh georgenijo.com</span>.
+  </p>
+  <p class="integrity">
+    <b>How to read these numbers.</b> Commit counts exclude 7,609 automated Fleet
+    health-snapshot commits, which would otherwise inflate 2026 by more than double. Lines
+    changed is a floor: it covers only the 14 repositories cloned locally, not all 70 on
+    GitHub. September 2026 is partial, through the 16th. Pull request counts are PRs
+    <em>opened</em>, not merged. The token total is a burn-log snapshot dated 2026-07-17 and
+    depends on which machines’ usage logs were aggregated, so treat it as a lower bound.
+    murmur-app has 101 GitHub releases (103 git tags); the two counts differ because not
+    every tag was published as a release.
+  </p>
+  <p class="colophon">
+    the usual site → <a href="./terminal.html">/terminal.html</a> ·
+    <a href="./burn.html">burn log</a> ·
+    updated september 2026
+  </p>
+</footer>
+
+</main>
 </div>
 
-<div id="cur" hidden aria-hidden="true"><span class="core"></span><span class="fr"><i></i><i></i><i></i><i></i></span></div>
-
-<script src="./lab-health.js"></script>
 <script>
 (function(){
-"use strict";
-var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
-var FINE = matchMedia("(pointer:fine)").matches;
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-var staticContent=document.getElementById("static-content");
-if(staticContent)staticContent.remove();
+  /* ── print button ───────────────────────────────────────── */
+  var pb = document.getElementById("printbtn");
+  if (pb) pb.addEventListener("click", function(){ settleCounters(); window.print(); });
 
-/* ── live layer: cursor takeover ────────────────────────────────
-   One fixed element, lerped toward the pointer each frame. Default
-   state is a blinking ink caret (the terminal cursor escaped into
-   the page); over anything interactive it opens into a crop-mark /
-   viewfinder frame — four corner brackets in the accent ink. The
-   caret keeps mix-blend-mode:difference so it reads on cream, ink,
-   and vermilion alike. Touch devices keep the native cursor. */
-var curEl=document.getElementById("cur");
-if(FINE){
-  var cx=-100,cy=-100,px=-100,py=-100,shown=false;
-  addEventListener("pointermove",function(e){
-    cx=e.clientX;cy=e.clientY;
-    if(!shown){shown=true;px=cx;py=cy;curEl.hidden=false;}
-  },{passive:true});
-  document.addEventListener("pointerleave",function(){shown=false;curEl.hidden=true;});
-  addEventListener("pointerdown",function(){curEl.classList.add("down");});
-  addEventListener("pointerup",function(){curEl.classList.remove("down");});
-  document.addEventListener("pointerover",function(e){
-    var hit=e.target.closest&&e.target.closest("a,button,.row,input,kbd");
-    curEl.classList.toggle("on",!!hit);
+  /* ── ssh copy ───────────────────────────────────────────── */
+  var ssh = document.getElementById("sshcopy");
+  if (ssh) ssh.addEventListener("click", function(){
+    var txt = ssh.getAttribute("data-ssh"), hint = ssh.querySelector(".hint");
+    var done = function(ok){ if(hint){ hint.textContent = ok ? "copied" : "copy failed";
+      setTimeout(function(){ hint.textContent = "copy"; }, 1800); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){done(true);}, function(){done(false);});
+    } else {
+      var ta = null, ok = false;
+      try {
+        ta = document.createElement("textarea");
+        ta.value = txt; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+        document.body.appendChild(ta); ta.select();
+        // execCommand returns false when the copy is refused; that is a
+        // failure, not a success, so it has to drive the reported state.
+        ok = document.execCommand("copy") === true;
+      } catch(e){ ok = false; }
+      finally { if (ta && ta.parentNode) ta.parentNode.removeChild(ta); }
+      done(ok);
+    }
   });
-  (function curLoop(){
-    var k=RM?1:0.35;
-    px+=(cx-px)*k;py+=(cy-py)*k;
-    curEl.style.transform="translate("+px+"px,"+py+"px)";
-    requestAnimationFrame(curLoop);
-  })();
-}
 
-/* ── content (mirrors ssh-tui/content.go) ───────────────────── */
-var GH = "https://github.com/georgenijo";
-var LI = "https://www.linkedin.com/in/georgenijo/";
-var EMAIL = "george.nijo8@gmail.com";
-var PROJECTS = [
-  {name:"agent-mesh",  lang:"Go",         tag:"Agents orchestrating themselves",
-   desc:"Hand the mesh a vague goal and the agents work out the rest: who does what, who owns which file, what's already been answered. Presence, file claims, async questions, a shared blackboard — Claude Code, Codex, and Cursor acting like one team instead of five strangers."},
-  {name:"usher",       lang:"Go",         tag:"MCP broker",
-   desc:"One front desk every agent talks to: a single MCP endpoint that routes, trims, arbitrates, and audits tool calls across a fleet of servers. Auth, health, and name collisions are handled before the agent even notices."},
-  {name:"hangar",      lang:"Rust",       tag:"Agent control plane",
-   desc:"Mission control for long-lived coding agents: scheduling, budgets, kill switches, and an audit log of every tool call a fleet makes. Where agents live between jobs — and answer for what they did."},
-  {name:"ghosthands",  lang:"Python",     tag:"Local computer-use for macOS",
-   desc:"Full computer-use with zero cloud: a local model reads the screen and drives native Mac apps through the accessibility tree — and never fakes success. A Swift-native sibling does the low-level driving. Nothing leaves the machine."},
-  {name:"murmur-app",  lang:"Rust",       tag:"Local voice-to-text for macOS",
-   desc:"Hold a key, speak, release — the words land in whatever app has focus before your hands find the keyboard. Whisper on the GPU, fully offline: no cloud, no subscription, no audio leaving the machine."},
-  {name:"fleetmap",    lang:"Swift",      tag:"Live map of what your Mac runs",
-   desc:"Your Mac as a living map: every process a node — sized by RAM, colored by CPU, wired by its real sockets. Activity Monitor tells you what's running; fleetmap shows what's talking to what."},
-  {name:"gauge",       lang:"Swift",      tag:"Claude usage in the menu bar",
-   desc:"A one-purpose menu-bar meter for Claude: session and weekly limits, pace until reset, and spend charted straight from local logs. Know the budget is gone before the model does."},
-  {name:"whoop-dashboard",lang:"TypeScript",tag:"Health analytics with an AI coach",
-   desc:"Sleep, strain, and recovery in one dashboard — with a Claude coach that reads months of WHOOP trends and talks back. Health data that finally answers questions."},
-  {name:"aperture",    lang:"Swift",      tag:"iOS film camera",
-   desc:"A film camera in your pocket: fixed stocks, 36 exposures, and no preview until the roll is developed. A Metal pipeline paints the light leaks, grain, and date stamps. Patience as a feature."}
-];
-var MENU = [
-  {id:"about",    t:"about",    d:"who's at the keyboard"},
-  {id:"projects", t:"projects", d:"nine repos, five languages"},
-  {id:"lab",      t:"George Lab",d:"five projects · event-updated"},
-  {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
-  {id:"burn",     t:"burn log", d:"tokens · models · commits", href:"./burn.html"},
-  {id:"guestbook",t:"guestbook",d:"leave a line over ssh", href:"./guestbook.html"},
-  {id:"contact",  t:"contact",  d:"say hello"}
-];
-var ABOUT_HTML =
-  '<p><span class="hl">George Nijo</span> — software engineer in Boston. Supervisor of agents.</p>'+
-  '<p>I build infrastructure for AI agents: coordination meshes, MCP brokers, and control planes — the plumbing that keeps a fleet of agents fast, cheap, and accountable. Currently building <span class="hl">AgentOS</span>, a personal + home agent operating system.</p>'+
-  '<p>Local-first, honesty-first: build tools that solve your own problems on your own machine, then open-source the parts worth sharing. Ship the menu bar app before the platform.</p>'+
-  '<p class="dim">Python · Go · Rust · Swift · a dash of TypeScript</p>';
-var NOW_HTML =
-  '<p>Heads-down on <span class="hl">AgentOS</span> — one control plane for the agents that run my code, my inbox, and (eventually) the house.</p>'+
-  '<div class="kv"><span class="k">hangar</span><span class="dim">scheduling + budgets for long-lived agents</span></div>'+
-  '<div class="kv"><span class="k">usher</span><span class="dim">auth story for brokered MCP servers</span></div>'+
-  '<div class="kv"><span class="k">agent-mesh</span><span class="dim">keeping parallel agents out of each other\'s files</span></div>'+
-  '<p class="dim">→ <a href="./burn.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px">burn log</a> — tokens · models · commits — 30-day line · ship notes</p>';
-var CONTACT_INTRO = '<p class="dim">no forms, no funnels — just these three:</p>';
-
-/* ── boot ───────────────────────────────────────────────────── */
-var bootPre=document.getElementById("bootpre"), bootWrap=document.getElementById("boot"),
-    appEl=document.getElementById("app"), booting=false, bootSkip=false;
-function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-var BOOT_LINES=[
-  {h:'<span class="b-dim">Connecting to ssh.georgenijo.com port 22.</span>',w:240},
-  {h:'<span class="b-dim">Host key:</span> ssh-ed25519 SHA256:lba/GXO1RlqaWyX9VvHRpDLLK8egub1dOScGWr7PHPU <span class="b-ok">✓ known</span>',w:300},
-  {h:'<span class="b-ok">Authenticated to ssh.georgenijo.com (via publickey).</span>',w:340}
-];
-function sleep(ms){return new Promise(function(res){ if(bootSkip||RM) return res(); setTimeout(res,ms); });}
-function runBoot(){
-  booting=true; bootSkip=false;
-  appEl.hidden=true; bootWrap.hidden=false; bootPre.innerHTML="";
-  var CMD="ssh ssh.georgenijo.com", html='<span class="prompt-sig">➜ ~ $</span> ';
-  bootPre.innerHTML=html+'<span class="cur-b"></span>';
-  var p=Promise.resolve();
-  CMD.split("").forEach(function(ch,i){
-    p=p.then(function(){return sleep(30).then(function(){
-      html='<span class="prompt-sig">➜ ~ $</span> '+esc(CMD.slice(0,i+1));
-      bootPre.innerHTML=html+'<span class="cur-b"></span>';
-    });});
-  });
-  p=p.then(function(){return sleep(280);});
-  BOOT_LINES.forEach(function(line){
-    p=p.then(function(){return sleep(line.w).then(function(){
-      html+="\n"+line.h;
-      bootPre.innerHTML=html+'\n<span class="cur-b"></span>';
-    });});
-  });
-  p.then(function(){return sleep(260);}).then(function(){
-    bootPre.innerHTML=html+
-      '<div class="masthead">George <em>Nijo</em></div>'+
-      '<div class="motd-tag">software engineer · boston · agent infrastructure</div>';
-    return sleep(950);
-  }).then(function(){
-    booting=false; bootWrap.hidden=true; appEl.hidden=false; go("menu");
-  });
-}
-function skipBoot(){ bootSkip=true; }
-
-/* ── TUI state (same machine as production index.html) ──────── */
-var pageEl=document.getElementById("page"), crumbEl=document.getElementById("crumb"),
-    statusEl=document.getElementById("status");
-var ST={view:"menu",proj:null,rows:[],cursor:0,cursors:{}};
-var PARENT={about:"menu",projects:"menu",lab:"menu",now:"menu",contact:"menu",project:"projects",menu:null,closed:null};
-
-function projByName(n){for(var i=0;i<PROJECTS.length;i++)if(PROJECTS[i].name===n)return PROJECTS[i];return null;}
-function projDetailHTML(p){
-  return "<p>"+p.desc+"</p>"+
-    '<div class="kv"><span class="k">repo</span><span class="dim">github.com/georgenijo/'+p.name+'</span></div>'+
-    '<div class="kv"><span class="k">lang</span><span class="dim">'+p.lang+"</span></div>";
-}
-function go(view,opts){opts=opts||{};ST.cursors[viewKey()]=ST.cursor;ST.view=view;if("proj" in opts)ST.proj=opts.proj;render();}
-function viewKey(){return ST.view==="project"?"project:"+(ST.proj||""):ST.view;}
-function back(){var p=PARENT[ST.view];if(p)go(p);}
-function quit(){ST.cursors={};ST.view="closed";render();}
-
-function h(tag,cls,htmlStr){var el=document.createElement(tag);if(cls)el.className=cls;if(htmlStr!=null)el.innerHTML=htmlStr;return el;}
-function makeRow(spec,idx){
-  var el;
-  if(spec.href){
-    el=h("a","row");el.href=spec.href;
-    if(spec.href.indexOf("mailto:")!==0){el.target="_blank";el.rel="noopener";}
+  /* ── scroll ruler ───────────────────────────────────────── */
+  var ruler = document.getElementById("ruler"), ticking = false;
+  function paintRuler(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    ruler.style.transform = "scaleX(" + p + ")";
+    ticking = false;
   }
-  else{el=h("button","row");el.type="button";}
-  var inner="";
-  if(spec.num)inner+='<span class="num">'+spec.num+"</span>";
-  if(spec.k)inner+='<span class="k">'+spec.k+"</span>";
-  inner+='<span class="tx"><span class="t">'+spec.t+"</span>";
-  if(spec.d&&spec.dInline)inner+=' <span class="d">'+spec.d+"</span>";
-  inner+="</span>";
-  if(spec.d&&!spec.dInline)inner+='<span class="d">'+spec.d+"</span>";
-  if(spec.aux)inner+='<span class="aux">'+spec.aux+"</span>";
-  el.innerHTML=inner;
-  el.addEventListener("click",function(){
-    ST.cursor=idx;paintCursor();
-    if(!spec.href&&spec.on)spec.on();
+  if (ruler && !reduce) {
+    window.addEventListener("scroll", function(){
+      if (!ticking) { ticking = true; requestAnimationFrame(paintRuler); }
+    }, {passive:true});
+    window.addEventListener("resize", paintRuler, {passive:true});
+    paintRuler();
+  }
+
+  /* ── line length for the draw-on animation ──────────────── */
+  var sline = document.getElementById("sline");
+  if (sline && sline.getTotalLength) {
+    try {
+      var len = Math.ceil(sline.getTotalLength());
+      sline.style.setProperty("--len", len);
+    } catch(e){}
+  }
+
+  /* ── count-up ───────────────────────────────────────────── */
+  function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+  function fmt(n, dec, group){
+    var s = dec ? n.toFixed(dec) : String(Math.round(n));
+    if (group) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return s;
+  }
+  // Every [data-count] element records its rendered final text up front, so a
+  // print can restore it synchronously no matter where the animation is.
+  var counters = [].slice.call(document.querySelectorAll("[data-count]"));
+  counters.forEach(function(el){
+    if (!el.hasAttribute("data-final")) el.setAttribute("data-final", el.textContent);
   });
-  el.addEventListener("focus",function(){ST.cursor=idx;paintCursor();});
-  return el;
-}
-function scrollNear(el){
-  var top=el.offsetTop-pageEl.offsetTop, bot=top+el.offsetHeight;
-  if(top<pageEl.scrollTop)pageEl.scrollTop=top;
-  else if(bot>pageEl.scrollTop+pageEl.clientHeight)pageEl.scrollTop=bot-pageEl.clientHeight;
-}
-function paintCursor(){
-  ST.rows.forEach(function(r,i){r.el.classList.toggle("sel",i===ST.cursor);});
-  var cur=ST.rows[ST.cursor];
-  if(cur)scrollNear(cur.el);
-}
-function setStatus(hints){
-  statusEl.innerHTML="";
-  hints.forEach(function(hnt){
-    if(hnt.on){
-      var b=h("button","hint");b.type="button";
-      b.innerHTML="<kbd>"+hnt.k+"</kbd> "+hnt.l;
-      b.addEventListener("click",hnt.on);statusEl.appendChild(b);
-    } else statusEl.appendChild(h("span","hint","<kbd>"+hnt.k+"</kbd> "+hnt.l));
-  });
-}
-function stdHints(list){
-  var hints=[];
-  if(list)hints.push({k:"↑/↓",l:"navigate"},{k:"enter",l:"select"});
-  if(PARENT[ST.view])hints.push({k:"esc",l:"back",on:back});
-  hints.push({k:"q",l:"quit",on:quit});
-  return hints;
-}
-/* frame(): builds the header crumb + a fresh sheet.
-   Pass a string for a static crumb (menu), or an array of
-   {t,go?} segments — segments with `go` become clickable, and a
-   "← back" control is prepended (esc keeps working as before). */
-function frame(crumb){
-  crumbEl.innerHTML="";
-  if(typeof crumb==="string"){
-    crumbEl.appendChild(h("span","path",crumb));
-  }else{
-    var bk=h("button","crumb-lnk crumb-back","← back");
-    bk.type="button";bk.setAttribute("aria-label","go back");
-    bk.addEventListener("click",back);
-    crumbEl.appendChild(bk);
-    var path=h("span","path");
-    crumb.forEach(function(seg,i){
-      if(i)path.appendChild(document.createTextNode(" / "));
-      if(seg.go){
-        var b=h("button","crumb-lnk",seg.t);b.type="button";
-        b.addEventListener("click",function(){go(seg.go);});
-        path.appendChild(b);
-      }else path.appendChild(h("b",null,seg.t));
+  var rafs = [];
+  function settleCounters(){
+    rafs.forEach(function(h){ cancelAnimationFrame(h); });
+    rafs.length = 0;
+    counters.forEach(function(el){
+      var f = el.getAttribute("data-final");
+      if (f !== null && el.textContent !== f) el.textContent = f;
     });
-    crumbEl.appendChild(path);
   }
-  pageEl.innerHTML="";ST.rows=[];
-  var wrap=h("div","reveal sheet");pageEl.appendChild(wrap);return wrap;
-}
-/* slip "printing": stagger the sheet's lines in, ~25ms apart,
-   capped so the whole entry settles well under 350ms. Entry only —
-   reduced-motion skips it entirely (CSS also disables .ink/.stamp). */
-function inkIn(wrap){
-  if(RM)return;
-  var els=wrap.querySelectorAll(".vkick:not(.stamp),.slip>*,.acts .row");
-  for(var i=0;i<els.length;i++){
-    els[i].classList.add("ink");
-    els[i].style.animationDelay=Math.min(i*25,180)+"ms";
+  function countUp(el){
+    var target = parseFloat(el.getAttribute("data-count"));
+    // never animate in a hidden tab: rAF is paused there and the value
+    // would be left frozen at zero.
+    if (isNaN(target) || document.hidden) return;
+    var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
+    var group = el.hasAttribute("data-group");
+    var pre = el.getAttribute("data-prefix") || "";
+    var suf = el.getAttribute("data-suffix") || "";
+    var final = el.getAttribute("data-final");
+    if (final === null) final = el.textContent;
+    var t0 = null, dur = 1100, handle = null;
+    function step(ts){
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      el.textContent = pre + fmt(target * easeOut(p), dec, group) + suf;
+      if (p < 1) { handle = requestAnimationFrame(step); rafs.push(handle); }
+      else el.textContent = final;
+    }
+    handle = requestAnimationFrame(step);
+    rafs.push(handle);
   }
-}
-function addRows(wrap,specs,restoreKey,cls){
-  var box=h("div","rows"+(cls?" "+cls:""));
-  specs.forEach(function(s){
-    var idx=ST.rows.length;
-    var el=makeRow(s,idx);
-    ST.rows.push({el:el,on:s.on,href:s.href});
-    box.appendChild(el);
-  });
-  wrap.appendChild(box);
-  var saved=ST.cursors[restoreKey];
-  ST.cursor=(typeof saved==="number"&&saved<ST.rows.length)?saved:0;
-  paintCursor();
-}
-function pad2(n){return (n<10?"0":"")+n;}
 
-/* ── views ──────────────────────────────────────────────────── */
-function render(){
-  pageEl.scrollTop=0;
-  switch(ST.view){
-    case "menu":vMenu();break;
-    case "about":vSheet("about","whoami",ABOUT_HTML);break;
-    case "projects":vProjects();break;
-    case "lab":vLab();break;
-    case "project":vProject();break;
-    case "now":vSheet("now","updated july 2026",NOW_HTML);break;
-    case "contact":vContact();break;
-    case "closed":vClosed();return;
+  // Covers the Print button, Cmd/Ctrl+P and the browser's own print menu:
+  // beforeprint fires for all three, and the paint happens after it returns.
+  if (window.addEventListener) window.addEventListener("beforeprint", settleCounters);
+  if (window.matchMedia) {
+    var pmq = window.matchMedia("print");
+    var onPrintMQ = function(e){ if (e.matches) settleCounters(); };
+    if (pmq.addEventListener) pmq.addEventListener("change", onPrintMQ);
+    else if (pmq.addListener) pmq.addListener(onPrintMQ);
   }
-}
-function vMenu(){
-  var w=frame("<b>georgenijo.com</b> ~");
-  w.appendChild(h("p","vkick","index <span class='n'>·</span> software engineer · boston"));
-  addRows(w,MENU.map(function(m,i){
-    if(m.href) return {num:pad2(i+1),t:m.t,d:m.d,href:m.href};
-    return {num:pad2(i+1),t:m.t,d:m.d,on:function(){go(m.id);}};
-  }),"menu","index");
-  setStatus(stdHints(true));
-}
-function vContact(){
-  var w=frame([{t:"~",go:"menu"},{t:"contact"}]);
-  w.appendChild(h("p","vkick","say hello"));
-  w.appendChild(h("p","vtitle stamp","contact"));
-  var slip=h("div","slip",CONTACT_INTRO);
-  w.appendChild(slip);
-  addRows(slip,[
-    {k:"mailto",t:EMAIL,href:"mailto:"+EMAIL},
-    {k:"github",t:"github.com/georgenijo",href:GH},
-    {k:"linkedin",t:"linkedin.com/in/georgenijo",href:LI}
-  ],"contact","kvrows");
-  addRows(w,[{t:"back to index",on:back}],"contact","acts");
-  inkIn(w);
-  setStatus(stdHints(false));
-}
-function vSheet(id,sub,body,acts){
-  var w=frame([{t:"~",go:"menu"},{t:id}]);
-  w.appendChild(h("p","vkick",sub));
-  w.appendChild(h("p","vtitle stamp",id));
-  w.appendChild(h("div","slip",body));
-  addRows(w,acts||[
-    {t:"see the projects",on:function(){go("projects");}},
-    {t:"back to index",on:back}
-  ],id,"acts");
-  inkIn(w);
-  setStatus(stdHints(false));
-}
-function vProjects(){
-  var w=frame([{t:"~",go:"menu"},{t:"projects"}]);
-  w.appendChild(h("p","vkick","ledger · "+PROJECTS.length+" repos · five languages"));
-  w.appendChild(h("p","vtitle","projects"));
-  addRows(w,PROJECTS.map(function(p,i){
-    return {num:pad2(i+1),t:p.name,d:p.tag,dInline:true,aux:p.lang,
-            on:function(){go("project",{proj:p.name});}};
-  }),"projects","ledger");
-  setStatus(stdHints(true));
-}
-function fmtDate(value){
-  if(!value)return "unknown";
-  var d=new Date(value);
-  if(isNaN(d.getTime()))return value;
-  return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
-}
-function metric(value){return value==null?"—":value;}
-function fleetStateCopy(state){
-  return {
-    current:"current",
-    stale:"stale snapshot",
-    unsupported:"unsupported snapshot",
-    malformed:"invalid snapshot"
-  }[state]||"snapshot unavailable";
-}
-function renderFleet(grid,data){
-  var parsed=GeorgeLabHealth.parse(data);
-  var section=h("section","lab-card");
-  var heading='<div><h2>fleet health</h2><div class="lab-kind"><span class="lab-status">'+
-    esc(fleetStateCopy(parsed.state))+'</span> · privacy-safe</div></div>';
-  if(parsed.state!=="current"){
-    section.innerHTML=heading+'<div><p class="lab-note">Live fleet status is unavailable. No cached node details are shown.</p></div>';
-  }else{
-    var healthy=parsed.nodes.filter(function(n){return n.health==="healthy";}).length;
-    var reachable=parsed.nodes.filter(function(n){return n.reachable;}).length;
-    section.innerHTML=heading+'<div><p class="lab-note">Short-lived collector snapshot; no resident agent or listener.</p>'+
-      '<div class="lab-facts"><span>nodes <b>'+parsed.nodes.length+'</b></span>'+
-      '<span>reachable <b>'+reachable+'</b></span><span>healthy <b>'+healthy+'</b></span>'+
-      '<span>collected <b>'+fmtDate(parsed.generatedAt)+'</b></span></div></div>';
+
+  /* ── reveal on scroll ───────────────────────────────────── */
+  var reveals = [].slice.call(document.querySelectorAll(".reveal"));
+  function activate(el){
+    el.classList.add("in");
+    if (!reduce) {
+      [].slice.call(el.querySelectorAll("[data-count]")).forEach(countUp);
+    }
   }
-  grid.insertBefore(section,grid.firstChild);
-}
-function vLab(){
-  var w=frame([{t:"~",go:"menu"},{t:"lab"}]);
-  w.appendChild(h("p","vkick","George Lab · project telemetry"));
-  w.appendChild(h("p","vtitle stamp","five builds, one bench"));
-  var meta=h("div","lab-meta",'<span id="lab-state">loading snapshot…</span><span>event-driven · no resident agent</span>');
-  var grid=h("div","lab-grid",'<p class="lab-empty">Reading the latest checked-in project snapshot…</p>');
-  w.appendChild(meta);w.appendChild(grid);
-  fetch("./data/lab-projects.json",{cache:"no-cache"}).then(function(res){
-    if(!res.ok)throw new Error("status "+res.status);
-    return res.json();
-  }).then(function(data){
-    var state=document.getElementById("lab-state");
-    if(state)state.innerHTML='<span class="live">snapshot</span> · '+fmtDate(data.generatedAt);
-    grid.innerHTML="";
-    if(!data||data.schemaVersion!==1||!Array.isArray(data.projects))throw new Error("invalid project snapshot");
-    data.projects.forEach(function(p){
-      var release=p.latestRelease&&p.latestRelease.tag?esc(String(p.latestRelease.tag)):"no release";
-      var card=h("article","lab-card");
-      card.innerHTML=
-        '<div><h2><a href="'+p.repositoryUrl+'" target="_blank" rel="noopener">'+esc(String(p.name))+' ↗</a></h2>'+
-        '<div class="lab-kind"><span class="lab-status">'+esc(String(p.status))+'</span> · '+esc(String(p.category))+'</div></div>'+
-        '<div><p class="lab-note">'+esc(String(p.note))+'</p>'+
-        '<div class="lab-facts"><span>release <b>'+release+'</b></span>'+
-        '<span>issues <b>'+metric(p.openIssues)+'</b></span><span>PRs <b>'+metric(p.openPullRequests)+'</b></span>'+
-        '<span>activity <b>'+fmtDate(p.lastActivityAt)+'</b></span></div></div>';
-      grid.appendChild(card);
+  if (reduce || !("IntersectionObserver" in window)) {
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ activate(en.target); io.unobserve(en.target); }
+      });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:0.12});
+    reveals.forEach(function(el, i){
+      el.style.transitionDelay = Math.min(i, 3) * 60 + "ms";
+      io.observe(el);
     });
-    fetch("./data/fleet-health.json",{cache:"no-cache"}).then(function(res){
-      if(!res.ok)throw new Error("status "+res.status);
-      return res.json();
-    }).then(function(fleet){renderFleet(grid,fleet);}).catch(function(){
-      renderFleet(grid,null);
+    // anything already above the fold on load
+    setTimeout(function(){
+      reveals.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0 && !el.classList.contains("in")) {
+          activate(el); io.unobserve(el);
+        }
+      });
+    }, 60);
+  }
+
+  /* ── line-chart tooltip + crosshair ─────────────────────── */
+  var svg = document.getElementById("linechart");
+  var tip = document.getElementById("tip");
+  if (svg && tip) {
+    var PTS = [[56,268],[96,268],[136,263.6],[176,268],[216,268],[256,268],[296,260.5],
+      [336,267.8],[376,263],[416,267],[456,266.4],[496,266.7],[536,262.5],[576,230.6],
+      [616,174],[656,193.2],[696,165],[736,76.5],[776,50.4],[816,82.2],[856,152.8]];
+    var NS = "http://www.w3.org/2000/svg";
+    var ch = document.createElementNS(NS, "line");
+    ch.setAttribute("class","crosshair"); ch.setAttribute("y1","24"); ch.setAttribute("y2","268");
+    ch.style.display = "none"; ch.setAttribute("aria-hidden","true");
+    ch.style.pointerEvents = "none";
+    var cd = document.createElementNS(NS, "circle");
+    cd.setAttribute("class","dot hoverdot"); cd.setAttribute("r","5"); cd.style.display = "none";
+    cd.setAttribute("aria-hidden","true");
+    cd.style.pointerEvents = "none";
+    svg.insertBefore(ch, document.getElementById("hits"));
+    svg.appendChild(cd);
+
+    var hits = [].slice.call(svg.querySelectorAll(".hit"));
+    hits.forEach(function(rect, i){
+      function show(ev){
+        var p = PTS[i];
+        ch.setAttribute("x1", p[0]); ch.setAttribute("x2", p[0]); ch.style.display = "";
+        cd.setAttribute("cx", p[0]); cd.setAttribute("cy", p[1]); cd.style.display = "";
+        var t = rect.querySelector("title");
+        tip.textContent = t ? t.textContent : "";
+        var box = rect.getBoundingClientRect();
+        var x = (ev && ev.clientX) ? ev.clientX : box.left + box.width / 2;
+        tip.style.left = x + "px";
+        tip.style.top = (box.top + box.height * 0.35) + "px";
+        tip.style.opacity = "1";
+      }
+      function hide(){ tip.style.opacity = "0"; ch.style.display="none"; cd.style.display="none"; }
+      rect.addEventListener("mousemove", show);
+      rect.addEventListener("mouseenter", show);
+      rect.addEventListener("mouseleave", hide);
+      rect.addEventListener("blur", hide);
     });
-  }).catch(function(){
-    var state=document.getElementById("lab-state");
-    if(state)state.textContent="snapshot unavailable";
-    grid.innerHTML='<p class="lab-empty">The project snapshot could not be loaded. Try opening the site through a web server.</p>';
-  });
-  addRows(w,[{t:"back to index",on:back}],"lab","acts");
-  inkIn(w);
-  setStatus(stdHints(false));
-}
-function vProject(){
-  var p=projByName(ST.proj);
-  if(!p)return go("projects");
-  var w=frame([{t:"~",go:"menu"},{t:"projects",go:"projects"},{t:p.name}]);
-  w.appendChild(h("p","vkick stamp",pad2(PROJECTS.indexOf(p)+1)+" · "+p.tag));
-  w.appendChild(h("p","vtitle stamp",p.name+' <span class="badge">'+p.lang+"</span>"));
-  w.appendChild(h("div","slip",projDetailHTML(p)));
-  addRows(w,[
-    {t:"open github.com/georgenijo/"+p.name+" ↗",href:GH+"/"+p.name},
-    {t:"back to projects",on:back}
-  ],"project:"+p.name,"acts");
-  inkIn(w);
-  setStatus(stdHints(false));
-}
-function vClosed(){
-  crumbEl.innerHTML="";appEl.hidden=true;
-  bootWrap.hidden=false;
-  bootWrap.innerHTML='<div class="closed reveal">'+
-    '<p class="msg">Connection to ssh.georgenijo.com closed.</p>'+
-    '<p>Thanks for stopping by.</p>'+
-    '<button class="reconnect" type="button" id="reconn">➜ ~ $ ssh ssh.georgenijo.com  (reconnect)</button></div>';
-  var b=document.getElementById("reconn");
-  b.addEventListener("click",restart);b.focus();
-}
-function restart(){
-  bootWrap.innerHTML="";
-  var pre=document.createElement("pre");pre.id="bootpre";
-  bootWrap.appendChild(pre);bootPre=pre;
-  ST.view="menu";ST.cursors={};runBoot();
-}
-
-/* ── input ──────────────────────────────────────────────────── */
-bootWrap.addEventListener("click",function(){if(booting)skipBoot();});
-window.addEventListener("keydown",function(e){
-  if(booting){skipBoot();return;}
-  if(ST.view==="closed"){
-    if(e.key==="Enter"||e.key.toLowerCase()==="r"){e.preventDefault();restart();}
-    return;
+    svg.addEventListener("mouseleave", function(){
+      tip.style.opacity = "0"; ch.style.display="none"; cd.style.display="none";
+    });
   }
-  var k=e.key;
-  if(k==="ArrowDown"||k==="j"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.min(ST.cursor+1,ST.rows.length-1);paintCursor();}}
-  else if(k==="ArrowUp"||k==="k"){e.preventDefault();if(ST.rows.length){ST.cursor=Math.max(ST.cursor-1,0);paintCursor();}}
-  else if(k==="Enter"){
-    if(document.activeElement&&document.activeElement.closest&&
-       document.activeElement.closest(".crumb"))return; // crumb link focused: let it activate
-    var r=ST.rows[ST.cursor];if(!r)return;
-    if(document.activeElement===r.el)return;
-    e.preventDefault();
-    if(r.href)r.el.click();else if(r.on)r.on();
-  }
-  else if(k==="Escape"){e.preventDefault();back();}
-  else if(k==="q"&&!e.metaKey&&!e.ctrlKey&&!e.altKey){e.preventDefault();quit();}
-});
-
-runBoot();
 })();
 </script>
 </body>
