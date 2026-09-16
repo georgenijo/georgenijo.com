@@ -30,15 +30,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Stamp "updated <month> <year>" in index.html
+      - name: Stamp "updated <month> <year>" in terminal.html
         run: |
           set -euo pipefail
           STAMP=$(git log -1 --format=%cd --date=format:'%B %Y' | tr '[:upper:]' '[:lower:]')
-          echo "Stamping index.html with: updated ${STAMP}"
-          # Matches "updated <month> <year>" regardless of which month/year
-          # is currently baked in, so this keeps working forever.
-          sed -i -E "s/updated [a-z]+ [0-9]{4}/updated ${STAMP}/" index.html
-          grep -n "updated ${STAMP}" index.html
+          # terminal.html is the file that carries the rolling "updated <month>
+          # <year>" stamp. index.html is a dated snapshot document: its footer
+          # date is deliberately static and must NOT be rewritten here.
+          if grep -qE 'updated [a-z]+ [0-9]{4}' terminal.html; then
+            echo "Stamping terminal.html with: updated ${STAMP}"
+            # Matches "updated <month> <year>" regardless of which month/year
+            # is currently baked in, so this keeps working forever.
+            sed -i -E "s/updated [a-z]+ [0-9]{4}/updated ${STAMP}/" terminal.html
+            grep -n "updated ${STAMP}" terminal.html
+          else
+            echo "No 'updated <month> <year>' pattern in terminal.html; skipping stamp."
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -47,8 +54,12 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp index.html 404.html og.png CNAME concept-5-ssh.html lab-health.js _site/
-          cp -R data _site/
+          # Explicit allowlist: only these files are published. Everything the
+          # site links to (index.html, llms.txt, sitemap.xml) must appear here.
+          cp index.html terminal.html 404.html og.png CNAME concept-5-ssh.html lab-health.js _site/
+          cp burn.html burn.json llms.txt robots.txt sitemap.xml _site/
+          cp index.md about.md projects.md now.md contact.md burn.md _site/
+          cp -R data docs about contact privacy _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
