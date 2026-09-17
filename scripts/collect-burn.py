@@ -16,7 +16,7 @@ Output: burn.json (minimal, public-safe):
 Run: python3 scripts/collect-burn.py
       python3 scripts/collect-burn.py --fleet   # also fleet exec --all (slow, ~30s)
 """
-import json, subprocess, sys, os
+import json, re, subprocess, sys, os
 from pathlib import Path
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, date
@@ -34,11 +34,21 @@ PUBLIC_REPOS = frozenset({
 })
 
 
+# Claude Code keeps transcripts under ~/.claude by default, but a session
+# started with an alternate CLAUDE_CONFIG_DIR (the CPA profile lives in
+# ~/.claude-cpa) writes there instead — and exports that variable, so a
+# collector launched from such a session would silently scan only the
+# alternate directory. Always name both so every session is counted once.
+CLAUDE_DIRS = "$HOME/.claude,$HOME/.claude-cpa"
+
+
 def run(cmd, cwd=None, timeout=20):
+    env = dict(os.environ)
+    env["CLAUDE_CONFIG_DIR"] = os.path.expandvars(CLAUDE_DIRS)
     try:
         return subprocess.check_output(
             cmd, cwd=cwd, text=True, stderr=subprocess.DEVNULL,
-            timeout=timeout, shell=isinstance(cmd, str),
+            timeout=timeout, shell=isinstance(cmd, str), env=env,
         )
     except Exception:
         return ""
@@ -88,6 +98,15 @@ def collect_local_ccusage():
         return {}
 
 
+# Automated commits are not "what shipped": the hourly Fleet health snapshot,
+# the George Lab metadata refresh, and T3 Code's checkpoint refs (which
+# --all would otherwise pick up). The site's commit counts exclude them too.
+BOT_MSG = re.compile(
+    r"^(chore\(lab\): (publish Fleet health snapshot|refresh project metadata)"
+    r"|t3 checkpoint ref=)"
+)
+
+
 def collect_commits_local():
     """Commits keyed by date, newest-first within each day (by unix time)."""
     commits_by_date = defaultdict(list)
@@ -112,6 +131,8 @@ def collect_commits_local():
                 continue
             try:
                 d, ts, h, msg = line.split("|", 3)
+                if BOT_MSG.match(msg):
+                    continue
                 commits_by_date[d].append({
                     "repo": repo.name,
                     "hash": h,
@@ -213,6 +234,7 @@ def collect_fleet_and_merge():
         'bash -lc \''
         'export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"; '
         '[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh" >/dev/null 2>&1; '
+        'export CLAUDE_CONFIG_DIR="' + CLAUDE_DIRS + '"; '
         'npx --yes ccusage@latest daily -j'
         '\''
     )

@@ -452,9 +452,9 @@ footer p{font-size:.95rem}
       <span class="f">Floor, not a total: ~925k added / ~134k deleted, measured across 14 locally cloned repos only.</span>
     </div>
     <div class="tile">
-      <span class="v num" data-count="6.2" data-decimals="1" data-suffix="B">6.2B</span>
+      <span class="v num" data-count="27.5" data-decimals="1" data-suffix="B">27.5B</span>
       <span class="l label">AI tokens burned</span>
-      <span class="f">Burn-log snapshot dated 2026-07-17, aggregated across machines via Fleet. Scope-dependent; treat as a floor.</span>
+      <span class="f">Burn-log snapshot dated 2026-09-17, aggregated across all four machines via Fleet. Treat as a floor.</span>
     </div>
     <div class="tile">
       <span class="v num" data-count="101">101</span>
@@ -628,37 +628,37 @@ footer p{font-size:.95rem}
 
   <figure class="chartbox">
     <p class="charttitle">Tokens by model</p>
-    <p class="chartsub">Top 5 models, burn-log snapshot 2026-07-17.</p>
+    <p class="chartsub">Top 5 models, all time, burn-log snapshot 2026-09-17.</p>
 
     <div class="chartscroll chartfit">
     <svg class="chart" viewBox="0 0 900 214" role="img" aria-labelledby="bc-t bc-d" preserveAspectRatio="xMidYMid meet">
       <title id="bc-t">Tokens burned by model, top five</title>
-      <desc id="bc-d">Horizontal bars. Opus 4.8 leads with 2.51 billion tokens, followed by Fable 5 at 1.06 billion, Sonnet 5 at 911 million, GPT-5.5 at 661 million and GPT-5.6 Sol at 434 million.</desc>
+      <desc id="bc-d">Horizontal bars. GPT-5.6 Sol leads with 17.1 billion tokens, followed by Opus 4.8 at 2.38 billion, GPT-6 Astra at 2.21 billion, Sonnet 5 at 1.62 billion, Fable 5 at 1.19 billion.</desc>
 
-      <text class="barlabel wide-only" x="140" y="38" text-anchor="end">Opus 4.8</text>
-      <text class="barlabel narrow-only" x="140" y="38" text-anchor="end">Opus 4.8</text>
-      <g class="barwrap"><path class="bar" d="M152 24 h556 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-556 z"><title>Opus 4.8 · 2,510,416,238 tokens</title></path></g>
-      <text class="barval" x="722" y="38">2.51B</text>
+      <text class="barlabel wide-only" x="140" y="38" text-anchor="end">GPT-5.6 Sol</text>
+      <text class="barlabel narrow-only" x="140" y="38" text-anchor="end">Sol</text>
+      <g class="barwrap"><path class="bar" d="M152 24 h556 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-556 z"><title>GPT-5.6 Sol · 17,105,083,953 tokens</title></path></g>
+      <text class="barval" x="722" y="38">17.1B</text>
 
-      <text class="barlabel wide-only" x="140" y="76" text-anchor="end">Fable 5</text>
-      <text class="barlabel narrow-only" x="140" y="76" text-anchor="end">Fable 5</text>
-      <g class="barwrap"><path class="bar" d="M152 62 h233 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-233 z"><title>Fable 5 · 1,062,481,134 tokens</title></path></g>
-      <text class="barval" x="399" y="76">1.06B</text>
+      <text class="barlabel wide-only" x="140" y="76" text-anchor="end">Opus 4.8</text>
+      <text class="barlabel narrow-only" x="140" y="76" text-anchor="end">Opus 4.8</text>
+      <g class="barwrap"><path class="bar" d="M152 62 h77 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-77 z"><title>Opus 4.8 · 2,381,125,567 tokens</title></path></g>
+      <text class="barval" x="243" y="76">2.38B</text>
 
-      <text class="barlabel wide-only" x="140" y="114" text-anchor="end">Sonnet 5</text>
-      <text class="barlabel narrow-only" x="140" y="114" text-anchor="end">Sonnet 5</text>
-      <g class="barwrap"><path class="bar" d="M152 100 h199 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-199 z"><title>Sonnet 5 · 911,112,836 tokens</title></path></g>
-      <text class="barval" x="365" y="114">911M</text>
+      <text class="barlabel wide-only" x="140" y="114" text-anchor="end">GPT-6 Astra</text>
+      <text class="barlabel narrow-only" x="140" y="114" text-anchor="end">Astra</text>
+      <g class="barwrap"><path class="bar" d="M152 100 h72 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-72 z"><title>GPT-6 Astra · 2,210,032,428 tokens</title></path></g>
+      <text class="barval" x="238" y="114">2.21B</text>
 
-      <text class="barlabel wide-only" x="140" y="152" text-anchor="end">GPT-5.5</text>
-      <text class="barlabel narrow-only" x="140" y="152" text-anchor="end">GPT-5.5</text>
-      <g class="barwrap"><path class="bar" d="M152 138 h143 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-143 z"><title>GPT-5.5 · 660,827,177 tokens</title></path></g>
-      <text class="barval" x="309" y="152">661M</text>
+      <text class="barlabel wide-only" x="140" y="152" text-anchor="end">Sonnet 5</text>
+      <text class="barlabel narrow-only" x="140" y="152" text-anchor="end">Sonnet 5</text>
+      <g class="barwrap"><path class="bar" d="M152 138 h53 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-53 z"><title>Sonnet 5 · 1,621,700,440 tokens</title></path></g>
+      <text class="barval" x="219" y="152">1.62B</text>
 
-      <text class="barlabel wide-only" x="140" y="190" text-anchor="end">GPT-5.6 Sol</text>
-      <text class="barlabel narrow-only" x="140" y="190" text-anchor="end">GPT-5.6</text>
-      <g class="barwrap"><path class="bar" d="M152 176 h93 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-93 z"><title>GPT-5.6 Sol · 434,067,143 tokens</title></path></g>
-      <text class="barval" x="259" y="190">434M</text>
+      <text class="barlabel wide-only" x="140" y="190" text-anchor="end">Fable 5</text>
+      <text class="barlabel narrow-only" x="140" y="190" text-anchor="end">Fable 5</text>
+      <g class="barwrap"><path class="bar" d="M152 176 h39 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-39 z"><title>Fable 5 · 1,185,960,807 tokens</title></path></g>
+      <text class="barval" x="205" y="190">1.19B</text>
 
       <line class="baseline" x1="152" y1="14" x2="152" y2="204"></line>
     </svg>
@@ -666,8 +666,10 @@ footer p{font-size:.95rem}
 
     <figcaption>
       Top 5 models by tokens, from the burn log at
-      <a href="./burn.html">georgenijo.com/burn</a>. Opus 4.8 is ~40% of the total — the hard
-      reasoning goes to the expensive model, the mechanical work does not.
+      <a href="./burn.html">georgenijo.com/burn</a>, aggregated across all four Fleet machines.
+      Sol, the lead implementation model, carries ~62% of every token. GPT-6 Astra, which takes
+      the hardest reasoning and every independent review, and Opus 4.8 come next at ~8% each.
+      Volume goes to the implementation tier; the expensive models are reserved for judgment.
     </figcaption>
     <details class="dtable">
       <summary>Data table</summary>
@@ -675,11 +677,11 @@ footer p{font-size:.95rem}
         <caption>Tokens by model, top five.</caption>
         <thead><tr><th scope="col">Model</th><th scope="col">Tokens</th></tr></thead>
         <tbody>
-          <tr><th scope="row">Opus 4.8</th><td>2,510,416,238</td></tr>
-          <tr><th scope="row">Fable 5</th><td>1,062,481,134</td></tr>
-          <tr><th scope="row">Sonnet 5</th><td>911,112,836</td></tr>
-          <tr><th scope="row">GPT-5.5</th><td>660,827,177</td></tr>
-          <tr><th scope="row">GPT-5.6 Sol</th><td>434,067,143</td></tr>
+          <tr><th scope="row">GPT-5.6 Sol</th><td>17,105,083,953</td></tr>
+          <tr><th scope="row">Opus 4.8</th><td>2,381,125,567</td></tr>
+          <tr><th scope="row">GPT-6 Astra</th><td>2,210,032,428</td></tr>
+          <tr><th scope="row">Sonnet 5</th><td>1,621,700,440</td></tr>
+          <tr><th scope="row">Fable 5</th><td>1,185,960,807</td></tr>
         </tbody>
       </table>
     </details>
@@ -748,7 +750,7 @@ footer p{font-size:.95rem}
       <h3>Burn log</h3>
       <span class="tag">Tracks what the agents cost against what they shipped</span>
       <p>A collector walks ccusage data and git history across every repo and every machine, aggregates through Fleet, and publishes a daily record correlating tokens spent to commits landed to repos touched. It is the accountability half of running agents at volume, and it is public.</p>
-      <div class="meta"><span>Python pipeline + static page</span><span>6.2B tokens recorded to date</span><span class="st">Public — <a href="./burn.html">georgenijo.com/burn</a></span></div>
+      <div class="meta"><span>Python pipeline + static page</span><span>27.5B tokens recorded to date</span><span class="st">Public — <a href="./burn.html">georgenijo.com/burn</a></span></div>
     </article>
 
     <article class="card">
@@ -928,8 +930,9 @@ footer p{font-size:.95rem}
     health-snapshot commits, which would otherwise inflate 2026 by more than double. Lines
     changed is a floor: it covers only the 14 repositories cloned locally, not all 70 on
     GitHub. September 2026 is partial, through the 16th. Pull request counts are PRs
-    <em>opened</em>, not merged. The token total is a burn-log snapshot dated 2026-07-17 and
-    depends on which machines’ usage logs were aggregated, so treat it as a lower bound.
+    <em>opened</em>, not merged. The token total is a burn-log snapshot dated 2026-09-17 aggregated
+    across all four Fleet machines; one of them keeps only 30 days of Claude transcripts, so
+    treat it as a lower bound.
     murmur-app has 101 GitHub releases (103 git tags); the two counts differ because not
     every tag was published as a release.
   </p>

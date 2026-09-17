@@ -1,392 +1,374 @@
 {
-  "generatedAt": "2026-07-10T00:55:13.009999",
-  "totalTokens": 6754818070,
+  "generatedAt": "2026-09-17T00:05:21.905158",
+  "totalTokens": 27460301908,
   "byModelTop": [
+    {
+      "short": "5.6-sol",
+      "model": "gpt-5.6-sol",
+      "tokens": 17105083953
+    },
     {
       "short": "opus-4-8",
       "model": "claude-opus-4-8",
-      "tokens": 3144949323
+      "tokens": 2381125567
     },
     {
-      "short": "fable-5",
-      "model": "claude-fable-5",
-      "tokens": 1267222218
+      "short": "6-astra",
+      "model": "gpt-6-astra",
+      "tokens": 2210032428
     },
     {
       "short": "sonnet-5",
       "model": "claude-sonnet-5",
-      "tokens": 886347088
+      "tokens": 1621700440
     },
     {
-      "short": "5.5",
-      "model": "gpt-5.5",
-      "tokens": 656058582
-    },
-    {
-      "short": "sonnet-4-6",
-      "model": "claude-sonnet-4-6",
-      "tokens": 357915837
+      "short": "fable-5",
+      "model": "claude-fable-5",
+      "tokens": 1185960807
     }
   ],
   "last30": [
     {
-      "date": "2026-06-08",
-      "tokens": 14247978,
-      "commits": 1,
+      "date": "2026-08-19",
+      "tokens": 1012864563,
+      "commits": 41,
       "topRepos": [
-        "agent-mesh (1)"
+        "murmur-app (41)"
       ],
       "topMsgs": [
-        "[coordinator] Ticket intake: mesh submit + GitHub issue ingestion (#23"
+        "Merge remote-tracking branch 'origin/main' into fix/dictation-live-pre",
+        "Merge remote-tracking branch 'origin/main' into issue/630-fix-ota-cana",
+        "fix: repair OTA canary failure propagation"
       ]
     },
     {
-      "date": "2026-06-09",
-      "tokens": 113998288,
-      "commits": 50,
+      "date": "2026-08-20",
+      "tokens": 338045009,
+      "commits": 5,
       "topRepos": [
-        "agent-mesh (50)"
-      ],
-      "topMsgs": [
-        "feat(hooks): add Codex CLI adapter",
-        "Merge PR #74 from georgenijo/issue/25-scheduler",
-        "docs(decisions): log #25 scheduler design decisions"
-      ]
-    },
-    {
-      "date": "2026-06-10",
-      "tokens": 164296062,
-      "commits": 44,
-      "topRepos": [
-        "agent-mesh (43)",
-        "homelab (1)"
-      ],
-      "topMsgs": [
-        "docs: add ticket lifecycle mockup (#90)",
-        "Merge PR #87 from georgenijo/issue/80-reviewgate",
-        "docs(decisions): log the #80 review-gating transport and policy fork"
-      ]
-    },
-    {
-      "date": "2026-06-11",
-      "tokens": 510162340,
-      "commits": 51,
-      "topRepos": [
-        "homelab (45)",
-        "agent-mesh (6)"
-      ],
-      "topMsgs": [
-        "feat(scheduler,worker): bounded re-dispatch with review feedback on re",
-        "Merge PR #82 from georgenijo/codex/windows-portability",
-        "docs(ops): document why Windows maps terminate to TerminateProcess"
-      ]
-    },
-    {
-      "date": "2026-06-12",
-      "tokens": 130104812,
-      "commits": 11,
-      "topRepos": [
-        "homelab (11)"
-      ],
-      "topMsgs": [
-        "feat: native SwiftUI iOS app mirroring the HA dashboard",
-        "docs: perf-audit final report; correct stale camera facts in README",
-        "perf: govee bridge publishes state only on change; fix known_devices w"
-      ]
-    },
-    {
-      "date": "2026-06-13",
-      "tokens": 186015754,
-      "commits": 8,
-      "topRepos": [
-        "homelab (8)"
-      ],
-      "topMsgs": [
-        "ios: document Xcode Cloud auto-build-on-merge workflow (mirrors CoachO",
-        "fix: enforce single coherent AC target across HA + iOS",
-        "fix: smart AC single source of truth + advisor temp source"
-      ]
-    },
-    {
-      "date": "2026-06-14",
-      "tokens": 175843846,
-      "commits": 3,
-      "topRepos": [
-        "agent-mesh (3)"
-      ],
-      "topMsgs": [
-        "feat(worker): push workers to consult experts and claim before editing",
-        "fix(dashboard): keep envelope details open across the SSE rebuild",
-        "fix(runtime): stop gating expert Start on a session id"
-      ]
-    },
-    {
-      "date": "2026-06-15",
-      "tokens": 2076738,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-06-18",
-      "tokens": 989460,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-06-19",
-      "tokens": 955526,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-06-21",
-      "tokens": 23355526,
-      "commits": 7,
-      "topRepos": [
-        "whoop-dashboard (7)"
-      ],
-      "topMsgs": [
-        "docs(decisions): log Plans surface + iOS redesign ship",
-        "feat(ios): UI redesign \u2014 declutter, one accent per screen, Plans tab (",
-        "feat(web): Plans surface \u2014 Coach-authored, recovery-tuned workout plan"
-      ]
-    },
-    {
-      "date": "2026-06-22",
-      "tokens": 8087136,
-      "commits": 2,
-      "topRepos": [
+        "murmur-app (3)",
         "whoop-dashboard (2)"
       ],
       "topMsgs": [
-        "all files",
-        "Add iOS Trends tab with shared chart date formatting."
+        "chore: bump version to 0.38.1",
+        "fix(ios): tighten Coach chat mobile interactions (#558)",
+        "fix(ios): tighten Coach chat mobile interactions"
       ]
     },
     {
-      "date": "2026-06-23",
-      "tokens": 426863312,
-      "commits": 21,
+      "date": "2026-08-21",
+      "tokens": 66925237,
+      "commits": 3,
       "topRepos": [
-        "homelab (21)"
+        "georgenijo.com (2)",
+        "murmur-app (1)"
       ],
       "topMsgs": [
-        "ios: bump build to 12 (last build numbers for 0.1.0 were used historic",
-        "fix(ios): exclude Info-macOS.plist from the iOS bundle so App Store ex",
-        "fix(ios): disable Mac app variant so App Store export ships iOS-only"
+        "feat(agent-readiness): trust anchor pages, canonical, JSON-LD descript",
+        "feat(agent-readiness): no-JS content, crawler allowlist, markdown vari",
+        "Fix history apply-mode action layout (#636)"
       ]
     },
     {
-      "date": "2026-06-24",
-      "tokens": 159064052,
-      "commits": 9,
+      "date": "2026-08-22",
+      "tokens": 102924529,
+      "commits": 5,
       "topRepos": [
-        "homelab (5)",
+        "murmur-app (5)"
+      ],
+      "topMsgs": [
+        "test: update appearance visual contract",
+        "fix: make main errors compact and lifecycle aware",
+        "feat: make Paste Last shortcut configurable"
+      ]
+    },
+    {
+      "date": "2026-08-23",
+      "tokens": 1167441546,
+      "commits": 34,
+      "topRepos": [
+        "murmur-app (34)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.39.1",
+        "Merge PR #659 from georgenijo/codex/performance-core-flow",
+        "perf: remove core flow stalls"
+      ]
+    },
+    {
+      "date": "2026-08-24",
+      "tokens": 565565949,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-25",
+      "tokens": 309334814,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-26",
+      "tokens": 13021765,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-27",
+      "tokens": 32147798,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-28",
+      "tokens": 57918206,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-29",
+      "tokens": 85633782,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-08-30",
+      "tokens": 200323810,
+      "commits": 14,
+      "topRepos": [
+        "whoop-dashboard (12)",
+        "murmur-app (2)"
+      ],
+      "topMsgs": [
+        "Merge PR #660 from georgenijo/feature/follow-system-default-",
+        "feat: clarify automatic microphone selection",
+        "feat(coach): restore exact MCP observability under Cursor ACP (#561)"
+      ]
+    },
+    {
+      "date": "2026-08-31",
+      "tokens": 1213293952,
+      "commits": 30,
+      "topRepos": [
+        "murmur-app (20)",
+        "whoop-dashboard (10)"
+      ],
+      "topMsgs": [
+        "Pin the visual fixture clock",
+        "Pin the visual fixture clock",
+        "Report post-stop dictation latency by release"
+      ]
+    },
+    {
+      "date": "2026-09-01",
+      "tokens": 224830116,
+      "commits": 8,
+      "topRepos": [
+        "whoop-dashboard (5)",
+        "murmur-app (3)"
+      ],
+      "topMsgs": [
+        "fix(overview): keep insight refresh active through regeneration (#569)",
+        "fix(ios): compile Steps KPI strip",
+        "fix(ios): wrap KPI cell conditional in Group"
+      ]
+    },
+    {
+      "date": "2026-09-02",
+      "tokens": 26204719,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-09-03",
+      "tokens": 208333763,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-09-04",
+      "tokens": 596837377,
+      "commits": 53,
+      "topRepos": [
+        "murmur-app (50)",
+        "agentos (2)",
+        "whoop-dashboard (1)"
+      ],
+      "topMsgs": [
+        "test: fix the calendar date for visual regression fixtures",
+        "chore: remove unused frontend code and add dead-code audit",
+        "chore: bump version to 0.41.0"
+      ]
+    },
+    {
+      "date": "2026-09-05",
+      "tokens": 255331578,
+      "commits": 19,
+      "topRepos": [
+        "murmur-app (19)"
+      ],
+      "topMsgs": [
+        "Merge PR #678 from georgenijo/fix/meeting-echo-recovery-read",
+        "Merge PR #677 from georgenijo/feat/quiet-branch-settings",
+        "test: pin the visual fixture date"
+      ]
+    },
+    {
+      "date": "2026-09-06",
+      "tokens": 48286698,
+      "commits": 4,
+      "topRepos": [
+        "murmur-app (4)"
+      ],
+      "topMsgs": [
+        "Merge PR #679 from georgenijo/issue/676-correct-last-dictati",
+        "fix: allow chained correction during applied linger and skip identity ",
+        "fix: address review findings for correct-last-dictation"
+      ]
+    },
+    {
+      "date": "2026-09-07",
+      "tokens": 534801434,
+      "commits": 24,
+      "topRepos": [
+        "murmur-app (24)"
+      ],
+      "topMsgs": [
+        "Merge PR #685 from georgenijo/issue/540-diarization-spike",
+        "Merge remote-tracking branch 'origin/main' into issue/540-diarization-",
+        "Merge PR #686 from georgenijo/issue/430-performance-diagnost"
+      ]
+    },
+    {
+      "date": "2026-09-08",
+      "tokens": 196585623,
+      "commits": 21,
+      "topRepos": [
+        "murmur-app (21)"
+      ],
+      "topMsgs": [
+        "test: update unified microphone picker visual contract",
+        "fix: preserve user focus during microphone teardown",
+        "fix: restore microphone picker focus after switching"
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "tokens": 667921150,
+      "commits": 93,
+      "topRepos": [
+        "murmur-app (93)"
+      ],
+      "topMsgs": [
+        "Merge PR #701 from georgenijo/issue/699-fix-microphone-picke",
+        "Merge remote-tracking branch 'origin/main' into issue/699-fix-micropho",
+        "Merge PR #702 from georgenijo/issue/698-make-the-update-dial"
+      ]
+    },
+    {
+      "date": "2026-09-10",
+      "tokens": 633535388,
+      "commits": 67,
+      "topRepos": [
+        "murmur-app (55)",
+        "agentos (9)",
+        "whoop-dashboard (3)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.46.1",
+        "Merge PR #713 from georgenijo/fix/smart-auto-lid-status",
+        "fix: read Smart Auto lid state from the power-management service"
+      ]
+    },
+    {
+      "date": "2026-09-11",
+      "tokens": 915831810,
+      "commits": 98,
+      "topRepos": [
+        "murmur-app (98)"
+      ],
+      "topMsgs": [
+        "fix: remove idle shortcut hint from notch",
+        "Merge PR #761 from georgenijo/codex/issue-758-most-used-tran",
+        "Merge 'main' into codex/issue-758-most-used-transform"
+      ]
+    },
+    {
+      "date": "2026-09-12",
+      "tokens": 126166329,
+      "commits": 16,
+      "topRepos": [
+        "murmur-app (16)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.48.0",
+        "Merge PR #771 from georgenijo/codex/product-ui-048",
+        "test: refresh settings visual fixtures"
+      ]
+    },
+    {
+      "date": "2026-09-13",
+      "tokens": 348196218,
+      "commits": 6,
+      "topRepos": [
+        "murmur-app (3)",
+        "agentos (3)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.49.0",
+        "Polish Assistant UI and dictate editable drafts before sending (#773)",
+        "feat: persistent Pi Assistant workspace with voice and text (#772)"
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "tokens": 615653219,
+      "commits": 15,
+      "topRepos": [
+        "murmur-app (11)",
         "agentos (4)"
       ],
       "topMsgs": [
-        "feat(ios): Ambient redesign \u2014 glass/aurora UI across all 5 screens",
-        "Add Ambient redesign build plan + mockups",
-        "fix(ios): auto-set Xcode Cloud build number to avoid version collision"
+        "Polish Voice Query popover and simplify Assistant handoff (#776)",
+        "fix: wait for light action readback (#345)",
+        "fix: wait for light action readback"
       ]
     },
     {
-      "date": "2026-06-25",
-      "tokens": 524885059,
-      "commits": 49,
-      "topRepos": [
-        "agentos (29)",
-        "homelab (12)",
-        "agent-mesh (8)"
-      ],
-      "topMsgs": [
-        "feat(dashboard): click drill-in + live worker streaming",
-        "Merge session/hardening: dashboard allow-list + worker skip-permission",
-        "feat(worker): push workers to consult experts and claim before editing"
-      ]
-    },
-    {
-      "date": "2026-06-26",
-      "tokens": 370481197,
-      "commits": 47,
-      "topRepos": [
-        "agentos (26)",
-        "agent-mesh (19)",
-        "whoop-dashboard (2)"
-      ],
-      "topMsgs": [
-        "feat(scheduler): persist accrued cost to the log on every worker/revie",
-        "docs(mockups): add observer redesign \u2014 Console/Wall toggle + control p",
-        "feat(coordinator): autonomous on-demand experts (#117) (#118)"
-      ]
-    },
-    {
-      "date": "2026-06-27",
-      "tokens": 41325494,
-      "commits": 5,
-      "topRepos": [
-        "agentos (5)"
-      ],
-      "topMsgs": [
-        "feat(apps/ios): retire WKWebView \u2014 Orion is fully native (M7, issue #1",
-        "feat(apps/ios): wire native Orion to /api/repos + full calendar payloa",
-        "feat(orion): real gated-write + repos backend routes"
-      ]
-    },
-    {
-      "date": "2026-06-28",
-      "tokens": 262175835,
-      "commits": 61,
-      "topRepos": [
-        "agent-mesh (34)",
-        "whoop-dashboard (22)",
-        "agentos (5)"
-      ],
-      "topMsgs": [
-        "docs: full overnight autonomous run report (MDX) (#140)",
-        "docs: full overnight autonomous run report (MDX)",
-        "feat(#95): mesh up \u2014 one-command fleet bring-up and arming (#139)"
-      ]
-    },
-    {
-      "date": "2026-06-29",
-      "tokens": 385767495,
-      "commits": 24,
-      "topRepos": [
-        "agentos (14)",
-        "agent-mesh (10)"
-      ],
-      "topMsgs": [
-        "feat(#100): add read-only Settings page to dashboard (slice 1)",
-        "feat(#141): escalation primitive \u2014 worker can escalate ambiguous tasks",
-        "feat(#141): escalation primitive \u2014 worker can escalate ambiguous tasks"
-      ]
-    },
-    {
-      "date": "2026-06-30",
-      "tokens": 68341182,
-      "commits": 13,
-      "topRepos": [
-        "agentos (8)",
-        "agent-mesh (5)"
-      ],
-      "topMsgs": [
-        "docs: revamp README \u2014 modern layout, badges, mermaid diagrams (#153)",
-        "Merge 'main' into docs/readme-revamp",
-        "docs: revamp README \u2014 modern layout, badges, mermaid diagrams"
-      ]
-    },
-    {
-      "date": "2026-07-01",
-      "tokens": 54033431,
-      "commits": 16,
-      "topRepos": [
-        "agentos (16)"
-      ],
-      "topMsgs": [
-        "feat(orion): code-task attachments flow to the mesh worker (M3)",
-        "feat(orion): supervisor lifecycle cards \u2014 merged/failed/approval state",
-        "feat(orion): chat attachments \u2014 upload chips, vision pass-through, hon"
-      ]
-    },
-    {
-      "date": "2026-07-02",
-      "tokens": 241938471,
-      "commits": 47,
-      "topRepos": [
-        "agentos (45)",
-        "georgenijo.com (2)"
-      ],
-      "topMsgs": [
-        "Ship concept 5: ssh georgenijo.com \u2014 Charm-style TUI portfolio",
-        "GEORGE OS \u2014 desktop-in-browser personal site",
-        "Merge remote-tracking branch 'origin/main' into phase-0"
-      ]
-    },
-    {
-      "date": "2026-07-03",
-      "tokens": 484206567,
-      "commits": 112,
-      "topRepos": [
-        "agentos (104)",
-        "georgenijo.com (8)"
-      ],
-      "topMsgs": [
-        "Add ssh-tui source \u2014 the Go Wish/Bubbletea server behind ssh georgenij",
-        "Boot sequence shows the real host key fingerprint and IP",
-        "Preview pane updates on click/keys only, not hover"
-      ]
-    },
-    {
-      "date": "2026-07-04",
-      "tokens": 583531916,
-      "commits": 89,
-      "topRepos": [
-        "agentos (80)",
-        "georgenijo.com (7)",
-        "agent-mesh (2)"
-      ],
-      "topMsgs": [
-        "Contact page: one box, links inside it",
-        "Social card, JSON-LD, 404 page, deploy script, auto-dated now page",
-        "Boot animations, viewfinder cursor, dark mode, LinkedIn, punchier copy"
-      ]
-    },
-    {
-      "date": "2026-07-05",
-      "tokens": 429117,
+      "date": "2026-09-15",
+      "tokens": 417118798,
       "commits": 0,
       "topRepos": [],
       "topMsgs": []
     },
     {
-      "date": "2026-07-06",
-      "tokens": 47272323,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-07-07",
-      "tokens": 859422405,
-      "commits": 69,
+      "date": "2026-09-16",
+      "tokens": 241595706,
+      "commits": 4,
       "topRepos": [
-        "agentos (66)",
-        "agent-mesh (3)"
+        "georgenijo.com (4)"
       ],
       "topMsgs": [
-        "feat: settings authority + operator settings screen (v1) (#156)",
-        "fix: settings POST is a merge-patch; effective snapshot validates befo",
-        "feat: settings authority + operator settings screen (v1)"
+        "snapshot: frame the ship-rate story around the workflow build-out (#7)",
+        "snapshot: frame the ship-rate story around the workflow build-out",
+        "feat: resume dossier landing page; terminal site moves to /terminal.ht"
       ]
     },
     {
-      "date": "2026-07-08",
-      "tokens": 5005817,
+      "date": "2026-09-17",
+      "tokens": 2864590,
       "commits": 0,
       "topRepos": [],
       "topMsgs": []
-    },
-    {
-      "date": "2026-07-09",
-      "tokens": 10307006,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-07-10",
-      "tokens": 36905097,
-      "commits": 1,
-      "topRepos": [
-        "georgenijo.com (1)"
-      ],
-      "topMsgs": [
-        "feat: burn log \u2014 tokens \u00b7 models \u00b7 commits + live pipeline + TUI view"
-      ]
     }
   ]
 }
