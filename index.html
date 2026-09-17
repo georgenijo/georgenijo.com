@@ -411,7 +411,7 @@ footer p{font-size:.95rem}
     I turned agent-orchestrated delivery into a repeatable system: explicit model routing,
     fanned-out subagents, one independent cross-model review, and verification against the
     running build. The output is measurable — <span class="hl num">6,300 commits and 1,105
-    pull requests across 18 repos</span> so far in 2026, against 129 commits in all of 2025.
+    pull requests across 18 repos</span> so far in 2026.
   </p>
 
   <ul class="contact">
@@ -427,9 +427,9 @@ footer p{font-size:.95rem}
   <div class="sechead"><span class="n">01</span><h2 id="h-stats">By the numbers</h2></div>
   <div class="stats">
     <div class="tile">
-      <span class="v num" data-count="73" data-suffix="×">73×</span>
-      <span class="l label">Monthly commit rate, after vs. before</span>
-      <span class="f">(6,266 ÷ 8) ÷ (129 ÷ 12) ≈ 72.9 — Feb–Sep 2026 averages 783 commits/mo against a 2025 average of 10.8/mo. Bot commits excluded.</span>
+      <span class="v num" data-count="783">783</span>
+      <span class="l label">Commits per month, Feb–Sep 2026 average</span>
+      <span class="f">6,266 clean commits over eight months. Bot commits excluded.</span>
     </div>
     <div class="tile">
       <span class="v num" data-count="6300" data-group="1">6,300</span>
@@ -437,13 +437,13 @@ footer p{font-size:.95rem}
       <span class="f">Jan 1 – Sep 16, 2026. Excludes 7,609 automated Fleet health-snapshot commits.</span>
     </div>
     <div class="tile">
-      <span class="v num">3<span class="arrow">→</span><span data-count="1105" data-group="1">1,105</span></span>
-      <span class="l label">Pull requests opened, 2025 → 2026</span>
-      <span class="f">PRs opened, not merged. 2026 figure is through Sep 16.</span>
+      <span class="v num" data-count="1105" data-group="1">1,105</span>
+      <span class="l label">Pull requests opened in 2026</span>
+      <span class="f">Through Sep 16. Opened, not merged.</span>
     </div>
     <div class="tile">
-      <span class="v num">2<span class="arrow">→</span><span data-count="18">18</span></span>
-      <span class="l label">Repos with commits, 2025 → 2026</span>
+      <span class="v num" data-count="18">18</span>
+      <span class="l label">Repos shipping in 2026</span>
       <span class="f">70 repositories exist on GitHub; these are the ones actually receiving work.</span>
     </div>
     <div class="tile">
@@ -480,7 +480,7 @@ footer p{font-size:.95rem}
     <div class="chartscroll chartfit">
     <svg class="chart" id="linechart" viewBox="0 0 900 300" role="img" aria-labelledby="lc-t lc-d" preserveAspectRatio="xMidYMid meet">
       <title id="lc-t">Clean commits per month, January 2025 through September 2026</title>
-      <desc id="lc-d">A line chart. Commits stay under 50 per month for all of 2025, rise to 230 in February 2026 when agent workflows were adopted, and peak at 1,338 in July 2026. September 2026 is partial at 708 through the 16th. The full monthly series is available in the data table below the chart.</desc>
+      <desc id="lc-d">A line chart of commits per month, January 2025 through September 2026. In February 2026 the agent workflow and infrastructure build-out begins at 230 commits, and the series peaks at 1,338 in July 2026. September 2026 is partial at 708 through the 16th. The full monthly series is available in the data table below the chart.</desc>
 
       <!-- gridlines + y axis -->
       <g aria-hidden="true">
@@ -509,7 +509,7 @@ footer p{font-size:.95rem}
         <line class="inflect" x1="576" y1="24" x2="576" y2="268"></line>
         <g class="wide-only">
           <text class="dnote" x="582" y="36">FEB 2026</text>
-          <text class="dnote" x="582" y="48">agent workflows adopted</text>
+          <text class="dnote" x="582" y="48">agent workflow build-out begins</text>
         </g>
         <g class="narrow-only">
           <text class="dnote" x="582" y="118">FEB 2026</text>
@@ -614,11 +614,11 @@ footer p{font-size:.95rem}
   </figure>
 
   <p class="note">
-    <b>Feb 2026 — the method changed, not the hours.</b><br>
-    This is where I stopped typing code as the primary act and started running agents against
-    a written doctrine: fan work out to subagents, route each task to a model chosen on
-    difficulty, require one independent review before anything merges. Commits went from 34 in
-    January to 230 in February and have not returned to the old baseline since.
+    <b>Feb 2026 — the build-out begins.</b><br>
+    This is when I started aggressively building out agent workflows and the infrastructure
+    behind them, and running work against a written doctrine: fan work out to subagents, route
+    each task to a model chosen on difficulty, require one independent review before anything
+    merges. Every month since has added tooling, and the output has compounded with it.
   </p>
 </section>
 
@@ -879,24 +879,14 @@ footer p{font-size:.95rem}
   <div class="sechead"><span class="n">07</span><h2 id="h-timeline">Timeline</h2></div>
   <ol class="rail">
     <li>
-      <span class="d num">2025-03</span>
-      <span class="h">First commit on St. Basil’s</span>
-      <p>27 commits in March, then nothing for three months. This is the old baseline: real projects, sporadic output.</p>
-    </li>
-    <li>
-      <span class="d num">2025-07 – 2025-12</span>
-      <span class="h">Sparse and manual</span>
-      <p>46, 1, 31, 6, 10, 8 commits across six months. Two repos received any work at all in the whole of 2025.</p>
-    </li>
-    <li>
       <span class="d num">2026-01</span>
       <span class="h">murmur-app starts</span>
-      <p>34 commits. Still hand-written, still one project at a time.</p>
+      <p>The largest project on this page begins as a local, offline dictation app for macOS.</p>
     </li>
     <li>
       <span class="d num">2026-02</span>
-      <span class="h">The inflection</span>
-      <p>230 commits. Agent workflows adopted as a standing method: written working agreements, subagent fan-out, explicit model routing.</p>
+      <span class="h">The build-out begins</span>
+      <p>230 commits. Agent workflows and the infrastructure behind them become a standing method: written working agreements, subagent fan-out, explicit model routing.</p>
     </li>
     <li>
       <span class="d num">2026-03</span>
