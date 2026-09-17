@@ -277,6 +277,19 @@ svg.chart{display:block;width:100%;min-width:600px;height:auto;overflow:visible}
 .rules h3{font-family:var(--display);font-size:1.3rem;margin-bottom:3px}
 .rules p{color:var(--muted);margin:0;font-size:.98rem}
 
+/* ── shop floor ────────────────────────────────────────────── */
+.nodes{list-style:none;padding:0;margin:0 0 28px;border:1px solid var(--rule)}
+.nodes li{display:grid;grid-template-columns:minmax(120px,168px) 1fr;gap:16px;
+  padding:13px 15px;border-bottom:1px solid var(--rule)}
+.nodes li:last-child{border-bottom:0}
+.nodes .r{font-family:var(--mono);font-size:.73rem;color:var(--accent);padding-top:3px}
+.nodes p{margin:0;color:var(--muted);font-size:.95rem}
+@media (max-width:560px){.nodes li{grid-template-columns:1fr;gap:5px}}
+.practices{list-style:none;padding:0;margin:0;display:grid;gap:21px}
+.practices li{max-width:70ch}
+.practices h3{font-family:var(--display);font-size:1.26rem;margin-bottom:3px}
+.practices p{color:var(--muted);margin:0;font-size:.98rem}
+
 /* ── cards ─────────────────────────────────────────────────── */
 .cards{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
   grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
@@ -720,9 +733,59 @@ footer p{font-size:.95rem}
   </ol>
 </section>
 
+<!-- ═══ SHOP FLOOR ═════════════════════════════════════════ -->
+<section aria-labelledby="h-mesh" class="reveal">
+  <div class="sechead"><span class="n">05</span><h2 id="h-mesh">The shop floor</h2></div>
+  <p class="deck">One laptop and three servers on a private mesh. Which machine a job runs on is decided before anything else about it.</p>
+
+  <ul class="nodes">
+    <li>
+      <span class="r">laptop · control</span>
+      <p>Where I work. It plans, routes, reviews, and hands work out — and it is the only machine that can decrypt a secret.</p>
+    </li>
+    <li>
+      <span class="r">always-on worker</span>
+      <p>Runs headless agent sessions. Work started here keeps going after the laptop lid closes.</p>
+    </li>
+    <li>
+      <span class="r">gateway · production</span>
+      <p>Serves this page and runs the monitor that watches the other machines. Also the way in when a direct route fails.</p>
+    </li>
+    <li>
+      <span class="r">workloads</span>
+      <p>Hosts artifacts, dev servers, and anything long-running that has no business on a laptop.</p>
+    </li>
+  </ul>
+
+  <ul class="practices">
+    <li>
+      <h3>No agent ever types an address.</h3>
+      <p>One manifest records who each machine is; the mesh supplies live addressing. An agent names the machine and something else resolves it. Addresses change, names do not.</p>
+    </li>
+    <li>
+      <h3>Work outlives the session that started it.</h3>
+      <p>Long jobs go to a server rather than the laptop. Closing the lid does not kill them, and the result can be picked up from any machine.</p>
+    </li>
+    <li>
+      <h3>Every machine speaks the same language.</h3>
+      <p>One skill bundle is linked into both agent runtimes on all four machines, so a session started anywhere has the same vocabulary and the same working agreements.</p>
+    </li>
+    <li>
+      <h3>Handoffs are artifacts, not pasted text.</h3>
+      <p>A finished result is published once and gets an immutable, checksummed ID and a private URL. The next agent — or the next person — consumes that ID instead of a copy.</p>
+    </li>
+    <li>
+      <h3>The mesh watches itself, within limits.</h3>
+      <p>A monitor on the gateway checks the workers, requires two independent observations before it acts, and is authorized to take exactly one action. It cannot widen its own permissions.</p>
+    </li>
+  </ul>
+
+  <p class="note">This page is the proof: it is served from the gateway, and the token counts above were collected from all four machines.</p>
+</section>
+
 <!-- ═══ TOOLS ══════════════════════════════════════════════ -->
 <section aria-labelledby="h-tools" class="reveal">
-  <div class="sechead"><span class="n">05</span><h2 id="h-tools">Tools he built to make that possible</h2></div>
+  <div class="sechead"><span class="n">06</span><h2 id="h-tools">Tools I built to make that possible</h2></div>
   <div class="cards">
 
     <article class="card">
@@ -807,7 +870,7 @@ footer p{font-size:.95rem}
 
 <!-- ═══ PRODUCTS ═══════════════════════════════════════════ -->
 <section aria-labelledby="h-products" class="reveal">
-  <div class="sechead"><span class="n">06</span><h2 id="h-products">Products and selected projects</h2></div>
+  <div class="sechead"><span class="n">07</span><h2 id="h-products">Products and selected projects</h2></div>
   <div class="cards">
 
     <article class="card">
@@ -857,7 +920,7 @@ footer p{font-size:.95rem}
 
 <!-- ═══ TIMELINE ═══════════════════════════════════════════ -->
 <section aria-labelledby="h-timeline" class="reveal">
-  <div class="sechead"><span class="n">07</span><h2 id="h-timeline">Timeline</h2></div>
+  <div class="sechead"><span class="n">08</span><h2 id="h-timeline">Timeline</h2></div>
   <ol class="rail">
     <li>
       <span class="d num">2026-01</span>

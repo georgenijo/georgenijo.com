@@ -70,7 +70,24 @@ Six rules. They are written down, they are enforced by config, and they are why 
 5. **Verification is risk-based and happens against the running build.** Reproduce the bug first where feasible. Exercise the affected user flow in a real browser or a real binary. Confirm the artifact actually contains the change. Tests are evidence, not the whole case.
 6. **"Fix this" means finished, not started.** A repository fix request authorizes the whole chain: implement, verify, review, commit, push, PR ready to merge, CI resolved, conflicts handled — without a second prompt. The inverse rule matters as much: a question authorizes nothing. Asking whether something could work never edits a file.
 
-## Tools built to make that possible
+## The shop floor
+
+One laptop and three servers on a private mesh. Which machine a job runs on is decided before anything else about it.
+
+- **laptop · control** — Where I work. It plans, routes, reviews, and hands work out, and it is the only machine that can decrypt a secret.
+- **always-on worker** — Runs headless agent sessions. Work started here keeps going after the laptop lid closes.
+- **gateway · production** — Serves this page and runs the monitor that watches the other machines. Also the way in when a direct route fails.
+- **workloads** — Hosts artifacts, dev servers, and anything long-running that has no business on a laptop.
+
+1. **No agent ever types an address.** One manifest records who each machine is; the mesh supplies live addressing. An agent names the machine and something else resolves it. Addresses change, names do not.
+2. **Work outlives the session that started it.** Long jobs go to a server rather than the laptop. Closing the lid does not kill them, and the result can be picked up from any machine.
+3. **Every machine speaks the same language.** One skill bundle is linked into both agent runtimes on all four machines, so a session started anywhere has the same vocabulary and the same working agreements.
+4. **Handoffs are artifacts, not pasted text.** A finished result is published once and gets an immutable, checksummed ID and a private URL. The next agent, or the next person, consumes that ID instead of a copy.
+5. **The mesh watches itself, within limits.** A monitor on the gateway checks the workers, requires two independent observations before it acts, and is authorized to take exactly one action. It cannot widen its own permissions.
+
+This page is the proof: it is served from the gateway, and the token counts above were collected from all four machines.
+
+## Tools I built to make that possible
 
 - **Fleet** — Agent-native control plane for a personal Tailscale mesh. One manifest resolves who every box is; Tailscale supplies live IPs and online state, so neither I nor an agent ever hardcodes an address or guesses an SSH user. Covers discovery, remote exec, file transfer, service management, durable artifact publishing, shared skill distribution, and token-burn analytics. Python, ~9.5k LOC, 28 subcommands. Private.
 - **Family Host** — A personal Vercel, invite-only, running on my own hardware. Push a GitHub repo or container image and get an isolated HTTPS app on a real subdomain, plus persistent browser-based coding workspaces and managed Postgres. Systemd guard/monitor/backup timers, deploy locks, rollback, restore verification, secret scanning, synthetic checks. Python server + Node CLI, ~37k LOC, 169 commits. Private.
