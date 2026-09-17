@@ -83,7 +83,6 @@ Six rules. They are written down, they are enforced by config, and they are why 
 - **usher** — The MCP broker, one front desk every agent talks to. Routes, trims, arbitrates, gates, and audits MCP traffic so agents face a single well-behaved surface. Context trimming is the load-bearing feature. Go. Public — [github.com/georgenijo/usher](https://github.com/georgenijo/usher).
 - **hangar** — Multi-session control plane for Claude Code, Codex, and friends. Runs and supervises many agent sessions at once, so parallel fan-out is an operation rather than a pile of terminal tabs. Rust. Public — [github.com/georgenijo/hangar](https://github.com/georgenijo/hangar).
 - **ghosthands** — Free, local computer-use for macOS, no cursor stolen. A small MLX model drives native macOS apps through the Accessibility tree, then replays the recorded flow with no model in the loop. Python, ~32k lines changed in 12 months. Public — [github.com/georgenijo/ghosthands](https://github.com/georgenijo/ghosthands).
-- **omen** — Code intelligence for AI agents, over MCP. A tree-sitter analysis CLI built for assistants: complexity, hotspots, dead code, and tech-debt analysis across 13 languages and 18+ analyzers, as a CLI and an MCP server. Rust, published as `omen-cli` v4.29.0. Published — [crates.io/crates/omen-cli](https://crates.io/crates/omen-cli).
 
 ## Products and selected projects
 
@@ -93,7 +92,6 @@ Six rules. They are written down, they are enforced by config, and they are why 
 - **St. Basil's Boston** — Church website rebuild, run as an agent ticket workflow. Next.js 14 App Router with Sanity CMS, Supabase, and Resend. Work enters as tickets and is executed by agents against acceptance checks. The oldest thread here: first commit March 2025, before any of this. TypeScript, ~86k lines changed in 12 months, 279 commits. Private repo, live site.
 - **fleetmap** — Live map of what your Mac is actually running. A relationship-aware process and connection monitor: processes sized by RAM, colored by CPU, wired together by their live sockets. Swift + Go. Public — [github.com/georgenijo/fleetmap](https://github.com/georgenijo/fleetmap).
 - **Gauge** — Claude usage in the menu bar, and nothing else. A deliberately minimal macOS menu bar app showing consumption at a glance. Swift. Public — [github.com/georgenijo/Gauge](https://github.com/georgenijo/Gauge).
-- **NotchPill** — Dynamic Island-style notch overlay for macOS. Turns the notch into a notification surface, and it is where my agent Stop-hook lands. Swift. Public — [github.com/georgenijo/NotchPill](https://github.com/georgenijo/NotchPill).
 
 ## Timeline
 
@@ -103,11 +101,11 @@ Six rules. They are written down, they are enforced by config, and they are why 
 | 2025-07 – 2025-12 | Sparse and manual | 46, 1, 31, 6, 10, 8 commits across six months. Two repos received any work at all in the whole of 2025. |
 | 2026-01 | murmur-app starts | 34 commits. Still hand-written, still one project at a time. |
 | 2026-02 | The inflection | 230 commits. Agent workflows adopted as a standing method: written working agreements, subagent fan-out, explicit model routing. |
-| 2026-03 | Tooling for agents begins | omen and aperture both start within two days of each other. 578 commits. |
+| 2026-03 | Tooling for agents begins | aperture starts. 578 commits. |
 | 2026-04 | Control planes | hangar and whoop-dashboard begin. 460 commits, and the PR count starts climbing toward four figures. |
 | 2026-06 | Peak infrastructure month | agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks. 1,177 commits. |
 | 2026-07 | The factory measures itself | This site and the burn log go up; Fleet starts auto-publishing health snapshots to it. 1,338 commits, the highest month so far. |
-| 2026-09 | Steady state | murmur-app v0.50.0 on the 14th, `omen-cli` published to crates.io on the 15th. 708 commits through the 16th, with half the month left. |
+| 2026-09 | Steady state | murmur-app reaches v0.50.0 on the 14th. 708 commits through the 16th, with half the month left. |
 
 ## How to read these numbers
 
