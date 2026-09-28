@@ -2,33 +2,33 @@
 
 Software engineer · Boston · builds the factory that builds the software
 
-I turned agent-orchestrated delivery into a repeatable system: explicit model routing, fanned-out subagents, one independent cross-model review, and verification against the running build. The output is measurable — 6,300 commits and 1,105 pull requests across 18 repos so far in 2026, against 129 commits in all of 2025.
+I turned agent-orchestrated delivery into a repeatable system: explicit model routing, fanned-out subagents, one independent cross-model review, and verification against the running build. The output is measurable — 6,621 GitHub contributions and 1,128 pull requests across 18 repos so far in 2026, against 129 in all of 2025.
 
 - Email: [george.nijo8@gmail.com](mailto:george.nijo8@gmail.com)
 - GitHub: [github.com/georgenijo](https://github.com/georgenijo)
 - LinkedIn: [linkedin.com/in/georgenijo](https://www.linkedin.com/in/georgenijo)
 - Terminal: `ssh georgenijo.com` — a real endpoint, a Go Wish/Bubbletea TUI mirror of this site
 
-This is a snapshot document dated 2026-09-16. The terminal-styled version of this site lives at [/terminal.html](https://georgenijo.com/terminal.html).
+This is a snapshot document dated 2026-09-28. The terminal-styled version of this site lives at [/terminal.html](https://georgenijo.com/terminal.html).
 
 ## By the numbers
 
 | Value | Measure | Qualifier |
 |---|---|---|
-| 73× | Monthly commit rate, after vs. before | 2025 average 10.8 commits/mo vs. Feb–Sep 2026 average 783/mo. (6,266 ÷ 8) ÷ (129 ÷ 12) ≈ 72.9. Bot commits excluded. |
-| 6,300 | Commits in 2026 so far | Jan 1 – Sep 16, 2026. Excludes 7,609 automated Fleet health-snapshot commits. |
-| 3 → 1,105 | Pull requests opened, 2025 → 2026 | PRs opened, not merged. 2026 figure is through Sep 16. |
-| 2 → 18 | Repos with commits, 2025 → 2026 | 70 repositories exist on GitHub; these are the ones actually receiving work. |
-| ~1.06M | Lines changed, trailing 12 months | Floor, not a total: ~925k added / ~134k deleted, measured across 14 locally cloned repos only. |
-| 6.2B | AI tokens burned | Burn-log snapshot dated 2026-07-17, aggregated across machines via Fleet. Scope-dependent; treat as a floor. |
+| 77× | Monthly contribution rate, after vs. before | 2025 average 10.8/mo vs. Feb–Sep 2026 average 823/mo. (6,587 ÷ 8) ÷ (129 ÷ 12) ≈ 76.6. Bot commits excluded. |
+| 6,621 | GitHub contributions in 2026 so far | Jan 1 – Sep 28, 2026. Commits, PRs, reviews, and issues on the GitHub contribution graph, minus 8,930 automated Fleet health-snapshot commits. |
+| 3 → 1,128 | Pull requests opened, 2025 → 2026 | PRs opened, not merged. 2026 figure is through Sep 28. |
+| 2 → 18 | Repos with contributions, 2025 → 2026 | 75 repositories exist on GitHub; these are the ones actually receiving work. |
+| ~1.37M | Lines changed, trailing 12 months | Floor, not a total: ~1.19M added / ~178k deleted, Sep 2025 – Sep 2026, measured across 14 locally cloned repos only. |
+| 31.3B | AI tokens burned | Burn-log snapshot dated 2026-09-28, aggregated across all four machines via Fleet. Treat as a floor. |
 | 101 | GitHub releases of one app | murmur-app, v0.1.0 → v0.50.0, latest 2026-09-14. Roughly one release every 1–2 days in Sep 2026. |
-| 77 | Personal agent skills in use | Installed skills in `~/.claude/skills`, plus 5 hook events wired into the agent loop. |
+| 38 | Personal agent skills in use | Working skills installed across the agent skill directories, plus 5 hook events wired into the agent loop. |
 
 ## Ship rate
 
-Clean commits per month. Bot commits excluded. Sep 2026 is partial (through the 16th).
+Clean GitHub contributions per month. Bot commits excluded. Sep 2026 is partial (through the 28th).
 
-| Month | Commits | Month | Commits |
+| Month | Contributions | Month | Contributions |
 |---|---|---|---|
 | 2025-01 | 0 | 2026-01 | 34 |
 | 2025-02 | 0 | 2026-02 | 230 |
@@ -38,26 +38,26 @@ Clean commits per month. Bot commits excluded. Sep 2026 is partial (through the 
 | 2025-06 | 0 | 2026-06 | 1,177 |
 | 2025-07 | 46 | 2026-07 | 1,338 |
 | 2025-08 | 1 | 2026-08 | 1,142 |
-| 2025-09 | 31 | 2026-09 | 708 (partial) |
+| 2025-09 | 31 | 2026-09 | 1,029 (partial) |
 | 2025-10 | 6 | | |
 | 2025-11 | 10 | | |
 | 2025-12 | 8 | | |
 
-**Feb 2026 — the method changed, not the hours.** This is where I stopped typing code as the primary act and started running agents against a written doctrine: fan work out to subagents, route each task to a model chosen on difficulty, require one independent review before anything merges. Commits went from 34 in January to 230 in February and have not returned to the old baseline since.
+**Feb 2026 — the method changed, not the hours.** This is where I stopped typing code as the primary act and started running agents against a written doctrine: fan work out to subagents, route each task to a model chosen on difficulty, require one independent review before anything merges. Contributions went from 34 in January to 230 in February and have not returned to the old baseline since.
 
 ## Model mix
 
-Tokens by model, burn-log snapshot 2026-07-17.
+Tokens by model, burn-log snapshot 2026-09-28.
 
 | Model | Tokens |
 |---|---|
-| Opus 4.8 | 2,510,416,238 |
-| Fable 5 | 1,062,481,134 |
-| Sonnet 5 | 911,112,836 |
-| GPT-5.5 | 660,827,177 |
-| GPT-5.6 Sol | 434,067,143 |
+| GPT-5.6 Sol | 17,982,064,924 |
+| GPT-6 Astra | 2,862,660,877 |
+| Opus 4.8 | 2,374,383,304 |
+| Sonnet 5 | 1,890,829,000 |
+| Opus 5.5 | 1,348,888,042 |
 
-Top 5 models by tokens, from the burn log at [georgenijo.com/burn](https://georgenijo.com/burn.html). Opus 4.8 is ~40% of the total — the hard reasoning goes to the expensive model, the mechanical work does not.
+Top 5 models by tokens, from the burn log at [georgenijo.com/burn](https://georgenijo.com/burn.html). Sol, the lead implementation model, carries ~58% of every token. GPT-6 Astra, which takes the hardest reasoning and every independent review, comes next at ~9%, then Opus 4.8 at ~8%. Volume goes to the implementation tier; the expensive models are reserved for judgment.
 
 ## The factory
 
@@ -94,7 +94,7 @@ This page is the proof: it is served from the gateway, and the token counts abov
 - **CPA — personal AI gateway** — Every model provider behind one Anthropic-compatible API. A reverse proxy fronting Anthropic Opus/Sonnet/Fable and OpenAI GPT-6 Astra and GPT-5.6 Sol/Terra/Luna behind a single endpoint, with per-client metering, quotas, and dashboards. Python, ~19k LOC, 77 commits plus six extension modules. Private.
 - **Burn log** — Tracks what the agents cost against what they shipped. A collector walks usage data and git history across every repo and machine, aggregates through Fleet, and publishes a daily record correlating tokens spent to commits landed. Python pipeline + static page, 6.2B tokens recorded. Public — [georgenijo.com/burn](https://georgenijo.com/burn.html).
 - **ssh-tui** — `ssh georgenijo.com` returns an interactive terminal, not a banner. A Wish + Bubbletea server on an Oracle Cloud box serving a full TUI mirror of this site on port 22. Go, ~2,000 LOC. Public endpoint.
-- **Claude Code skills and hooks** — The agent loop itself, customized until it fits the doctrine. 77 personal skills covering repo cleanup, TDD, blast-radius analysis, decision logging, artifact publishing, and video generation, plus 5 hook events. Markdown, Python, shell. Private.
+- **Claude Code skills and hooks** — The agent loop itself, customized until it fits the doctrine. 38 personal skills covering repo cleanup, TDD, blast-radius analysis, decision logging, artifact publishing, and video generation, plus 5 hook events. Markdown, Python, shell. Private.
 - **agentos** — Collapses eleven scattered repos into one self-hosted agent OS. A single backend, one secrets ledger, and a `just`-driven dev loop unifying Claude Code, the Cursor bridge, Discord bots, Google and GitHub glue, the mesh nodes, and Home Assistant. Everything external is mocked in tests. Python, ~96k lines changed in 12 months, 196 commits. Private.
 - **agent-mesh** — A shared nervous system for agents that would otherwise collide. A local-first coordination fabric letting Claude Code, Codex CLI, Cursor CLI, and Aider discover each other, announce what they are touching, and read a shared blackboard of decisions. Go stdlib only. ~58k lines changed in 12 months, 209 commits. Public — [github.com/georgenijo/agent-mesh](https://github.com/georgenijo/agent-mesh).
 - **usher** — The MCP broker, one front desk every agent talks to. Routes, trims, arbitrates, gates, and audits MCP traffic so agents face a single well-behaved surface. Context trimming is the load-bearing feature. Go. Public — [github.com/georgenijo/usher](https://github.com/georgenijo/usher).
@@ -114,19 +114,19 @@ This page is the proof: it is served from the gateway, and the token counts abov
 
 | Date | Headline | Detail |
 |---|---|---|
-| 2025-03 | First commit on St. Basil's | 27 commits in March, then nothing for three months. The old baseline: real projects, sporadic output. |
-| 2025-07 – 2025-12 | Sparse and manual | 46, 1, 31, 6, 10, 8 commits across six months. Two repos received any work at all in the whole of 2025. |
-| 2026-01 | murmur-app starts | 34 commits. Still hand-written, still one project at a time. |
-| 2026-02 | The inflection | 230 commits. Agent workflows adopted as a standing method: written working agreements, subagent fan-out, explicit model routing. |
-| 2026-03 | Tooling for agents begins | aperture starts. 578 commits. |
-| 2026-04 | Control planes | hangar and whoop-dashboard begin. 460 commits, and the PR count starts climbing toward four figures. |
-| 2026-06 | Peak infrastructure month | agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks. 1,177 commits. |
-| 2026-07 | The factory measures itself | This site and the burn log go up; Fleet starts auto-publishing health snapshots to it. 1,338 commits, the highest month so far. |
-| 2026-09 | Steady state | murmur-app reaches v0.50.0 on the 14th. 708 commits through the 16th, with half the month left. |
+| 2025-03 | First commit on St. Basil's | 27 contributions in March, then nothing for three months. The old baseline: real projects, sporadic output. |
+| 2025-07 – 2025-12 | Sparse and manual | 46, 1, 31, 6, 10, 8 contributions across six months. Two repos received any work at all in the whole of 2025. |
+| 2026-01 | murmur-app starts | 34 contributions. Still hand-written, still one project at a time. |
+| 2026-02 | The inflection | 230 contributions. Agent workflows adopted as a standing method: written working agreements, subagent fan-out, explicit model routing. |
+| 2026-03 | Tooling for agents begins | aperture starts. 578 contributions. |
+| 2026-04 | Control planes | hangar and whoop-dashboard begin. 460 contributions, and the PR count starts climbing toward four figures. |
+| 2026-06 | Peak infrastructure month | agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks. 1,177 contributions. |
+| 2026-07 | The factory measures itself | This site and the burn log go up; Fleet starts auto-publishing health snapshots to it. 1,338 contributions, the highest month so far. |
+| 2026-09 | Steady state | murmur-app reaches v0.50.0 on the 14th. 1,029 contributions through the 28th — already the fourth-busiest month. |
 
 ## How to read these numbers
 
-Commit counts exclude 7,609 automated Fleet health-snapshot commits, which would otherwise inflate 2026 by more than double. Lines changed is a floor: it covers only the 14 repositories cloned locally, not all 70 on GitHub. September 2026 is partial, through the 16th. Pull request counts are PRs opened, not merged. The token total is a burn-log snapshot dated 2026-07-17 and depends on which machines' usage logs were aggregated, so treat it as a lower bound. murmur-app has 101 GitHub releases (103 git tags); the two counts differ because not every tag has a release attached.
+Monthly counts are GitHub contributions: commits, pull requests, reviews, and issues on the GitHub contribution graph, private repositories included. They exclude 8,930 automated Fleet health-snapshot commits, which would otherwise inflate 2026 by more than double. Lines changed is a floor: it covers only the 14 repositories cloned locally, not all 75 on GitHub. September 2026 is partial, through the 28th. Pull request counts are PRs opened, not merged. The token total is a burn-log snapshot dated 2026-09-28 aggregated across all four Fleet machines; one of them keeps only 30 days of Claude transcripts, so treat it as a lower bound. murmur-app has 101 GitHub releases (103 git tags); the two counts differ because not every tag has a release attached.
 
 ## Where to look next
 
