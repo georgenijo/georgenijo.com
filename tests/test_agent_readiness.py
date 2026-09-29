@@ -43,17 +43,19 @@ def visible_text(html):
 def test_homepage_has_static_nojs_content():
     html = (ROOT / "index.html").read_text()
     assert "<h1" in html, "homepage must have an H1 in raw HTML"
-    # The static section must exist in raw markup...
-    assert 'id="static-content"' in html
-    static_start = html.index('id="static-content"')
-    static_section = html[static_start : html.index("</main>", static_start)]
-    # ...with 500+ chars of real text...
-    assert len(visible_text(static_section)) >= 500
-    # ...that JS removes on boot so the visual design is unchanged.
-    assert 'getElementById("static-content")' in html
-    assert "staticContent.remove()" in html
-    # App must be visible without JS (no `hidden` in raw markup).
-    assert '<div class="app" id="app">' in html
+    main = re.search(r'<main\b[^>]*>(.*?)</main>', html, re.S)
+    assert main, "homepage must have a main landmark"
+    assert len(visible_text(main.group(1))) >= 3000
+    # Core prose, figures, workflow rules and exact tables survive without JS.
+    for fragment in ["6,300", "1,105", "independent review", "paper dossier"]:
+        assert fragment in visible_text(html)
+    for table_id, rows in [("bars-table", 21), ("tokens-table", 5)]:
+        table = re.search(rf'<table id="{table_id}">(.*?)</table>', html, re.S)
+        assert table, f"missing static {table_id}"
+        assert table.group(1).count("<tr>") == rows + 1
+    assert '<main id="main">' in html
+    assert 'content="noindex"' not in html
+    assert (ROOT / "dossier.html").is_file()
 
 
 def test_robots_txt_allowlists_agent_user_agents():
@@ -161,11 +163,16 @@ def test_404_has_agent_recovery_body():
 
 def test_pages_workflow_deploys_agent_files():
     workflow = (ROOT / ".github/workflows/pages.yml").read_text()
-    for fragment in ["robots.txt", "llms.txt", "sitemap.xml", "*.md"]:
-        assert fragment in workflow, f"pages.yml does not deploy {fragment}"
-    # Preserve the existing release-contract fragments.
-    assert "lab-health.js _site/" in workflow
-    assert "cp -R data _site/" in workflow
+    # Explicit allowlists avoid publishing private drafts or source files.
+    copies = [line.strip().split() for line in workflow.splitlines()
+              if line.strip().startswith("cp ")]
+    published = {item for line in copies for item in line[1:-1] if item != "-R"}
+    expected = {"index.html", "dossier.html", "terminal.html", "robots.txt",
+                "llms.txt", "sitemap.xml", "lab-health.js", "data", "docs",
+                "about", "contact", "privacy", "index.md", "about.md",
+                "projects.md", "now.md", "contact.md", "burn.md"}
+    assert expected <= published, f"Pages omits: {expected - published}"
+    assert not any("*" in item for item in published), "keep explicit allowlist"
 
 
 def test_nginx_negotiation_config_follows_protocol():

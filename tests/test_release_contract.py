@@ -31,6 +31,7 @@ require(PAGES, "uses: actions/configure-pages@v5", "Pages configuration")
 require(PAGES, "uses: actions/upload-pages-artifact@v3", "Pages artifact")
 require(PAGES, "uses: actions/deploy-pages@v4", "Pages deployment")
 require(PAGES, "lab-health.js _site/", "Lab browser contract artifact")
-require(PAGES, "cp -R data _site/", "Lab snapshots artifact")
+require(PAGES, "cp -R data docs about contact privacy _site/", "public directories artifact")
+require(PAGES, "cp index.html dossier.html terminal.html", "homepage and archived dossier")
 
 print("release workflow contract tests passed")

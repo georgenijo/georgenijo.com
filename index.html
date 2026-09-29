@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>George Nijo</title>
+<title>George Nijo — the factory that builds the software</title>
 <meta name="description" content="George Nijo — software engineer in Boston who builds the factory that builds the software: agent-orchestrated delivery, model routing, and the tooling underneath it.">
 <link rel="canonical" href="https://georgenijo.com/">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="George Nijo">
-<meta property="og:description" content="Software engineer building infrastructure for AI agents — routers, brokers, control planes. 6,621 GitHub contributions and 1,128 pull requests across 18 repos so far in 2026.">
+<meta property="og:description" content="Software engineer building the factory that builds the software: agent orchestration, model routing, and verification.">
 <meta property="og:url" content="https://georgenijo.com/">
 <meta property="og:type" content="profile">
 <meta property="og:image" content="https://georgenijo.com/og.png">
@@ -41,1142 +41,1302 @@
   "email": "mailto:george.nijo8@gmail.com"
 }
 </script>
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ece6d8">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171310">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f2e8'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23b5351c' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0f0c0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f0c0a'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='bold' fill='%23e8674b' text-anchor='middle'%3E%E2%80%BA_%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script>document.documentElement.className += " js";</script>
+
 <style>
-/* ── georgenijo.com · rendered document ──────────────────────────
-   Palette continuity with PAPER v2: cream paper, ink, brick red.
-   Single file, inline CSS + vanilla JS, no build step.           */
+/* ── georgenijo.com · night shift ────────────────────────────────
+   Same ink as the paper dossier (brick red, Instrument Serif, JetBrains
+   Mono), turned down to the lights-off factory floor. Single file, inline
+   CSS + vanilla JS, no build step, no dependencies.
+   Data colors were run through the dataviz palette validator against the
+   dark surface: Claude #e8674b / GPT #3a8fd6 pass every check.          */
 
 :root{
-  --desk:#ece6d8;
-  --paper:#fbf8f1;
-  --fg:#1c1710;
-  --muted:#5d5342;
-  --rule:#ddd4c2;
-  --grid:#e5ddcb;
-  --accent:#b5351c;
-  --accent-wash:rgba(181,53,28,.10);
-  --shadow:0 1px 2px rgba(40,30,15,.10), 0 18px 46px -18px rgba(40,30,15,.30);
-  --serif:"Iowan Old Style","Charter","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --bg:#0f0c0a;
+  --bg2:#15110e;
+  --panel:#1b1612;
+  --panel2:#221c17;
+  --line:#2f2721;
+  --line2:#40362d;
+  --fg:#efe7da;
+  --muted:#a89c8c;
+  --dim:#a09483;
+  --claude:#e8674b;
+  --claude-soft:#f2a089;
+  --gpt:#3a8fd6;
+  --gold:#e9b872;
+  --serif:"Iowan Old Style","Charter","Palatino Linotype",Palatino,Georgia,serif;
   --display:"Instrument Serif",var(--serif);
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  --wrap:1180px;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --desk:#171310;
-    --paper:#1f1a16;
-    --fg:#ece5d9;
-    --muted:#a99d8e;
-    --rule:#352d25;
-    --grid:#2e2721;
-    --accent:#e06a50;
-    --accent-wash:rgba(224,106,80,.13);
-    --shadow:0 1px 2px rgba(0,0,0,.5), 0 20px 50px -20px rgba(0,0,0,.7);
-  }
-}
-
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
-  margin:0;
-  background:var(--desk);
-  color:var(--fg);
-  font-family:var(--serif);
-  font-size:17px;
-  line-height:1.62;
-  font-kerning:normal;
-  text-rendering:optimizeLegibility;
-  hanging-punctuation:first last;
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--serif);font-size:17px;line-height:1.6;
+  text-rendering:optimizeLegibility;overflow-x:hidden;
 }
-::selection{background:var(--accent-wash)}
-
-a{color:inherit;text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:1px}
-a:hover{color:var(--accent)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-
-/* ── the ruler ─────────────────────────────────────────────── */
-#ruler{
-  position:fixed;top:0;left:0;height:3px;width:100%;
-  transform:scaleX(0);transform-origin:0 50%;
-  background:var(--accent);z-index:50;
-}
-
-/* ── desk + sheet ──────────────────────────────────────────── */
-.desk{padding:clamp(18px,4vw,56px) clamp(10px,3vw,32px) 64px}
-.sheet{
-  position:relative;
-  max-width:880px;margin:0 auto;
-  background:var(--paper);
-  box-shadow:var(--shadow);
-  padding:clamp(28px,5vw,64px) clamp(20px,5vw,60px) clamp(36px,5vw,56px);
-  border:1px solid var(--rule);
-}
-/* paper grain */
-.sheet::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
-  opacity:.055;mix-blend-mode:multiply;
-}
-@media (prefers-color-scheme: dark){.sheet::before{mix-blend-mode:screen;opacity:.035}}
-.sheet > *{position:relative}
-
-/* ── typography ────────────────────────────────────────────── */
-h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.01em;margin:0}
-h1{font-size:clamp(3.1rem,10vw,5.6rem);line-height:.92;letter-spacing:-.025em}
-h2{font-size:clamp(1.9rem,4.6vw,2.7rem);line-height:1.05}
-h3{font-size:1.16rem;line-height:1.3}
+::selection{background:rgba(232,103,75,.3)}
+a{color:inherit;text-decoration:none;border-bottom:1px solid var(--claude)}
+a:hover{color:var(--claude-soft)}
+:focus-visible{outline:2px solid var(--claude);outline-offset:3px;border-radius:3px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:-.01em}
 p{margin:0 0 1em}
-.label{
-  font-family:var(--mono);font-size:.66rem;font-weight:500;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
-}
-.muted{color:var(--muted)}
 .mono{font-family:var(--mono)}
-.num{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1}
-.vh{
-  position:absolute!important;width:1px;height:1px;overflow:hidden;
-  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+.num{font-variant-numeric:tabular-nums lining-nums}
+.label{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+svg.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* film grain over everything */
+body::after{
+  content:"";position:fixed;inset:-50%;pointer-events:none;z-index:90;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1.2s steps(6) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}
+  60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}
 }
 
-/* section frame */
-section{margin-top:clamp(40px,7vw,72px)}
-.sechead{
-  display:flex;align-items:baseline;gap:14px;
-  border-top:1px solid var(--fg);padding-top:10px;margin-bottom:22px;
+/* ── nav ─────────────────────────────────────────────────────── */
+#bar{position:fixed;top:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,var(--claude),var(--gold),var(--gpt));transform:scaleX(0);transform-origin:0 50%;z-index:80}
+nav.top{
+  position:fixed;top:0;left:0;right:0;z-index:70;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(18px,4vw,40px);
+  background:rgba(15,12,10,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(47,39,33,.6);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;
 }
-.sechead .n{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.14em}
-.deck{max-width:62ch;color:var(--muted);font-size:1.02rem;margin:-6px 0 26px}
+nav.top .mark{border:0;display:flex;align-items:center;gap:10px;color:var(--fg)}
+nav.top .mark b{color:var(--claude);font-weight:700}
+nav.top ul{list-style:none;display:flex;gap:4px;margin:0;padding:0}
+nav.top ul a{border:0;color:var(--muted);padding:6px 10px;border-radius:99px;transition:color .2s,background .2s}
+nav.top ul a:hover,nav.top ul a.on{color:var(--fg);background:rgba(239,231,218,.07)}
+@media (max-width:760px){nav.top ul{display:none}}
 
-/* ── masthead ──────────────────────────────────────────────── */
-.masthead{border-bottom:1px solid var(--fg);padding-bottom:26px}
-.topline{
-  display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;
-  justify-content:space-between;margin-bottom:22px;
+/* ── hero ────────────────────────────────────────────────────── */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+#flow{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(120% 70% at 0% 100%,rgba(15,12,10,.96) 25%,rgba(15,12,10,.55) 60%,rgba(15,12,10,0) 85%),
+    linear-gradient(0deg,var(--bg) 0%,rgba(15,12,10,0) 30%);
 }
-.btn{
-  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
-  background:none;color:var(--fg);border:1px solid var(--rule);
-  padding:7px 13px;cursor:pointer;border-radius:2px;
+.hero .wrap{width:100%;padding-bottom:clamp(40px,8vh,90px);padding-top:120px}
+.hero h1{
+  font-size:clamp(3rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;max-width:12ch;
 }
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.titleline{
-  font-family:var(--mono);font-size:.82rem;color:var(--muted);
-  margin:16px 0 18px;letter-spacing:.01em;
+.hero h1 em{color:var(--claude);font-style:italic}
+.hero .who{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.hero .who .pulse{width:8px;height:8px;border-radius:50%;background:var(--claude);box-shadow:0 0 0 0 rgba(232,103,75,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,103,75,.55)}70%{box-shadow:0 0 0 12px rgba(232,103,75,0)}100%{box-shadow:0 0 0 0 rgba(232,103,75,0)}}
+.hero .lede{max-width:58ch;font-size:clamp(1.02rem,1.9vw,1.2rem);color:#d8cfc1;margin:26px 0 32px}
+.hero .lede b{font-weight:400;color:var(--fg);background:linear-gradient(transparent 60%,rgba(232,103,75,.3) 60%)}
+.strip{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line2);max-width:880px}
+.strip > div{flex:1 1 150px;padding:14px 18px 4px 0}
+.strip .v{font-family:var(--display);font-size:clamp(2rem,4.2vw,3rem);line-height:1;display:block}
+.strip .v small{font-size:.5em;color:var(--claude);margin-left:2px}
+.strip .l{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.flowtags{position:absolute;inset:0;pointer-events:none;z-index:-1}
+@media (max-width:900px){.flowtags{display:none}}
+.flowtags span{
+  position:absolute;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;transform:translateX(-50%);
 }
-.titleline strong{color:var(--fg);font-weight:500}
-.lede{
-  font-size:clamp(1.06rem,2.2vw,1.24rem);max-width:66ch;
-  margin:0 0 24px;
+.flowtags span::before{content:"";display:block;width:1px;height:14px;background:var(--line2);margin:0 auto 6px}
+.ticker{
+  position:absolute;right:clamp(18px,4vw,40px);top:96px;z-index:1;
+  font-family:var(--mono);font-size:.7rem;line-height:1.75;color:var(--muted);
+  background:rgba(21,17,14,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border:1px solid var(--line);border-radius:8px;padding:12px 14px;width:300px;
 }
-.lede .hl{
-  background:linear-gradient(transparent 62%,var(--accent-wash) 62%);
-}
-.contact{
-  list-style:none;display:flex;flex-wrap:wrap;gap:6px 0;
-  padding:0;margin:0;font-family:var(--mono);font-size:.8rem;
-}
-.contact li{display:flex;align-items:center}
-.contact li + li::before{content:"·";color:var(--muted);margin:0 10px}
-.contact a{border-bottom-color:var(--rule)}
-.contact a:hover{border-bottom-color:var(--accent)}
-#sshcopy{
-  font:inherit;background:none;border:0;padding:0;cursor:copy;
-  color:var(--accent);border-bottom:1px dotted var(--accent);
-}
-#sshcopy .hint{font-size:.72em;letter-spacing:.1em;color:var(--muted);margin-left:7px}
+.ticker .hd{display:flex;justify-content:space-between;margin-bottom:6px;color:var(--dim);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase}
+.ticker .hd i{font-style:normal;color:var(--claude)}
+.ticker ol{list-style:none;margin:0;padding:0;height:7em;overflow:hidden}
+.ticker li{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:tick-in .35s ease}
+.ticker li .k{color:var(--fg)}
+.ticker li .c{color:var(--claude-soft)}
+.ticker li .g{color:#8cbcea}
+.ticker li .ok{color:var(--gold)}
+@keyframes tick-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:900px){.ticker{display:none}}
+.scrollcue{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px}
+.scrollcue::after{content:"";width:1px;height:26px;background:linear-gradient(var(--claude),transparent);animation:drip 1.8s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
-/* ── stat tiles ────────────────────────────────────────────── */
-.stats{
-  display:grid;gap:1px;background:var(--rule);
-  border:1px solid var(--rule);
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,196px),1fr));
-}
-.tile{background:var(--paper);padding:16px 16px 15px}
-.tile .v{
-  font-family:var(--display);font-size:clamp(2rem,4.4vw,2.65rem);
-  line-height:1.05;display:block;letter-spacing:-.015em;
-}
-.tile .v .arrow{color:var(--accent);font-size:.72em;padding:0 .12em}
-.tile .l{display:block;margin:6px 0 7px}
-.tile .f{font-size:.72rem;line-height:1.45;color:var(--muted);font-family:var(--mono)}
+/* ── marquee ─────────────────────────────────────────────────── */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding:14px 0;background:var(--bg2);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee .track{display:flex;gap:44px;width:max-content;animation:marq 48s linear infinite}
+.marquee span{font-family:var(--display);font-size:1.6rem;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:44px}
+.marquee span::after{content:"✦";font-size:.7rem;color:var(--claude)}
+@keyframes marq{to{transform:translateX(-50%)}}
 
-/* ── charts ────────────────────────────────────────────────── */
-figure{margin:0}
-figcaption{font-size:.84rem;color:var(--muted);margin-top:12px;max-width:70ch}
-.chartbox{border:1px solid var(--rule);padding:18px 14px 12px;background:var(--paper)}
-.charttitle{font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.02em;margin:0 0 3px;padding:0 6px}
-.chartsub{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin:0 0 14px;padding:0 6px}
-.chartscroll{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
-svg.chart{display:block;width:100%;min-width:600px;height:auto;overflow:visible}
-.ax{font-family:var(--mono);font-size:10px;fill:var(--muted)}
-.axv{font-family:var(--mono);font-size:10px;fill:var(--muted);font-variant-numeric:tabular-nums}
-.gridline{stroke:var(--grid);stroke-width:1}
-.baseline{stroke:var(--rule);stroke-width:1}
-.series{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.wash{fill:var(--accent-wash)}
-.dot{fill:var(--accent);stroke:var(--paper);stroke-width:2}
-.dot-open{fill:var(--paper);stroke:var(--accent);stroke-width:2}
-.dlabel{font-family:var(--mono);font-size:10.5px;font-weight:700;fill:var(--fg);font-variant-numeric:tabular-nums}
-.dnote{font-family:var(--mono);font-size:9.5px;fill:var(--muted)}
-.inflect{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 3;opacity:.75}
-.hit{fill:transparent;cursor:crosshair}
-/* The crosshair and the follow dot are painted under the cursor; without this
-   they swallow the pointer and the hit rect never sees mouseleave. */
-.crosshair,.hoverdot{pointer-events:none}
-.crosshair{stroke:var(--fg);stroke-width:1;opacity:.28}
-.bar{fill:var(--accent)}
-.barlabel{font-family:var(--mono);font-size:11px;fill:var(--fg)}
-.barval{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--fg);font-variant-numeric:tabular-nums}
-#tip{
-  position:fixed;z-index:60;pointer-events:none;opacity:0;
-  background:var(--fg);color:var(--paper);
-  font-family:var(--mono);font-size:.7rem;line-height:1.45;
-  padding:6px 9px;border-radius:3px;transform:translate(-50%,-140%);
-  white-space:nowrap;transition:opacity .12s ease;
-}
-/* exact values, reachable by keyboard and readable by sighted users */
-.dtable{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:12px}
-.dtable > summary{
-  cursor:pointer;list-style:none;display:inline-block;
-  letter-spacing:.1em;text-transform:uppercase;font-size:.66rem;
-  border-bottom:1px dotted var(--rule);padding-bottom:2px;
-}
-.dtable > summary::-webkit-details-marker{display:none}
-.dtable > summary::before{content:"▸ ";color:var(--accent)}
-.dtable[open] > summary::before{content:"▾ "}
-.dtable > summary:hover{color:var(--accent);border-bottom-color:var(--accent)}
-.dtable table{border-collapse:collapse;margin-top:10px;font-variant-numeric:tabular-nums}
-.dtable caption{text-align:left;padding-bottom:6px;max-width:64ch;line-height:1.5}
-.dtable th,.dtable td{
-  border-bottom:1px solid var(--rule);padding:3px 16px 3px 0;
-  text-align:left;font-weight:400;white-space:nowrap;
-}
-.dtable thead th{color:var(--fg)}
+/* ── sections ────────────────────────────────────────────────── */
+section.s{padding:clamp(80px,12vw,150px) 0 0;position:relative}
+.shead{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;align-items:end;margin-bottom:clamp(28px,4vw,48px)}
+.shead .n{font-family:var(--mono);font-size:.74rem;color:var(--claude);letter-spacing:.16em;grid-row:span 2;align-self:start;padding-top:.9em}
+.shead h2{font-size:clamp(2.3rem,6vw,4.6rem);line-height:.95;letter-spacing:-.02em}
+.shead h2 em{font-style:italic;color:var(--claude)}
+.shead p{grid-column:2;color:var(--muted);max-width:60ch;margin:14px 0 0;font-size:1.04rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}
+.panel.pad{padding:clamp(18px,3vw,30px)}
+.ptitle{font-family:var(--mono);font-size:.76rem;font-weight:700;margin:0 0 3px}
+.psub{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:0 0 18px}
 
-.note{
-  border-left:2px solid var(--accent);padding:2px 0 2px 16px;
-  margin:26px 0 0;max-width:68ch;
+.js .rv{opacity:0;transform:translateY(24px)}
+.js .rv.in{opacity:1;transform:none;transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+
+/* ── 01 inflection ───────────────────────────────────────────── */
+.inflect{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px}
+@media (max-width:900px){.inflect{grid-template-columns:1fr}}
+.chart-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+#bars{display:block;width:100%;min-width:900px;height:auto;overflow:visible}
+#bars .ax{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+#bars .grid{stroke:var(--line);stroke-width:1}
+#bars .base{stroke:var(--line2);stroke-width:1}
+#bars .b{transition:opacity .15s}
+#bars .b.pre{fill:#7d7163}
+#bars .b.post{fill:var(--claude)}
+#bars .b.part{fill:url(#hatch)}
+#bars.hovering .b{opacity:.35}
+#bars.hovering .b.hot{opacity:1}
+#bars .val{font-family:var(--mono);font-size:10.5px;font-weight:700;fill:var(--fg)}
+#bars .era{font-family:var(--mono);font-size:10px;letter-spacing:.14em;fill:var(--muted)}
+#bars .cut{stroke:var(--gold);stroke-dasharray:3 4;stroke-width:1.2}
+#bars .cutl{font-family:var(--mono);font-size:10px;fill:var(--gold)}
+#bars .hit{fill:transparent;cursor:crosshair}
+.js #bars .b{transform:scaleY(0);transform-box:fill-box;transform-origin:50% 100%}
+.js .in #bars .b{transform:none;transition:transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s),opacity .15s}
+.rate{display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.rate .big{font-family:var(--display);font-size:clamp(5rem,11vw,8.4rem);line-height:.8;color:var(--fg)}
+.rate .big small{font-size:.45em;color:var(--claude)}
+.rate .vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rate .vs div{border-top:1px solid var(--line2);padding-top:10px}
+.rate .vs b{display:block;font-family:var(--display);font-weight:400;font-size:2rem;line-height:1}
+.rate .vs span{font-family:var(--mono);font-size:.64rem;color:var(--muted);letter-spacing:.08em}
+.rate .gauge{height:10px;border-radius:99px;background:var(--line);overflow:hidden;display:flex;gap:2px}
+.rate .gauge i{display:block;height:100%;border-radius:99px}
+.fine{font-family:var(--mono);font-size:.66rem;line-height:1.55;color:var(--dim)}
+details.dt{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:14px}
+details.dt summary{cursor:pointer;list-style:none;display:inline-block;letter-spacing:.12em;text-transform:uppercase;font-size:.62rem}
+details.dt summary::-webkit-details-marker{display:none}
+details.dt summary::before{content:"▸ ";color:var(--claude)}
+details.dt[open] summary::before{content:"▾ "}
+details.dt table{border-collapse:collapse;margin-top:10px}
+details.dt td,details.dt th{padding:2px 18px 2px 0;border-bottom:1px solid var(--line);font-weight:400;text-align:left}
+
+/* ── 02 dot wall ─────────────────────────────────────────────── */
+.wall{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.wall{grid-template-columns:1fr}}
+.wall .side h3{font-size:2.2rem;line-height:1}
+.wall .side .yr{margin-top:22px;padding-top:12px;border-top:1px solid var(--line2)}
+.wall .side .yr b{font-family:var(--display);font-weight:400;font-size:3rem;line-height:1;display:block}
+.wall .side .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:1px}
+#dots{display:block;width:100%;cursor:crosshair}
+
+/* ── 03 factory pipeline ─────────────────────────────────────── */
+#pipe{display:block;width:100%;height:auto}
+#pipe .edge{fill:none;stroke:var(--line2);stroke-width:1.5}
+#pipe .edge.on{stroke:var(--gold);stroke-width:2}
+#pipe .node rect{fill:var(--panel2);stroke:var(--line2);stroke-width:1.2;transition:stroke .3s,fill .3s}
+#pipe .node .nl{font-family:var(--mono);font-size:12.5px;font-weight:700;fill:var(--fg)}
+#pipe .node .ns{font-family:var(--mono);font-size:9.5px;fill:var(--muted)}
+#pipe .node .ni{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+#pipe .node.on rect{stroke:var(--gold);fill:#2a2119}
+#pipe .node.on .ni{stroke:var(--gold)}
+#pipe .node.flash rect{stroke:var(--fg)}
+#pipe .pk{pointer-events:none}
+.pipelegend{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:14px}
+.pipelegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.pipelegend i.ring{background:transparent;border:2px solid var(--gpt)}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+@media (max-width:900px){.rules{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.rules{grid-template-columns:1fr}}
+.rule{
+  text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;
+  transition:border-color .3s,background .3s,transform .3s;position:relative;overflow:hidden;
 }
-.note b{font-weight:400;font-family:var(--display);font-size:1.18rem}
+.rule:hover{transform:translateY(-2px)}
+.rule .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--muted)}
+.rule .top .k{font-family:var(--mono);font-size:.7rem;color:var(--claude);letter-spacing:.14em}
+.rule h3{font-size:1.28rem;line-height:1.2;margin-bottom:6px}
+.rule p{color:var(--muted);font-size:.9rem;line-height:1.5;margin:0}
+.rule::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--gold)}
+.rule.on{border-color:#5a4632;background:#201913}
+.rule.on .top{color:var(--gold)}
+.rule.on::after{width:100%;transition:width var(--dur,3.2s) linear}
 
-/* ── doctrine ──────────────────────────────────────────────── */
-.rules{list-style:none;counter-reset:r;padding:0;margin:0;display:grid;gap:22px}
-.rules li{counter-increment:r;padding-left:52px;position:relative;max-width:70ch}
-.rules li::before{
-  content:counter(r,decimal-leading-zero);
-  position:absolute;left:0;top:2px;
-  font-family:var(--mono);font-size:.78rem;color:var(--accent);
-  border-top:1px solid var(--accent);padding-top:6px;width:34px;
+/* ── 04 routing ──────────────────────────────────────────────── */
+.routing{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px}
+@media (max-width:900px){.routing{grid-template-columns:1fr}}
+.ladder{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);gap:2px;border-radius:10px;overflow:hidden;background:var(--line)}
+.ladder [role="row"]{display:contents}
+.ladder .h,.ladder .task,.ladder .m{background:var(--panel2);padding:12px;min-width:0;min-height:58px;display:flex;flex-direction:column;justify-content:center;overflow-wrap:anywhere}
+@media(max-width:420px){.ladder .h,.ladder .task{padding:10px 7px}.ladder .m{padding-right:5px}}
+.ladder .h{background:var(--panel);font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);min-height:0;padding:10px 12px}
+.ladder .h i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.ladder .task b{font-family:var(--display);font-weight:400;font-size:1.12rem;line-height:1.15}
+.ladder .task span{font-family:var(--mono);font-size:.62rem;color:var(--muted)}
+.ladder .m{font-family:var(--mono);font-size:.8rem;font-weight:700;position:relative;padding-left:24px}
+.ladder .m::before{content:"";position:absolute;left:10px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%}
+.ladder .m.cl::before{background:var(--claude)}
+.ladder .m.gp::before{background:var(--gpt)}
+.ladder .m small{display:block;font-weight:400;font-size:.62rem;color:var(--muted)}
+.ladder .tier{display:flex;gap:3px;margin-top:6px}
+.ladder .tier i{width:14px;height:4px;border-radius:2px;background:var(--line2)}
+.ladder .tier i.f{background:var(--gold)}
+.tok .row{display:grid;grid-template-columns:96px minmax(0,1fr) 56px;align-items:center;gap:10px;margin:0 0 12px;font-family:var(--mono);font-size:.74rem}
+.tok .row .nm{color:var(--fg);text-align:right}
+.tok .row .tr{height:16px;position:relative}
+.tok .row .fill{position:absolute;inset:0 auto 0 0;border-radius:0 4px 4px 0;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.tok .row .fill.cl{background:var(--claude)}
+.tok .row .fill.gp{background:var(--gpt)}
+.tok .row .vl{font-weight:700}
+.legend{display:flex;gap:18px;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin:0 0 16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.split{display:flex;gap:2px;height:30px;margin-top:22px}
+.split div{border-radius:4px;display:flex;align-items:center;padding:0 10px;font-family:var(--mono);font-size:.7rem;color:#120e0b;font-weight:700;width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1) .3s;white-space:nowrap;overflow:hidden}
+.split .cl{background:var(--claude)}
+.split .gp{background:var(--gpt)}
+.tok .tip{cursor:default}
+
+/* ── 05 numbers ──────────────────────────────────────────────── */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:960px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.tiles{grid-template-columns:1fr}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;position:relative;overflow:hidden;transition:border-color .3s}
+.tile:hover{border-color:var(--line2)}
+.tile .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:rgba(232,103,75,.1);color:var(--claude);margin-bottom:18px}
+.tile .v{font-family:var(--display);font-size:clamp(2.4rem,4.4vw,3.2rem);line-height:1;display:block;letter-spacing:-.02em}
+.tile .v .ar{color:var(--claude);font-size:.6em;padding:0 .1em}
+.tile .l{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);margin:10px 0 8px}
+.tile .f{display:block;font-family:var(--mono);font-size:.66rem;line-height:1.5;color:var(--muted)}
+.tile .glow{position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(rgba(232,103,75,.14),transparent 70%);pointer-events:none}
+
+/* ── 06 stack ────────────────────────────────────────────────── */
+.stackwrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:960px){.stackwrap{grid-template-columns:1fr}}
+.stage{height:640px;display:grid;place-items:center;position:sticky;top:76px;overflow:hidden}
+@media (max-width:960px){.stage{position:relative;top:0}}
+.stage::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(50% 45% at 50% 55%,rgba(232,103,75,.1),transparent 70%),
+  linear-gradient(var(--line) 1px,transparent 1px) 0 0/32px 32px,
+  linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/32px 32px;opacity:.55;
+  -webkit-mask-image:radial-gradient(closest-side,#000 40%,transparent);mask-image:radial-gradient(closest-side,#000 40%,transparent)}
+.iso{
+  --gap:80px;width:290px;height:290px;position:relative;transform-style:preserve-3d;
+  transform:translateY(120px) rotateX(58deg) rotateZ(-42deg);
+  animation:bob 9s ease-in-out infinite;
 }
-.rules h3{font-family:var(--display);font-size:1.3rem;margin-bottom:3px}
-.rules p{color:var(--muted);margin:0;font-size:.98rem}
-
-/* ── shop floor ────────────────────────────────────────────── */
-.nodes{list-style:none;padding:0;margin:0 0 28px;border:1px solid var(--rule)}
-.nodes li{display:grid;grid-template-columns:minmax(120px,168px) 1fr;gap:16px;
-  padding:13px 15px;border-bottom:1px solid var(--rule)}
-.nodes li:last-child{border-bottom:0}
-.nodes .r{font-family:var(--mono);font-size:.73rem;color:var(--accent);padding-top:3px}
-.nodes p{margin:0;color:var(--muted);font-size:.95rem}
-@media (max-width:560px){.nodes li{grid-template-columns:1fr;gap:5px}}
-.practices{list-style:none;padding:0;margin:0;display:grid;gap:21px}
-.practices li{max-width:70ch}
-.practices h3{font-family:var(--display);font-size:1.26rem;margin-bottom:3px}
-.practices p{color:var(--muted);margin:0;font-size:.98rem}
-
-/* ── cards ─────────────────────────────────────────────────── */
-.cards{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
-.card{background:var(--paper);padding:18px 18px 16px;transition:transform .18s ease,box-shadow .18s ease;min-width:0;overflow-wrap:anywhere}
-.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);z-index:2;position:relative}
-.card .tag{font-family:var(--mono);font-size:.72rem;color:var(--accent);margin:4px 0 9px;display:block}
-.card p{font-size:.93rem;color:var(--muted);margin:0 0 12px}
-.meta{
-  display:flex;flex-wrap:wrap;gap:4px 10px;font-family:var(--mono);
-  font-size:.68rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:9px;
-  overflow-wrap:anywhere;word-break:break-word;
+.stage:hover .iso,.stage.spread .iso{--gap:98px}
+@keyframes bob{0%,100%{transform:translateY(120px) rotateX(58deg) rotateZ(-42deg)}50%{transform:translateY(110px) rotateX(58deg) rotateZ(-38deg)}}
+.plate{
+  position:absolute;inset:0;border-radius:18px;
+  transform:translateZ(calc(var(--i) * var(--gap)));
+  transition:transform .7s cubic-bezier(.2,.8,.2,1),background .4s,border-color .4s,box-shadow .4s;
+  background:rgba(30,25,21,.97);border:1px solid var(--line2);
+  box-shadow:0 0 0 1px rgba(0,0,0,.3),-18px 18px 40px rgba(0,0,0,.45);
+  display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:8px;padding:26px;
 }
-.meta .st{color:var(--accent);overflow-wrap:anywhere}
-.meta a{overflow-wrap:anywhere}
-
-/* ── timeline ──────────────────────────────────────────────── */
-.rail{list-style:none;padding:0;margin:0;border-left:1px solid var(--rule)}
-.rail li{position:relative;padding:0 0 26px 26px}
-.rail li::before{
-  content:"";position:absolute;left:-4.5px;top:9px;width:8px;height:8px;
-  background:var(--accent);border-radius:50%;
-  box-shadow:0 0 0 3px var(--paper);
+.plate .pl{position:absolute;left:16px;top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.plate .chip{font-family:var(--mono);font-size:12px;padding:6px 10px;border-radius:7px;background:var(--bg2);border:1px solid var(--line2);color:var(--fg);display:flex;align-items:center;gap:6px}
+.plate .chip svg{width:14px;height:14px}
+.plate.on{transform:translateZ(calc(var(--i) * var(--gap) + 26px));border-color:var(--claude);background:rgba(58,30,22,.92);box-shadow:0 0 0 1px rgba(232,103,75,.4),0 0 60px rgba(232,103,75,.25),-18px 18px 40px rgba(0,0,0,.45)}
+.plate.on .pl{color:var(--claude-soft)}
+.plate.dim{opacity:.72}
+.plate.above{transform:translateZ(calc(var(--i) * var(--gap) + 170px));opacity:.28}
+.plate.dim .chip{opacity:.6}
+.layers{display:flex;flex-direction:column;gap:6px}
+.layer{
+  font:inherit;color:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 14px;transition:border-color .25s,background .25s;
 }
-.rail .d{font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.08em}
-.rail .h{font-family:var(--display);font-size:1.22rem;line-height:1.25;display:block;margin:1px 0 2px}
-.rail p{font-size:.95rem;color:var(--muted);margin:0;max-width:66ch}
+.layer .ix{font-family:var(--mono);font-size:.7rem;color:var(--dim)}
+.layer b{font-family:var(--display);font-weight:400;font-size:1.25rem;display:block;line-height:1.15}
+.layer span.s{font-family:var(--mono);font-size:.64rem;color:var(--muted)}
+.layer .cnt{font-family:var(--mono);font-size:.64rem;color:var(--muted);border:1px solid var(--line2);border-radius:99px;padding:2px 8px}
+.layer.on{border-color:#6a3a2c;background:#221712}
+.layer.on .ix{color:var(--claude)}
+.detail{margin-top:10px;display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.tool{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;animation:tick-in .4s ease both}
+.tool .hd{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.tool .hd .ib{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:rgba(232,103,75,.1);color:var(--claude)}
+.tool h3{font-size:1.2rem}
+.tool .tag{font-family:var(--mono);font-size:.66rem;color:var(--claude-soft);display:block;margin-bottom:6px}
+.tool p{font-size:.88rem;color:var(--muted);margin:0 0 8px;line-height:1.5}
+.tool .meta{font-family:var(--mono);font-size:.62rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:4px 12px}
+.tool .meta .st{color:var(--gold)}
+@media (max-width:560px){.stage{height:500px}.iso{width:210px;height:210px;--gap:60px}.stage:hover .iso,.stage.spread .iso{--gap:70px}.plate .chip{font-size:10px;padding:4px 7px}}
 
-/* ── footer ────────────────────────────────────────────────── */
-footer{margin-top:clamp(44px,7vw,72px);border-top:1px solid var(--fg);padding-top:18px}
-footer p{font-size:.95rem}
-.integrity{font-size:.78rem;line-height:1.6;color:var(--muted);max-width:76ch;margin:18px 0 0}
-.integrity b{color:var(--fg);font-weight:400;font-family:var(--mono);font-size:.94em}
-.colophon{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:20px;letter-spacing:.04em}
+/* ── 07 timeline ─────────────────────────────────────────────── */
+.tl{position:relative}
+.tlrail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 0 24px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;cursor:grab}
+.tlrail.drag{cursor:grabbing;scroll-snap-type:none}
+.tlrail::-webkit-scrollbar{height:6px}.tlrail::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px}
+.ev{flex:0 0 min(290px,78vw);scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;position:relative;user-select:none}
+.ev .d{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.1em;display:flex;align-items:center;gap:8px}
+.ev .d::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--claude);box-shadow:0 0 0 4px rgba(232,103,75,.16)}
+.ev.pre .d::before{background:#7d7163;box-shadow:0 0 0 4px rgba(125,113,99,.16)}
+.ev h3{font-size:1.5rem;line-height:1.1;margin:12px 0 8px}
+.ev p{font-size:.9rem;color:var(--muted);line-height:1.5;flex:1}
+.ev .meter{margin-top:12px}
+.ev .meter .t{height:6px;background:var(--line);border-radius:9px;overflow:hidden}
+.ev .meter .t i{display:block;height:100%;border-radius:9px;background:var(--claude);width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.ev.pre .meter .t i{background:#7d7163}
+.ev .meter span{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-top:6px}
+.ev .meter span b{color:var(--fg);font-weight:700}
+.tlhint{font-family:var(--mono);font-size:.64rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
 
-/* ── print-in animation (progressive enhancement) ──────────── */
-.js .reveal{opacity:0;transform:translateY(14px)}
-.js .reveal.in{opacity:1;transform:none;transition:opacity .62s ease,transform .62s cubic-bezier(.22,.61,.36,1)}
-.js .series{stroke-dasharray:var(--len,2600);stroke-dashoffset:var(--len,2600)}
-.js .in .series,.js .series.in{stroke-dashoffset:0;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)}
-.js .anno{opacity:0}
-.js .in .anno{opacity:1;transition:opacity .5s ease .9s}
-.js .barwrap{transform:scaleX(0);transform-box:view-box;transform-origin:152px 0}
-.js .in .barwrap{transform:none;transition:transform .9s cubic-bezier(.22,.61,.36,1)}
-.js .barwrap:nth-of-type(2){transition-delay:.06s}
-.js .barwrap:nth-of-type(3){transition-delay:.12s}
-.js .barwrap:nth-of-type(4){transition-delay:.18s}
-.js .barwrap:nth-of-type(5){transition-delay:.24s}
+/* ── footer ──────────────────────────────────────────────────── */
+footer{margin-top:clamp(90px,12vw,150px);border-top:1px solid var(--line);background:var(--bg2);padding:56px 0 40px}
+.cta h2{font-size:clamp(2.4rem,7vw,5.2rem);line-height:.95;letter-spacing:-.02em;max-width:14ch}
+.cta h2 em{color:var(--claude)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 40px}
+.links a,.links button{
+  font-family:var(--mono);font-size:.78rem;border:1px solid var(--line2);border-radius:99px;padding:9px 16px;
+  display:inline-flex;align-items:center;gap:8px;background:none;color:var(--fg);cursor:pointer;transition:border-color .2s,background .2s
+}
+.links a:hover,.links button:hover{border-color:var(--claude);background:rgba(232,103,75,.08);color:var(--fg)}
+.links button{color:var(--claude-soft)}
+.integrity{font-size:.8rem;line-height:1.65;color:var(--muted);max-width:80ch;border-left:2px solid var(--claude);padding-left:16px}
+.integrity b{color:var(--fg);font-weight:400;font-family:var(--mono);font-size:.92em}
+.colophon{font-family:var(--mono);font-size:.64rem;color:var(--dim);margin-top:28px;letter-spacing:.06em}
+
+#tip{position:fixed;z-index:95;pointer-events:none;opacity:0;background:var(--fg);color:var(--bg);font-family:var(--mono);font-size:.7rem;line-height:1.45;padding:6px 10px;border-radius:5px;transform:translate(-50%,calc(-100% - 12px));white-space:nowrap;transition:opacity .12s}
+#tip b{font-weight:700}
 
 @media (prefers-reduced-motion: reduce){
-  #ruler{display:none}
-  .js .reveal,.js .reveal.in{opacity:1;transform:none;transition:none}
-  .js .series,.js .anno,.js .barwrap{stroke-dashoffset:0;opacity:1;transform:none;transition:none}
-  .card:hover{transform:none}
-  *{animation:none!important;scroll-behavior:auto!important}
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .js .rv{opacity:1;transform:none}
+  .js #bars .b{transform:none}
 }
-
-@media (max-width:560px){
-  body{font-size:16px}
-  .contact{flex-direction:column}
-  .contact li + li::before{display:none}
-}
-
-/* ── narrow-screen chart variant ───────────────────────────────
-   On a phone the line chart must show the whole series without a
-   horizontal scroll, so the SVG is allowed to shrink to the container.
-   Shrinking it also shrinks the type, so the narrow variant uses much
-   larger viewBox font sizes (28 units ≈ 9px on a 390px screen) and
-   fewer x ticks. The wide/narrow label sets are swapped, not scaled. */
-.narrow-only{display:none}
-@media screen and (max-width:700px){
-  .chartfit{overflow:visible}
-  .chartfit svg.chart{min-width:0;width:100%;height:auto;margin-bottom:10px}
-  .chartfit .wide-only{display:none}
-  .chartfit .narrow-only{display:inline}
-  .chartfit .ax{font-size:28px}
-  .chartfit .axv{font-size:28px}
-  .chartfit .dlabel{font-size:30px}
-  .chartfit .dnote{font-size:28px}
-  .chartfit .series{stroke-width:4}
-  .chartfit .inflect{stroke-width:2}
-  .chartfit .dot,.chartfit .dot-open{r:9;stroke-width:4}
-  .chartbox{padding-left:10px;padding-right:10px}
-}
-
-/* ── print ─────────────────────────────────────────────────── */
-@media print{
-  @page{size:Letter portrait;margin:14mm}
-  :root{--desk:#fff;--paper:#fff;--fg:#000;--muted:#333;--rule:#bbb;--grid:#ddd;--accent:#9d2f18;--accent-wash:rgba(157,47,24,.12);--shadow:none}
-  #ruler,#tip,.noprint{display:none!important}
-  body{background:#fff;font-size:10.5pt;line-height:1.42}
-  .desk{padding:0}
-  .sheet{box-shadow:none;border:0;padding:0;max-width:none}
-  .sheet::before{display:none}
-  .js .reveal,.js .series,.js .anno,.js .barwrap{opacity:1!important;transform:none!important;stroke-dashoffset:0!important;transition:none!important}
-  h1{font-size:34pt}
-  h2{font-size:16pt}
-  section{margin-top:16pt;break-inside:auto}
-  .sechead{break-after:avoid}
-  .tile,.card,.rules li,.rail li,figure{break-inside:avoid}
-  .card:hover{transform:none;box-shadow:none}
-  a{border-bottom:0;text-decoration:underline}
-  .stats{grid-template-columns:repeat(4,1fr)}
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .tile .v{font-size:17pt}
-  .chartbox{break-inside:avoid}
-  .chartscroll{overflow:visible}
-  svg.chart{min-width:0}
-}
+/* Motion is optional; content and controls remain usable while paused. */
+.motion-paused *, .motion-paused *::before, .motion-paused *::after{animation-play-state:paused!important;transition:none!important}
+.motion-paused{scroll-behavior:auto}
+.motion-paused .rv{opacity:1!important;transform:none!important}
+.motion-paused #bars .b{transform:none!important}
+#motion-toggle{font:inherit;font-size:.65rem;color:var(--fg);background:var(--panel);border:1px solid var(--line2);border-radius:99px;padding:7px 10px;cursor:pointer;white-space:nowrap}
+#motion-toggle[hidden]{display:none}
+.skip{position:fixed;top:-100px;left:18px;z-index:100;background:var(--bg);padding:8px 12px}
+.skip:focus{top:8px}
+#tip{white-space:normal;max-width:calc(100vw - 16px);transform:none}
 </style>
 </head>
 <body>
-<div id="ruler" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to content</a>
+<div id="bar" aria-hidden="true"></div>
 <div id="tip" role="status" aria-live="off"></div>
 
-<div class="desk">
-<main class="sheet" id="top">
+<!-- icon sprite: hand-drawn 24px line icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-ask" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9.5 9.2a2.5 2.5 0 1 1 3.3 2.4c-.5.2-.8.6-.8 1.1v.3"/><path d="M12 15.2h.01"/></symbol>
+    <symbol id="i-orch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="1.6"/><circle cx="20" cy="5" r="1.6"/><circle cx="4" cy="19" r="1.6"/><circle cx="20" cy="19" r="1.6"/><path d="M5.3 6.1 9.7 10M18.7 6.1 14.3 10M5.3 17.9l4.4-3.9M18.7 17.9l-4.4-3.9"/></symbol>
+    <symbol id="i-fan" viewBox="0 0 24 24"><path d="M3 12h5"/><path d="M8 12c4 0 4-7 9-7h4M8 12c4 0 4 7 9 7h4M8 12h13"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M12 5h6l2.5 2.5L18 10h-6M12 12H6l-2.5 2.5L6 17h6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-verify" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="m8.5 10.5 2.3 2.3 4.7-4.6"/></symbol>
+    <symbol id="i-ship" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="13" r="2"/><path d="M6 7v10M6 7c0 4 6 6 10 6"/></symbol>
+    <symbol id="i-astra" viewBox="0 0 24 24"><path d="M12 2.5l2.3 6.6 6.7.2-5.3 4.1 1.9 6.6L12 16.1 6.4 20l1.9-6.6L3 9.3l6.7-.2z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 3.8 5.8 3.8 9s-1.2 6.2-3.8 9c-2.6-2.8-3.8-5.8-3.8-9S9.4 5.8 12 3z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-commit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M2 12h6.5M15.5 12H22"/></symbol>
+    <symbol id="i-pr" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v8M18 16V9a3 3 0 0 0-3-3h-4"/><path d="m13 3.5-2.5 2.5L13 8.5"/></symbol>
+    <symbol id="i-repo" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-diff" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h4M10 6v4M8 16h4"/><path d="M15 7l2 2M15 15l2 2"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-6.8 0-3.6-2.4-5.7-4-8.2-.6 2-1.8 3.2-3 3.6.4-3.2-1-6.4-4-8.6.4 3.4-3 6-3 11.2C5 19.2 8 22 12 22z"/><path d="M12 22c-1.8 0-3-1.3-3-3 0-2 1.6-3 2.4-4.6.6 1.2 3.6 2.2 3.6 4.6 0 1.7-1.2 3-3 3z"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.3"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24"><path d="M4 20 15 9"/><path d="m13.5 7.5 3 3"/><path d="M18 3v3M16.5 4.5h3M20.5 9v2M19.5 10h2M9 3v2M8 4h2"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 19l3-1 8-8a6.4 6.4 0 0 0 1.8-5.8A6.4 6.4 0 0 0 12 6L4 14l-1 3z"/><path d="M13.5 10.5a1.5 1.5 0 1 0 0-.01"/><path d="M8 18c0 1.5-1 3-3 3 0-2 1.5-3 3-3z"/></symbol>
+    <symbol id="i-net" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><circle cx="12" cy="13" r="1.6"/><path d="M12 7v4.4M6.4 16.8l4.3-2.9M17.6 16.8l-4.3-2.9M7 18h10"/></symbol>
+    <symbol id="i-term" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12.5 15H17"/></symbol>
+    <symbol id="i-gate" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12"/><path d="M8 21v-7h8v7"/><path d="M3 9h18"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-mesh" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="19" r="2"/><path d="M7 6h10M6 7.8l5 9.4M18 7.8l-5 9.4"/></symbol>
+    <symbol id="i-switch" viewBox="0 0 24 24"><path d="M3 7h13M3 17h13"/><path d="m13 3.5 3.5 3.5L13 10.5M13 13.5l3.5 3.5-3.5 3.5"/><path d="M20 4v16"/></symbol>
+    <symbol id="i-os" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10.5V4a1.5 1.5 0 0 1 3 0v6.5M14 10.5V5.5a1.5 1.5 0 0 1 3 0V14c0 4-2.5 7-6.5 7-2.6 0-4.3-1.3-5.6-3.4L3.2 15a1.5 1.5 0 0 1 2.4-1.8L8 15.5"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3l4.5 7.8M21 12l-9 0M16.5 19.8 12 12M7.5 19.8 12 12M3 12l9 0M7.5 4.2 12 12"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.7-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15.3 12 20 12 20z"/><path d="M4.5 12h4l1.5-2.5 2.5 5 1.5-2.5h5.5"/></symbol>
+    <symbol id="i-church" viewBox="0 0 24 24"><path d="M12 2v5M10 4h4"/><path d="M5 21v-8l7-5 7 5v8z"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><circle cx="6" cy="7" r="3"/><circle cx="17" cy="6" r="2"/><circle cx="16" cy="17" r="4"/><circle cx="5" cy="18" r="1.5"/><path d="M8.7 8.3 12.8 14M9 7l6-1M6 10v6.5"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 17a9 9 0 1 1 17 0"/><path d="m12 14 4-5"/><circle cx="12" cy="14" r="1.4"/></symbol>
+  </defs>
+</svg>
 
-<!-- ═══ MASTHEAD ═══════════════════════════════════════════ -->
-<header class="masthead reveal">
-  <div class="topline">
-    <span class="label">Snapshot · 2026-09-28 · Boston, MA</span>
-    <button class="btn noprint" id="printbtn" type="button">Print / save PDF</button>
+<nav class="top" aria-label="Sections">
+  <a class="mark" href="#top"><b>›_</b> george nijo</a>
+  <ul>
+    <li><a href="#inflection">inflection</a></li>
+    <li><a href="#wall">wall</a></li>
+    <li><a href="#factory">factory</a></li>
+    <li><a href="#routing">routing</a></li>
+    <li><a href="#stack">stack</a></li>
+    <li><a href="#timeline">timeline</a></li>
+  </ul>
+  <button id="motion-toggle" type="button" aria-pressed="false" hidden>Pause motion</button>
+</nav>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════ -->
+<header class="hero" id="top">
+  <canvas id="flow" aria-hidden="true"></canvas>
+  <div class="flowtags" aria-hidden="true" id="flowtags">
+    <span data-x=".64">cross-model review</span>
+    <span data-x=".88">merged</span>
   </div>
 
-  <h1>George Nijo</h1>
+  <aside class="ticker" aria-label="Illustrative feed of the factory loop">
+    <div class="hd"><span>factory loop</span><i>● illustrative</i></div>
+    <ol id="ticker"></ol>
+  </aside>
 
-  <p class="titleline">
-    <strong>Software engineer</strong> · Boston · builds the factory that builds the software
-  </p>
-
-  <p class="lede">
-    I turned agent-orchestrated delivery into a repeatable system: explicit model routing,
-    fanned-out subagents, one independent cross-model review, and verification against the
-    running build. The output is measurable — <span class="hl num">6,621 GitHub contributions and 1,128
-    pull requests across 18 repos</span> so far in 2026.
-  </p>
-
-  <ul class="contact">
-    <li><a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a></li>
-    <li><a href="https://github.com/georgenijo" rel="me noopener">github.com/georgenijo</a></li>
-    <li><a href="https://www.linkedin.com/in/georgenijo" rel="me noopener">linkedin.com/in/georgenijo</a></li>
-    <li><button type="button" id="sshcopy" data-ssh="ssh georgenijo.com" aria-label="Copy ssh georgenijo.com to clipboard">ssh georgenijo.com<span class="hint">copy</span></button></li>
-  </ul>
+  <div class="wrap">
+    <div class="who"><span class="pulse" aria-hidden="true"></span><span class="label">George Nijo · Software engineer · Boston</span></div>
+    <h1>I build the factory that <em>builds the software.</em></h1>
+    <p class="lede">
+      I turned agent-orchestrated delivery into a repeatable system: explicit model routing,
+      fanned-out subagents, one independent cross-model review, and verification against the
+      running build. The output is measurable — <b>6,300 commits and 1,105 pull requests across
+      18 repos</b> through September 16, 2026, against 129 commits in all of 2025.
+    </p>
+    <div class="strip">
+      <div><span class="v num" data-count="6300" data-group="1">6,300</span><span class="l">commits · 2026</span></div>
+      <div><span class="v num" data-count="1105" data-group="1">1,105</span><span class="l">pull requests</span></div>
+      <div><span class="v num" data-count="18">18</span><span class="l">active repos</span></div>
+      <div><span class="v num"><span data-count="73">73</span><small>×</small></span><span class="l">monthly rate</span></div>
+    </div>
+  </div>
+  <div class="scrollcue" aria-hidden="true">scroll</div>
 </header>
 
-<!-- ═══ STATS ══════════════════════════════════════════════ -->
-<section aria-labelledby="h-stats" class="reveal">
-  <div class="sechead"><span class="n">01</span><h2 id="h-stats">By the numbers</h2></div>
-  <div class="stats">
-    <div class="tile">
-      <span class="v num" data-count="823">823</span>
-      <span class="l label">Contributions per month, Feb–Sep 2026 average</span>
-      <span class="f">6,587 clean contributions over eight months. Bot commits excluded.</span>
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="marq"></div>
+</div>
+
+<main id="main">
+<noscript><style>*,*::before,*::after{animation:none!important}</style><div class="wrap"><p>Animations are optional. Read the data below or open the <a href="./dossier.html">complete paper dossier</a> for all projects and workflow details.</p></div></noscript>
+
+<!-- ═══ 01 INFLECTION ══════════════════════════════════════════ -->
+<section class="s" id="inflection" aria-labelledby="h1s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">01</span>
+      <h2 id="h1s">The <em>inflection.</em></h2>
+      <p>February 2026 is where I stopped typing code as the primary act and started running agents against a written doctrine. The method changed, not the hours.</p>
     </div>
-    <div class="tile">
-      <span class="v num" data-count="6621" data-group="1">6,621</span>
-      <span class="l label">GitHub contributions in 2026 so far</span>
-      <span class="f">Jan 1 – Sep 28, 2026. Commits, PRs, reviews, and issues on the GitHub contribution graph, minus 8,930 automated Fleet health-snapshot commits.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="1128" data-group="1">1,128</span>
-      <span class="l label">Pull requests opened in 2026</span>
-      <span class="f">Through Sep 28. Opened, not merged.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="18">18</span>
-      <span class="l label">Repos shipping in 2026</span>
-      <span class="f">75 repositories exist on GitHub; these are the ones actually receiving work.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="1.37" data-decimals="2" data-prefix="~" data-suffix="M">~1.37M</span>
-      <span class="l label">Lines changed, trailing 12 months</span>
-      <span class="f">Floor, not a total: ~1.19M added / ~178k deleted, Sep 2025 – Sep 2026, measured across 14 locally cloned repos only.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="31.3" data-decimals="1" data-suffix="B">31.3B</span>
-      <span class="l label">AI tokens burned</span>
-      <span class="f">Burn-log snapshot dated 2026-09-28, aggregated across all four machines via Fleet. Treat as a floor.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="101">101</span>
-      <span class="l label">GitHub releases of one app</span>
-      <span class="f">murmur-app, v0.1.0 → v0.50.0, latest 2026-09-14. Roughly one release every 1–2 days in Sep 2026.</span>
-    </div>
-    <div class="tile">
-      <span class="v num" data-count="38">38</span>
-      <span class="l label">Personal agent skills in use</span>
-      <span class="f">Working skills installed across the agent skill directories, plus 5 hook events wired into the agent loop.</span>
+
+    <div class="inflect">
+      <figure class="panel pad rv" style="margin:0">
+        <p class="ptitle">Clean commits per month</p>
+        <p class="psub">Jan 2025 – Sep 2026 · bot commits excluded · Sep 2026 partial (through the 16th)</p>
+        <div class="chart-scroll" tabindex="0" role="region" aria-label="Monthly commits chart, scroll horizontally for all months"><svg id="bars" viewBox="0 0 900 340" role="img" aria-labelledby="bars-t bars-d">
+          <title id="bars-t">Clean commits per month, January 2025 through September 2026</title>
+          <desc id="bars-d">Bar chart. Commits stay under 50 per month through 2025, jump to 230 in February 2026 when agent workflows were adopted, and peak at 1,338 in July 2026. September 2026 is partial at 708.</desc>
+        </svg></div>
+        <p class="fine">Scroll the chart horizontally to explore every month, or open the data table.</p>
+        <details class="dt">
+          <summary>Data table</summary>
+          <table id="bars-table"><thead><tr><th>Month</th><th>Commits</th></tr></thead><tbody><tr><td>2025-01</td><td>0</td></tr><tr><td>2025-02</td><td>0</td></tr><tr><td>2025-03</td><td>27</td></tr><tr><td>2025-04</td><td>0</td></tr><tr><td>2025-05</td><td>0</td></tr><tr><td>2025-06</td><td>0</td></tr><tr><td>2025-07</td><td>46</td></tr><tr><td>2025-08</td><td>1</td></tr><tr><td>2025-09</td><td>31</td></tr><tr><td>2025-10</td><td>6</td></tr><tr><td>2025-11</td><td>10</td></tr><tr><td>2025-12</td><td>8</td></tr><tr><td>2026-01</td><td>34</td></tr><tr><td>2026-02</td><td>230</td></tr><tr><td>2026-03</td><td>578</td></tr><tr><td>2026-04</td><td>460</td></tr><tr><td>2026-05</td><td>633</td></tr><tr><td>2026-06</td><td>1,177</td></tr><tr><td>2026-07</td><td>1,338</td></tr><tr><td>2026-08</td><td>1,142</td></tr><tr><td>2026-09</td><td>708 (partial)</td></tr></tbody></table>
+        </details>
+      </figure>
+
+      <div class="panel pad rate rv">
+        <div>
+          <p class="label" style="margin-bottom:14px">Monthly commit rate, after vs before</p>
+          <div class="big num"><span data-count="73">73</span><small>×</small></div>
+        </div>
+        <div class="vs">
+          <div><b class="num">10.8</b><span>PER MONTH · 2025</span></div>
+          <div><b class="num" data-count="783">783</b><span>PER MONTH · FEB–SEP 2026</span></div>
+        </div>
+        <div>
+          <div class="gauge" aria-hidden="true"><i style="width:1.4%;background:#7d7163"></i><i style="flex:1;background:var(--claude)"></i></div>
+          <p class="fine" style="margin-top:10px">(6,266 ÷ 8) ÷ (129 ÷ 12) ≈ 72.9. The grey sliver is 2025's average drawn to the same scale.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SHIP RATE ══════════════════════════════════════════ -->
-<section aria-labelledby="h-ship" class="reveal" id="shipsec">
-  <div class="sechead"><span class="n">02</span><h2 id="h-ship">Ship rate</h2></div>
-
-  <figure class="chartbox">
-    <p class="charttitle">Clean GitHub contributions per month</p>
-    <p class="chartsub">Bot commits excluded. Sep 2026 is partial (through the 28th).</p>
-
-    <div class="chartscroll chartfit">
-    <svg class="chart" id="linechart" viewBox="0 0 900 300" role="img" aria-labelledby="lc-t lc-d" preserveAspectRatio="xMidYMid meet">
-      <title id="lc-t">Clean GitHub contributions per month, January 2025 through September 2026</title>
-      <desc id="lc-d">A line chart of GitHub contributions per month, January 2025 through September 2026. In February 2026 the agent workflow and infrastructure build-out begins at 230 contributions, and the series peaks at 1,338 in July 2026. September 2026 is partial at 1,029 through the 28th. The full monthly series is available in the data table below the chart.</desc>
-
-      <!-- gridlines + y axis -->
-      <g aria-hidden="true">
-        <line class="gridline" x1="56" y1="24" x2="856" y2="24"></line>
-        <line class="gridline" x1="56" y1="105.3" x2="856" y2="105.3"></line>
-        <line class="gridline" x1="56" y1="186.7" x2="856" y2="186.7"></line>
-        <line class="baseline" x1="56" y1="268" x2="856" y2="268"></line>
-        <g class="wide-only">
-          <text class="axv" x="48" y="27.5" text-anchor="end">1,500</text>
-          <text class="axv" x="48" y="108.8" text-anchor="end">1,000</text>
-          <text class="axv" x="48" y="190.2" text-anchor="end">500</text>
-          <text class="axv" x="48" y="271.5" text-anchor="end">0</text>
-          <text class="ax" x="56" y="12" text-anchor="start">contributions / month</text>
-        </g>
-        <!-- narrow phones: the SVG is scaled down to fit, so the type is
-             scaled up and the labels move inside the plot to stay legible -->
-        <g class="narrow-only">
-          <text class="axv" x="62" y="52" text-anchor="start">1,500</text>
-          <text class="axv" x="62" y="133" text-anchor="start">1,000</text>
-          <text class="axv" x="62" y="215" text-anchor="start">500</text>
-        </g>
-      </g>
-
-      <!-- inflection rule -->
-      <g class="anno">
-        <line class="inflect" x1="576" y1="24" x2="576" y2="268"></line>
-        <g class="wide-only">
-          <text class="dnote" x="582" y="36">FEB 2026</text>
-          <text class="dnote" x="582" y="48">agent workflow build-out begins</text>
-        </g>
-        <g class="narrow-only">
-          <text class="dnote" x="582" y="118">FEB 2026</text>
-        </g>
-      </g>
-
-      <!-- area wash + series -->
-      <path class="wash anno" d="M56 268 L56 268 L96 268 L136 263.6 L176 268 L216 268 L256 268 L296 260.5 L336 267.8 L376 263 L416 267 L456 266.4 L496 266.7 L536 262.5 L576 230.6 L616 174 L656 193.2 L696 165 L736 76.5 L776 50.4 L816 82.2 L856 100.6 L856 268 Z"></path>
-      <path class="series" id="sline" d="M56 268 L96 268 L136 263.6 L176 268 L216 268 L256 268 L296 260.5 L336 267.8 L376 263 L416 267 L456 266.4 L496 266.7 L536 262.5 L576 230.6 L616 174 L656 193.2 L696 165 L736 76.5 L776 50.4 L816 82.2 L856 100.6"></path>
-
-      <!-- selective markers -->
-      <g class="anno">
-        <circle class="dot" cx="576" cy="230.6" r="4.5"></circle>
-        <circle class="dot" cx="776" cy="50.4" r="4.5"></circle>
-        <circle class="dot-open" cx="856" cy="100.6" r="4.5"></circle>
-        <g class="wide-only">
-          <text class="dlabel" x="776" y="40" text-anchor="middle">1,338</text>
-          <text class="dlabel" x="856" y="120" text-anchor="end">1,029</text>
-          <text class="dnote" x="856" y="132" text-anchor="end">partial</text>
-        </g>
-        <g class="narrow-only">
-          <text class="dlabel" x="776" y="36" text-anchor="middle">1,338</text>
-          <text class="dlabel" x="856" y="162" text-anchor="end">1,029</text>
-          <text class="dnote" x="856" y="194" text-anchor="end">partial</text>
-        </g>
-      </g>
-
-      <!-- x axis -->
-      <g aria-hidden="true">
-        <g class="wide-only">
-          <text class="ax" x="56" y="284" text-anchor="start">Jan 2025</text>
-          <text class="ax" x="296" y="284" text-anchor="middle">Jul 2025</text>
-          <text class="ax" x="536" y="284" text-anchor="middle">Jan 2026</text>
-          <text class="ax" x="656" y="284" text-anchor="middle">Apr</text>
-          <text class="ax" x="776" y="284" text-anchor="middle">Jul</text>
-          <text class="ax" x="856" y="284" text-anchor="end">Sep 2026</text>
-        </g>
-        <g class="narrow-only">
-          <text class="ax" x="56" y="296" text-anchor="start">Jan 2025</text>
-          <text class="ax" x="536" y="296" text-anchor="middle">Jan 2026</text>
-          <text class="ax" x="856" y="296" text-anchor="end">Sep 2026</text>
-        </g>
-      </g>
-
-      <!-- hover targets: native <title> works without JS -->
-      <g id="hits">
-        <rect class="hit" x="36"  y="24" width="40" height="244"><title>Jan 2025 · 0 contributions</title></rect>
-        <rect class="hit" x="76"  y="24" width="40" height="244"><title>Feb 2025 · 0 contributions</title></rect>
-        <rect class="hit" x="116" y="24" width="40" height="244"><title>Mar 2025 · 27 contributions</title></rect>
-        <rect class="hit" x="156" y="24" width="40" height="244"><title>Apr 2025 · 0 contributions</title></rect>
-        <rect class="hit" x="196" y="24" width="40" height="244"><title>May 2025 · 0 contributions</title></rect>
-        <rect class="hit" x="236" y="24" width="40" height="244"><title>Jun 2025 · 0 contributions</title></rect>
-        <rect class="hit" x="276" y="24" width="40" height="244"><title>Jul 2025 · 46 contributions</title></rect>
-        <rect class="hit" x="316" y="24" width="40" height="244"><title>Aug 2025 · 1 contribution</title></rect>
-        <rect class="hit" x="356" y="24" width="40" height="244"><title>Sep 2025 · 31 contributions</title></rect>
-        <rect class="hit" x="396" y="24" width="40" height="244"><title>Oct 2025 · 6 contributions</title></rect>
-        <rect class="hit" x="436" y="24" width="40" height="244"><title>Nov 2025 · 10 contributions</title></rect>
-        <rect class="hit" x="476" y="24" width="40" height="244"><title>Dec 2025 · 8 contributions</title></rect>
-        <rect class="hit" x="516" y="24" width="40" height="244"><title>Jan 2026 · 34 contributions</title></rect>
-        <rect class="hit" x="556" y="24" width="40" height="244"><title>Feb 2026 · 230 contributions</title></rect>
-        <rect class="hit" x="596" y="24" width="40" height="244"><title>Mar 2026 · 578 contributions</title></rect>
-        <rect class="hit" x="636" y="24" width="40" height="244"><title>Apr 2026 · 460 contributions</title></rect>
-        <rect class="hit" x="676" y="24" width="40" height="244"><title>May 2026 · 633 contributions</title></rect>
-        <rect class="hit" x="716" y="24" width="40" height="244"><title>Jun 2026 · 1,177 contributions</title></rect>
-        <rect class="hit" x="756" y="24" width="40" height="244"><title>Jul 2026 · 1,338 contributions</title></rect>
-        <rect class="hit" x="796" y="24" width="40" height="244"><title>Aug 2026 · 1,142 contributions</title></rect>
-        <rect class="hit" x="836" y="24" width="40" height="244"><title>Sep 2026 · 1,029 contributions (partial)</title></rect>
-      </g>
-    </svg>
+<!-- ═══ 02 DOT WALL ════════════════════════════════════════════ -->
+<section class="s" id="wall" aria-labelledby="h2s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">02</span>
+      <h2 id="h2s">Every dot is <em>a commit.</em></h2>
+      <p>2025 is a small strip. 2026 builds a wall. Hover the wall to see which month each block of dots came from.</p>
     </div>
-
-    <details class="dtable">
-      <summary>Data table</summary>
-      <table>
-        <caption>Clean GitHub contributions per month, January 2025 – September 2026. Bot commits excluded.</caption>
-        <thead><tr><th scope="col">Month</th><th scope="col">Contributions</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">2025-01</th><td>0</td></tr>
-          <tr><th scope="row">2025-02</th><td>0</td></tr>
-          <tr><th scope="row">2025-03</th><td>27</td></tr>
-          <tr><th scope="row">2025-04</th><td>0</td></tr>
-          <tr><th scope="row">2025-05</th><td>0</td></tr>
-          <tr><th scope="row">2025-06</th><td>0</td></tr>
-          <tr><th scope="row">2025-07</th><td>46</td></tr>
-          <tr><th scope="row">2025-08</th><td>1</td></tr>
-          <tr><th scope="row">2025-09</th><td>31</td></tr>
-          <tr><th scope="row">2025-10</th><td>6</td></tr>
-          <tr><th scope="row">2025-11</th><td>10</td></tr>
-          <tr><th scope="row">2025-12</th><td>8</td></tr>
-          <tr><th scope="row">2026-01</th><td>34</td></tr>
-          <tr><th scope="row">2026-02</th><td>230</td></tr>
-          <tr><th scope="row">2026-03</th><td>578</td></tr>
-          <tr><th scope="row">2026-04</th><td>460</td></tr>
-          <tr><th scope="row">2026-05</th><td>633</td></tr>
-          <tr><th scope="row">2026-06</th><td>1177</td></tr>
-          <tr><th scope="row">2026-07</th><td>1338</td></tr>
-          <tr><th scope="row">2026-08</th><td>1142</td></tr>
-          <tr><th scope="row">2026-09</th><td>1029 (partial, through Sep 28)</td></tr>
-        </tbody>
-      </table>
-    </details>
-  </figure>
-
-  <p class="note">
-    <b>Feb 2026 — the build-out begins.</b><br>
-    This is when I started aggressively building out agent workflows and the infrastructure
-    behind them, and running work against a written doctrine: fan work out to subagents, route
-    each task to a model chosen on difficulty, require one independent review before anything
-    merges. Every month since has added tooling, and the output has compounded with it.
-  </p>
-</section>
-
-<!-- ═══ MODEL MIX ══════════════════════════════════════════ -->
-<section aria-labelledby="h-mix" class="reveal">
-  <div class="sechead"><span class="n">03</span><h2 id="h-mix">Model mix</h2></div>
-
-  <figure class="chartbox">
-    <p class="charttitle">Tokens by model</p>
-    <p class="chartsub">Top 5 models, all time, burn-log snapshot 2026-09-28.</p>
-
-    <div class="chartscroll chartfit">
-    <svg class="chart" viewBox="0 0 900 214" role="img" aria-labelledby="bc-t bc-d" preserveAspectRatio="xMidYMid meet">
-      <title id="bc-t">Tokens burned by model, top five</title>
-      <desc id="bc-d">Horizontal bars. GPT-5.6 Sol leads with 18.0 billion tokens, followed by GPT-6 Astra at 2.86 billion, Opus 4.8 at 2.37 billion, Sonnet 5 at 1.89 billion, and Opus 5.5 at 1.35 billion.</desc>
-
-      <text class="barlabel wide-only" x="140" y="38" text-anchor="end">GPT-5.6 Sol</text>
-      <text class="barlabel narrow-only" x="140" y="38" text-anchor="end">Sol</text>
-      <g class="barwrap"><path class="bar" d="M152 24 h556 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-556 z"><title>GPT-5.6 Sol · 17,982,064,924 tokens</title></path></g>
-      <text class="barval" x="722" y="38">18.0B</text>
-
-      <text class="barlabel wide-only" x="140" y="76" text-anchor="end">GPT-6 Astra</text>
-      <text class="barlabel narrow-only" x="140" y="76" text-anchor="end">Astra</text>
-      <g class="barwrap"><path class="bar" d="M152 62 h89 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-89 z"><title>GPT-6 Astra · 2,862,660,877 tokens</title></path></g>
-      <text class="barval" x="255" y="76">2.86B</text>
-
-      <text class="barlabel wide-only" x="140" y="114" text-anchor="end">Opus 4.8</text>
-      <text class="barlabel narrow-only" x="140" y="114" text-anchor="end">Opus 4.8</text>
-      <g class="barwrap"><path class="bar" d="M152 100 h73 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-73 z"><title>Opus 4.8 · 2,374,383,304 tokens</title></path></g>
-      <text class="barval" x="239" y="114">2.37B</text>
-
-      <text class="barlabel wide-only" x="140" y="152" text-anchor="end">Sonnet 5</text>
-      <text class="barlabel narrow-only" x="140" y="152" text-anchor="end">Sonnet 5</text>
-      <g class="barwrap"><path class="bar" d="M152 138 h58 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-58 z"><title>Sonnet 5 · 1,890,829,000 tokens</title></path></g>
-      <text class="barval" x="224" y="152">1.89B</text>
-
-      <text class="barlabel wide-only" x="140" y="190" text-anchor="end">Opus 5.5</text>
-      <text class="barlabel narrow-only" x="140" y="190" text-anchor="end">Opus 5.5</text>
-      <g class="barwrap"><path class="bar" d="M152 176 h42 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-42 z"><title>Opus 5.5 · 1,348,888,042 tokens</title></path></g>
-      <text class="barval" x="208" y="190">1.35B</text>
-
-      <line class="baseline" x1="152" y1="14" x2="152" y2="204"></line>
-    </svg>
+    <div class="panel pad wall rv">
+      <div class="side">
+        <h3>129 <span style="color:var(--dim)">vs</span> 6,300</h3>
+        <div class="yr"><span class="label"><i class="sw" style="background:#8a7f70"></i>2025 · full year</span><b class="num" data-count="129">129</b></div>
+        <div class="yr"><span class="label"><i class="sw" style="background:var(--claude)"></i>2026 · to Sep 16</span><b class="num" data-count="6300" data-group="1">6,300</b></div>
+        <p class="fine" style="margin-top:16px">Alternating shades mark month boundaries. Excludes 7,609 automated Fleet health-snapshot commits.</p>
+      </div>
+      <canvas id="dots" role="img" aria-label="Dot matrix: 129 dots for 2025 and 6,300 dots for 2026, one dot per commit."></canvas>
     </div>
-
-    <figcaption>
-      Top 5 models by tokens, from the burn log at
-      <a href="./burn.html">georgenijo.com/burn</a>, aggregated across all four Fleet machines.
-      Sol, the lead implementation model, carries ~58% of every token. GPT-6 Astra, which takes
-      the hardest reasoning and every independent review, comes next at ~9%, then Opus 4.8 at ~8%.
-      Volume goes to the implementation tier; the expensive models are reserved for judgment.
-    </figcaption>
-    <details class="dtable">
-      <summary>Data table</summary>
-      <table>
-        <caption>Tokens by model, top five.</caption>
-        <thead><tr><th scope="col">Model</th><th scope="col">Tokens</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">GPT-5.6 Sol</th><td>17,982,064,924</td></tr>
-          <tr><th scope="row">GPT-6 Astra</th><td>2,862,660,877</td></tr>
-          <tr><th scope="row">Opus 4.8</th><td>2,374,383,304</td></tr>
-          <tr><th scope="row">Sonnet 5</th><td>1,890,829,000</td></tr>
-          <tr><th scope="row">Opus 5.5</th><td>1,348,888,042</td></tr>
-        </tbody>
-      </table>
-    </details>
-  </figure>
-</section>
-
-<!-- ═══ THE FACTORY ════════════════════════════════════════ -->
-<section aria-labelledby="h-factory" class="reveal">
-  <div class="sechead"><span class="n">04</span><h2 id="h-factory">The factory</h2></div>
-  <p class="deck">Six rules. They are written down, they are enforced by config, and they are why the chart above looks like that.</p>
-  <ol class="rules">
-    <li>
-      <h3>The orchestrator never leaves the chat.</h3>
-      <p>The model I am talking to plans, routes, and reviews. It does not disappear into a forty-minute solo implementation. Context stays where decisions get made.</p>
-    </li>
-    <li>
-      <h3>Research and implementation get fanned out.</h3>
-      <p>Anything that means reading across many files goes to a subagent that returns a conclusion, not a file dump. Independent workstreams run in parallel with separated edit scopes.</p>
-    </li>
-    <li>
-      <h3>Model choice is a routing decision, not a default.</h3>
-      <p>Hardest architecture, ambiguity, and reviews go to GPT-6 Astra. Lead implementation and debugging go to Sol. Ordinary parallel work goes to Terra. Narrow mechanical volume goes to Luna. Claude Opus for hard Claude-native reasoning, Sonnet for ordinary, Haiku for narrow. Labels are literal; nothing gets relabeled to look better.</p>
-    </li>
-    <li>
-      <h3>One independent review, different model, fresh context, high effort.</h3>
-      <p>Every meaningful behavior change gets reviewed by a model that did not write it, given the intended behavior, the diff, and the verification evidence — and nothing else. Read-only. If that review is unavailable, I report the missing gate rather than quietly substituting a weaker one.</p>
-    </li>
-    <li>
-      <h3>Verification is risk-based and happens against the running build.</h3>
-      <p>Reproduce the bug first where feasible. Exercise the affected user flow in a real browser or a real binary. Confirm the artifact actually contains the change. Tests are evidence, not the whole case.</p>
-    </li>
-    <li>
-      <h3>“Fix this” means finished, not started.</h3>
-      <p>A repository fix request authorizes the whole chain: implement, verify, review, commit, push, PR ready to merge, CI resolved, conflicts handled — without a second prompt. The inverse rule matters as much: a question authorizes nothing. Asking whether something could work never edits a file.</p>
-    </li>
-  </ol>
-</section>
-
-<!-- ═══ SHOP FLOOR ═════════════════════════════════════════ -->
-<section aria-labelledby="h-mesh" class="reveal">
-  <div class="sechead"><span class="n">05</span><h2 id="h-mesh">The shop floor</h2></div>
-  <p class="deck">One laptop and three servers on a private mesh. Which machine a job runs on is decided before anything else about it.</p>
-
-  <ul class="nodes">
-    <li>
-      <span class="r">laptop · control</span>
-      <p>Where I work. It plans, routes, reviews, and hands work out — and it is the only machine that can decrypt a secret.</p>
-    </li>
-    <li>
-      <span class="r">always-on worker</span>
-      <p>Runs headless agent sessions. Work started here keeps going after the laptop lid closes.</p>
-    </li>
-    <li>
-      <span class="r">gateway · production</span>
-      <p>Serves this page and runs the monitor that watches the other machines. Also the way in when a direct route fails.</p>
-    </li>
-    <li>
-      <span class="r">workloads</span>
-      <p>Hosts artifacts, dev servers, and anything long-running that has no business on a laptop.</p>
-    </li>
-  </ul>
-
-  <ul class="practices">
-    <li>
-      <h3>No agent ever types an address.</h3>
-      <p>One manifest records who each machine is; the mesh supplies live addressing. An agent names the machine and something else resolves it. Addresses change, names do not.</p>
-    </li>
-    <li>
-      <h3>Work outlives the session that started it.</h3>
-      <p>Long jobs go to a server rather than the laptop. Closing the lid does not kill them, and the result can be picked up from any machine.</p>
-    </li>
-    <li>
-      <h3>Every machine speaks the same language.</h3>
-      <p>One skill bundle is linked into both agent runtimes on all four machines, so a session started anywhere has the same vocabulary and the same working agreements.</p>
-    </li>
-    <li>
-      <h3>Handoffs are artifacts, not pasted text.</h3>
-      <p>A finished result is published once and gets an immutable, checksummed ID and a private URL. The next agent — or the next person — consumes that ID instead of a copy.</p>
-    </li>
-    <li>
-      <h3>The mesh watches itself, within limits.</h3>
-      <p>A monitor on the gateway checks the workers, requires two independent observations before it acts, and is authorized to take exactly one action. It cannot widen its own permissions.</p>
-    </li>
-  </ul>
-
-  <p class="note">This page is the proof: it is served from the gateway, and the token counts above were collected from all four machines.</p>
-</section>
-
-<!-- ═══ TOOLS ══════════════════════════════════════════════ -->
-<section aria-labelledby="h-tools" class="reveal">
-  <div class="sechead"><span class="n">06</span><h2 id="h-tools">Tools I built to make that possible</h2></div>
-  <div class="cards">
-
-    <article class="card">
-      <h3>Fleet</h3>
-      <span class="tag">Agent-native control plane for a personal Tailscale mesh</span>
-      <p>One manifest resolves who every box is; Tailscale supplies live IPs and online state, so neither I nor an agent ever hardcodes an address or guesses an SSH user. It covers discovery, remote exec, file transfer, service management, durable artifact publishing, shared skill distribution to every machine, and token-burn analytics. It is designed so agents, not only humans, can act across the mesh.</p>
-      <div class="meta"><span>Python</span><span>~9.5k LOC, 28 subcommands</span><span class="st">Private</span></div>
-    </article>
-
-    <article class="card">
-      <h3>Family Host</h3>
-      <span class="tag">A personal Vercel, invite-only, running on my own hardware</span>
-      <p>Push a GitHub repo or a container image and get an isolated HTTPS app on a real subdomain, plus persistent browser-based coding workspaces and managed Postgres. Tenants get scoped access without ever receiving SSH, Docker, LAN, or tailnet access. The ops surface is the point: systemd guard/monitor/backup timers, deploy locks, rollback, restore verification, secret scanning, synthetic checks.</p>
-      <div class="meta"><span>Python server + Node CLI (family-host-cli v0.7.0)</span><span>~37k LOC, 169 commits</span><span class="st">Private</span></div>
-    </article>
-
-    <article class="card">
-      <h3>CPA — personal AI gateway</h3>
-      <span class="tag">Every model provider behind one Anthropic-compatible API</span>
-      <p>A reverse proxy that fronts Anthropic Opus/Sonnet/Fable and OpenAI GPT-6 Astra and GPT-5.6 Sol/Terra/Luna behind a single endpoint, with per-client metering, quotas, and dashboards. Claude Code points at it through an alternate config profile, which is what makes rule 3 above mechanical rather than aspirational.</p>
-      <div class="meta"><span>Python</span><span>~19k LOC, 77 commits, plus six fleet-cpa-* extension modules</span><span class="st">Private</span></div>
-    </article>
-
-    <article class="card">
-      <h3>Burn log</h3>
-      <span class="tag">Tracks what the agents cost against what they shipped</span>
-      <p>A collector walks ccusage data and git history across every repo and every machine, aggregates through Fleet, and publishes a daily record correlating tokens spent to commits landed to repos touched. It is the accountability half of running agents at volume, and it is public.</p>
-      <div class="meta"><span>Python pipeline + static page</span><span>31.3B tokens recorded to date</span><span class="st">Public — <a href="./burn.html">georgenijo.com/burn</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>ssh-tui</h3>
-      <span class="tag"><span class="mono">ssh georgenijo.com</span> returns an interactive terminal, not a banner</span>
-      <p>A Wish + Bubbletea server on an Oracle Cloud box, reached over Tailscale, serving a full TUI mirror of this site on port 22. Separate deploy path from the web build.</p>
-      <div class="meta"><span>Go</span><span>~2,000 LOC</span><span class="st">Public endpoint — ssh georgenijo.com</span></div>
-    </article>
-
-    <article class="card">
-      <h3>Claude Code skills and hooks</h3>
-      <span class="tag">The agent loop itself, customized until it fits the doctrine</span>
-      <p>38 personal skills covering repo cleanup, TDD, blast-radius analysis, decision logging, artifact publishing, and video generation, plus 5 hook events — Obsidian vault sync on skill use, a Stop-hook chime routed to a notch overlay, token-budget warnings, and Fleet context injected on every prompt. Config, dotfiles, and pipeline live in their own repos.</p>
-      <div class="meta"><span>Markdown, Python, shell</span><span>38 skills, 5 hook events</span><span class="st">Private (claude-dotfiles, claude-pipeline)</span></div>
-    </article>
-
-    <article class="card">
-      <h3>agentos</h3>
-      <span class="tag">Collapses eleven scattered repos into one self-hosted agent OS</span>
-      <p>A single backend, one secrets ledger, and a <span class="mono">just</span>-driven dev loop unifying Claude Code, the Cursor bridge, Discord bots, Google and GitHub glue, the mesh nodes, and Home Assistant. Everything external is mocked in tests, so the whole stack runs and passes offline.</p>
-      <div class="meta"><span>Python</span><span>~96k lines changed in 12 months, 196 commits</span><span class="st">Private</span></div>
-    </article>
-
-    <article class="card">
-      <h3>agent-mesh</h3>
-      <span class="tag">A shared nervous system for agents that would otherwise collide</span>
-      <p>A local-first coordination fabric letting Claude Code, Codex CLI, Cursor CLI, and Aider discover each other, announce what they are touching, ask each other questions, and read a shared blackboard of decisions — through one <span class="mono">mesh</span> command. Zero external dependencies, Go stdlib only. Fully implemented through P2 plus Fleet automation.</p>
-      <div class="meta"><span>Go</span><span>~58k lines changed in 12 months, 209 commits</span><span class="st">Public — <a href="https://github.com/georgenijo/agent-mesh" rel="noopener">github.com/georgenijo/agent-mesh</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>usher</h3>
-      <span class="tag">The MCP broker — one front desk every agent talks to</span>
-      <p>Routes, trims, arbitrates, gates, and audits MCP traffic so agents face a single well-behaved surface instead of a sprawl of servers. Context trimming is the load-bearing feature: tool sprawl is a context-budget problem before it is an ergonomics problem.</p>
-      <div class="meta"><span>Go</span><span>created 2026-06-17</span><span class="st">Public — <a href="https://github.com/georgenijo/usher" rel="noopener">github.com/georgenijo/usher</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>hangar</h3>
-      <span class="tag">Multi-session control plane for Claude Code, Codex, and friends</span>
-      <p>Runs and supervises many agent sessions at once from one place, so parallel fan-out is an operation rather than a pile of terminal tabs.</p>
-      <div class="meta"><span>Rust</span><span>created 2026-04-17</span><span class="st">Public — <a href="https://github.com/georgenijo/hangar" rel="noopener">github.com/georgenijo/hangar</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>ghosthands</h3>
-      <span class="tag">Free, local computer-use for macOS, no cursor stolen</span>
-      <p>A small MLX model drives native macOS apps through the Accessibility tree, then replays the recorded flow with no model in the loop at all. Runs in the background, costs nothing per run, and does not take over the machine while it works. A native companion implementation exists alongside it.</p>
-      <div class="meta"><span>Python (plus ghosthands-native)</span><span>~32k lines changed in 12 months across both repos</span><span class="st">Public — <a href="https://github.com/georgenijo/ghosthands" rel="noopener">github.com/georgenijo/ghosthands</a></span></div>
-    </article>
-
   </div>
 </section>
 
-<!-- ═══ PRODUCTS ═══════════════════════════════════════════ -->
-<section aria-labelledby="h-products" class="reveal">
-  <div class="sechead"><span class="n">07</span><h2 id="h-products">Products and selected projects</h2></div>
-  <div class="cards">
-
-    <article class="card">
-      <h3>murmur-app</h3>
-      <span class="tag">Local voice-to-text dictation for macOS, nothing leaves the machine</span>
-      <p>A Tauri 2 app with a Rust core — whisper-rs on the Metal GPU, cpal audio capture, a global hotkey, clipboard paste — and a React/TypeScript front end. It is the largest thing I have built and the fastest-shipping: 101 GitHub releases (103 git tags) from v0.1.0 to v0.50.0, most of them in the last few months.</p>
-      <div class="meta"><span>Rust + React/TypeScript</span><span>~222k LOC, 1,358 commits, 101 GitHub releases (103 git tags)</span><span class="st">Public — <a href="https://github.com/georgenijo/murmur-app" rel="noopener">github.com/georgenijo/murmur-app</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>aperture</h3>
-      <span class="tag">iOS film camera with a real vintage emulation pipeline</span>
-      <p>An AVFoundation capture engine feeding a Core Image and Metal processing chain that emulates film stocks rather than applying a filter. SwiftUI throughout.</p>
-      <div class="meta"><span>Swift</span><span>created 2026-03-05</span><span class="st">Public — <a href="https://github.com/georgenijo/aperture" rel="noopener">github.com/georgenijo/aperture</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>whoop-dashboard</h3>
-      <span class="tag">Personal health analytics with an AI coach on top</span>
-      <p>Pulls Whoop data into a dashboard that interprets rather than just plots, with a companion Oura version. Second-largest codebase by lines changed this year.</p>
-      <div class="meta"><span>TypeScript (Streamlit + Plotly origins)</span><span>~160k lines changed in 12 months, 282 commits</span><span class="st">Public — <a href="https://github.com/georgenijo/whoop-dashboard" rel="noopener">github.com/georgenijo/whoop-dashboard</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>St. Basil’s Boston</h3>
-      <span class="tag">Church website rebuild, run as an agent ticket workflow</span>
-      <p>Next.js 14 App Router with Sanity CMS, Supabase, and Resend. The interesting part is the process: work enters as tickets and is executed by agents against acceptance checks. Also the oldest thread here — its first commit is from March 2025, before any of this.</p>
-      <div class="meta"><span>TypeScript / Next.js</span><span>~86k lines changed in 12 months, 279 commits</span><span class="st">Private repo, live site</span></div>
-    </article>
-
-    <article class="card">
-      <h3>fleetmap</h3>
-      <span class="tag">Live map of what your Mac is actually running</span>
-      <p>A relationship-aware process and connection monitor — processes sized by RAM, colored by CPU, wired together by their live sockets. SwiftUI app with a Go CLI underneath.</p>
-      <div class="meta"><span>Swift + Go</span><span>created 2026-06-17</span><span class="st">Public — <a href="https://github.com/georgenijo/fleetmap" rel="noopener">github.com/georgenijo/fleetmap</a></span></div>
-    </article>
-
-    <article class="card">
-      <h3>Gauge</h3>
-      <span class="tag">Claude usage in the menu bar, and nothing else</span>
-      <p>A deliberately minimal macOS menu bar app showing Claude consumption at a glance. Built because the burn log answers the monthly question and this answers the right-now question.</p>
-      <div class="meta"><span>Swift</span><span>created 2026-06-14</span><span class="st">Public — <a href="https://github.com/georgenijo/Gauge" rel="noopener">github.com/georgenijo/Gauge</a></span></div>
-    </article>
-
+<!-- ═══ 03 FACTORY ═════════════════════════════════════════════ -->
+<section class="s" id="factory" aria-labelledby="h3s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">03</span>
+      <h2 id="h3s">How work moves <em>through the factory.</em></h2>
+      <p>Six rules, written down and enforced by config. Each dot below is one change: written by one model family, reviewed by the other, verified against the running build, then shipped.</p>
+    </div>
+    <div class="panel pad rv">
+      <svg id="pipe" role="img" aria-label="Pipeline diagram: an ask goes to the orchestrator, fans out to four model tiers, passes a cross-family review, is verified against the running build, and ships as a PR."></svg>
+      <div class="pipelegend">
+        <span><i style="background:var(--claude)"></i>written by Claude</span>
+        <span><i style="background:var(--gpt)"></i>written by GPT</span>
+        <span><i class="ring"></i>ring = reviewer from the other family</span>
+        <span><i style="background:var(--gold)"></i>active rule</span>
+      </div>
+    </div>
+    <div class="rules" id="rules"><article class="rule"><h3>The orchestrator never leaves the chat.</h3><p>The model I talk to plans, routes, and reviews. It doesn't disappear into a forty-minute solo implementation.</p></article><article class="rule"><h3>Research and implementation get fanned out.</h3><p>Wide reading goes to a subagent that returns a conclusion, not a file dump. Independent work runs in parallel.</p></article><article class="rule"><h3>Model choice is a routing decision.</h3><p>Hard architecture and reviews to the top tier, lead work to Sol, ordinary to Terra, mechanical to Luna.</p></article><article class="rule"><h3>One independent review, other family.</h3><p>A model that didn't write it gets the intent, the diff, and the evidence. Read-only, fresh context, high effort.</p></article><article class="rule"><h3>Verify against the running build.</h3><p>Reproduce first. Exercise the real flow in a real browser or binary. Tests are evidence, not the whole case.</p></article><article class="rule"><h3>“Fix this” means finished.</h3><p>Implement, verify, review, push, CI green, PR ready. And the inverse: a question authorizes nothing.</p></article></div>
   </div>
 </section>
 
-<!-- ═══ TIMELINE ═══════════════════════════════════════════ -->
-<section aria-labelledby="h-timeline" class="reveal">
-  <div class="sechead"><span class="n">08</span><h2 id="h-timeline">Timeline</h2></div>
-  <ol class="rail">
-    <li>
-      <span class="d num">2026-01</span>
-      <span class="h">murmur-app starts</span>
-      <p>The largest project on this page begins as a local, offline dictation app for macOS.</p>
-    </li>
-    <li>
-      <span class="d num">2026-02</span>
-      <span class="h">The build-out begins</span>
-      <p>230 contributions. Agent workflows and the infrastructure behind them become a standing method: written working agreements, subagent fan-out, explicit model routing.</p>
-    </li>
-    <li>
-      <span class="d num">2026-03</span>
-      <span class="h">Tooling for agents begins</span>
-      <p>aperture starts. 578 contributions. The tools start being built <em>for</em> the agents.</p>
-    </li>
-    <li>
-      <span class="d num">2026-04</span>
-      <span class="h">Control planes</span>
-      <p>hangar and whoop-dashboard begin. 460 contributions, and the PR count starts climbing toward four figures.</p>
-    </li>
-    <li>
-      <span class="d num">2026-06</span>
-      <span class="h">Peak infrastructure month</span>
-      <p>agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks. 1,177 contributions.</p>
-    </li>
-    <li>
-      <span class="d num">2026-07</span>
-      <span class="h">The factory measures itself</span>
-      <p>This site and the burn log go up; Fleet starts auto-publishing health snapshots to it. 1,338 contributions — the highest month so far.</p>
-    </li>
-    <li>
-      <span class="d num">2026-09</span>
-      <span class="h">Steady state</span>
-      <p>murmur-app reaches v0.50.0 on the 14th. 1,029 contributions through the 28th — already the fourth-busiest month.</p>
-    </li>
-  </ol>
+<!-- ═══ 04 ROUTING ═════════════════════════════════════════════ -->
+<section class="s" id="routing" aria-labelledby="h4s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">04</span>
+      <h2 id="h4s">Model choice is <em>a routing decision.</em></h2>
+      <p>Not a default. The hard reasoning goes to the expensive model; the mechanical volume does not. Labels are literal. Nothing gets relabeled to look better.</p>
+    </div>
+    <div class="routing">
+      <div class="panel pad rv">
+        <p class="ptitle">The routing table</p>
+        <p class="psub">Which tier does which kind of work</p>
+        <div class="ladder" role="table" aria-label="Model routing by task">
+          <div role="row">
+          <div class="h" role="columnheader">Task</div>
+          <div class="h" role="columnheader"><i style="background:var(--gpt)"></i>GPT</div>
+          <div class="h" role="columnheader"><i style="background:var(--claude)"></i>Claude</div>
+          </div>
+          <div role="row">
+          <div class="task" role="rowheader"><b>Hardest reasoning &amp; reviews</b><span>architecture, ambiguity</span><div class="tier"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div></div>
+          <div class="m gp" role="cell">Astra<small>gpt-6-astra</small></div>
+          <div class="m cl" role="cell">Opus<small>claude-opus</small></div>
+          </div>
+          <div role="row">
+          <div class="task" role="rowheader"><b>Lead implementation</b><span>complex features, debugging</span><div class="tier"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div></div>
+          <div class="m gp" role="cell">Sol<small>gpt-5.6-sol</small></div>
+          <div class="m cl" role="cell">Opus<small>claude-opus</small></div>
+          </div>
+          <div role="row">
+          <div class="task" role="rowheader"><b>Ordinary parallel work</b><span>exploration, routine edits</span><div class="tier"><i class="f"></i><i class="f"></i><i></i><i></i></div></div>
+          <div class="m gp" role="cell">Terra<small>gpt-5.6-terra</small></div>
+          <div class="m cl" role="cell">Sonnet<small>claude-sonnet</small></div>
+          </div>
+          <div role="row">
+          <div class="task" role="rowheader"><b>Narrow mechanical volume</b><span>renames, sweeps, formatting</span><div class="tier"><i class="f"></i><i></i><i></i><i></i></div></div>
+          <div class="m gp" role="cell">Luna<small>gpt-5.6-luna</small></div>
+          <div class="m cl" role="cell">Haiku<small>claude-haiku</small></div>
+          </div>
+        </div>
+      </div>
+
+      <figure class="panel pad tok rv" style="margin:0">
+        <p class="ptitle">Tokens by model</p>
+        <p class="psub">Top five models · burn-log snapshot 2026-07-17</p>
+        <div class="legend"><span><i style="background:var(--claude)"></i>Claude</span><span><i style="background:var(--gpt)"></i>GPT</span></div>
+        <div id="tokrows"></div><details class="dt"><summary>Token data table</summary><table id="tokens-table"><thead><tr><th>Model</th><th>Tokens</th></tr></thead><tbody><tr><td>Opus 4.8</td><td>2,510,416,238</td></tr><tr><td>Fable 5</td><td>1,062,481,134</td></tr><tr><td>Sonnet 5</td><td>911,112,836</td></tr><tr><td>GPT-5.5</td><td>660,827,177</td></tr><tr><td>GPT-5.6 Sol</td><td>434,067,143</td></tr></tbody></table></details>
+        <p class="label" style="margin-top:26px">Share of top-five tokens by family</p>
+        <div class="split" id="split" role="img" aria-label="Claude 4.48 billion tokens, 80.4 percent; GPT 1.09 billion tokens, 19.6 percent of the top five">
+          <div class="cl" data-w="80.4" style="width:80.4%"></div>
+          <div class="gp" data-w="19.6" style="width:19.6%"></div>
+        </div>
+        <p class="fine">Claude · 4.48B (80.4%) &nbsp; / &nbsp; GPT · 1.09B (19.6%)</p>
+        <p class="fine" style="margin-top:14px">Opus 4.8 alone is ~40% of the 6.2B total. Totals depend on which machines' logs were aggregated, so treat them as a floor.</p>
+      </figure>
+    </div>
+  </div>
 </section>
 
-<!-- ═══ FOOTER ═════════════════════════════════════════════ -->
-<footer class="reveal">
-  <p>
-    This page is a snapshot generated 2026-09-28. The usual site lives at
-    <a href="./terminal.html">/terminal.html</a>, or over SSH at
-    <span class="mono">ssh georgenijo.com</span>.
-  </p>
-  <p class="integrity">
-    <b>How to read these numbers.</b> Monthly counts are GitHub contributions: commits, pull
-    requests, reviews, and issues on the GitHub contribution graph, private repositories
-    included.
-    They exclude 8,930 automated Fleet health-snapshot commits, which would otherwise inflate
-    2026 by more than double. Lines
-    changed is a floor: it covers only the 14 repositories cloned locally, not all 75 on
-    GitHub. September 2026 is partial, through the 28th. Pull request counts are PRs
-    <em>opened</em>, not merged. The token total is a burn-log snapshot dated 2026-09-28 aggregated
-    across all four Fleet machines; one of them keeps only 30 days of Claude transcripts, so
-    treat it as a lower bound.
-    murmur-app has 101 GitHub releases (103 git tags); the two counts differ because not
-    every tag was published as a release.
-  </p>
-  <p class="colophon">
-    the usual site → <a href="./terminal.html">/terminal.html</a> ·
-    <a href="./burn.html">burn log</a> ·
-    updated september 2026
-  </p>
-</footer>
+<!-- ═══ 05 NUMBERS ═════════════════════════════════════════════ -->
+<section class="s" id="numbers" aria-labelledby="h5s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">05</span>
+      <h2 id="h5s">By the <em>numbers.</em></h2>
+      <p>Every figure has its qualifier printed next to it. A number without its caveat is marketing.</p>
+    </div>
+    <div class="tiles">
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-rocket"/></svg></div><span class="v num"><span data-count="73">73</span>×</span><span class="l">Monthly commit rate</span><span class="f">Feb–Sep 2026 averages 783/mo against 10.8/mo in 2025.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-commit"/></svg></div><span class="v num" data-count="6300" data-group="1">6,300</span><span class="l">Commits in 2026</span><span class="f">Jan 1 – Sep 16. Excludes 7,609 automated snapshot commits.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-pr"/></svg></div><span class="v num">3<span class="ar">→</span><span data-count="1105" data-group="1">1,105</span></span><span class="l">PRs opened, 2025 → 2026</span><span class="f">Opened, not merged. 2026 through Sep 16.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-repo"/></svg></div><span class="v num">2<span class="ar">→</span><span data-count="18">18</span></span><span class="l">Repos with commits</span><span class="f">70 exist on GitHub; these are the ones receiving work.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-diff"/></svg></div><span class="v num">~<span data-count="1.06" data-decimals="2">1.06</span>M</span><span class="l">Lines changed · 12 mo</span><span class="f">Floor: ~925k added / ~134k deleted, 14 local repos only.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-flame"/></svg></div><span class="v num"><span data-count="6.2" data-decimals="1">6.2</span>B</span><span class="l">AI tokens burned</span><span class="f">Burn-log snapshot 2026-07-17, aggregated via Fleet. A floor.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-tag"/></svg></div><span class="v num" data-count="101">101</span><span class="l">Releases of one app</span><span class="f">murmur-app v0.1.0 → v0.50.0, latest 2026-09-14.</span></div>
+      <div class="tile rv"><span class="glow"></span><div class="ic"><svg class="ico"><use href="#i-wand"/></svg></div><span class="v num" data-count="77">77</span><span class="l">Personal agent skills</span><span class="f">In ~/.claude/skills, plus 5 hook events in the agent loop.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 06 STACK ═══════════════════════════════════════════════ -->
+<section class="s" id="stack" aria-labelledby="h6s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">06</span>
+      <h2 id="h6s">The <em>stack</em> under the factory.</h2>
+      <p>Tools built to make the doctrine mechanical instead of aspirational, from the machines at the bottom to the products at the top. Pick a layer.</p>
+    </div>
+    <div class="stackwrap">
+      <div class="panel stage rv" id="stage" aria-hidden="true"><div class="iso" id="iso"></div></div>
+      <div class="rv">
+        <div class="layers" id="layers" role="tablist" aria-label="Stack layers" aria-orientation="vertical"></div>
+        <div class="detail" id="detail" role="tabpanel" tabindex="0"><p>Fleet and the CPA gateway support agent-mesh, hangar, usher, and agentos. They power products including murmur-app, aperture, and fleetmap. <a href="./dossier.html">Explore every layer in the paper dossier.</a></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 07 TIMELINE ════════════════════════════════════════════ -->
+<section class="s" id="timeline" aria-labelledby="h7s">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="n">07</span>
+      <h2 id="h7s">Twenty-one months, <em>one curve.</em></h2>
+      <p>The bar under each card is that month's commits on the same scale as the July 2026 peak.</p>
+    </div>
+    <div class="tl rv">
+      <div class="tlrail" id="tlrail" tabindex="0" aria-label="Timeline, scroll horizontally"><article class="ev"><h3>From manual work to agent orchestration</h3><p>March 2025: first St. Basil’s commits. January 2026: murmur-app starts. February: agent workflows adopted. June: infrastructure expands. July: 1,338 commits. September: murmur-app reaches v0.50.0.</p><a href="./dossier.html">Read the full timeline</a></article></div>
+      <p class="tlhint">← drag or scroll →</p>
+    </div>
+  </div>
+</section>
 
 </main>
-</div>
+
+<footer>
+  <div class="wrap">
+    <div class="cta">
+      <p class="label" style="margin-bottom:14px">Get in touch</p>
+      <h2>Want the factory <em>on your team?</em></h2>
+      <div class="links">
+        <a href="mailto:george.nijo8@gmail.com">george.nijo8@gmail.com</a>
+        <a href="https://github.com/georgenijo" rel="me noopener">github.com/georgenijo</a>
+        <a href="https://www.linkedin.com/in/georgenijo" rel="me noopener">linkedin.com/in/georgenijo</a>
+        <button type="button" id="sshcopy" data-ssh="ssh ssh.georgenijo.com"><svg class="ico" style="width:15px;height:15px"><use href="#i-term"/></svg><span>ssh ssh.georgenijo.com</span><span class="hint" style="color:var(--dim)">copy</span></button>
+      </div>
+    </div>
+    <p class="integrity">
+      <b>How to read these numbers.</b> Commit counts exclude 7,609 automated Fleet
+      health-snapshot commits, which would otherwise more than double 2026. Lines changed is a
+      floor: it covers only the 14 repositories cloned locally, not all 70 on GitHub.
+      September 2026 is partial, through the 16th. Pull request counts are PRs
+      <em>opened</em>, not merged. The token total is a burn-log snapshot dated 2026-07-17 and
+      depends on which machines' usage logs were aggregated. The hero feed and pipeline
+      packets are illustrations of the process, not live telemetry.
+    </p>
+    <p class="colophon">
+      <a href="./dossier.html">paper dossier</a> · <a href="./terminal.html">terminal site</a> · <a href="./burn.html">burn log</a> ·
+      single file, vanilla JS, no build step · snapshot 2026-09-16
+    </p>
+  </div>
+</footer>
 
 <script>
 (function(){
-  "use strict";
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ── print button ───────────────────────────────────────── */
-  var pb = document.getElementById("printbtn");
-  if (pb) pb.addEventListener("click", function(){ settleCounters(); window.print(); });
-
-  /* ── ssh copy ───────────────────────────────────────────── */
-  var ssh = document.getElementById("sshcopy");
-  if (ssh) ssh.addEventListener("click", function(){
-    var txt = ssh.getAttribute("data-ssh"), hint = ssh.querySelector(".hint");
-    var done = function(ok){ if(hint){ hint.textContent = ok ? "copied" : "copy failed";
-      setTimeout(function(){ hint.textContent = "copy"; }, 1800); } };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(function(){done(true);}, function(){done(false);});
-    } else {
-      var ta = null, ok = false;
-      try {
-        ta = document.createElement("textarea");
-        ta.value = txt; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
-        document.body.appendChild(ta); ta.select();
-        // execCommand returns false when the copy is refused; that is a
-        // failure, not a success, so it has to drive the reported state.
-        ok = document.execCommand("copy") === true;
-      } catch(e){ ok = false; }
-      finally { if (ta && ta.parentNode) ta.parentNode.removeChild(ta); }
-      done(ok);
-    }
+"use strict";
+var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+var reduce = motionQuery.matches, motionPaused = reduce, manualPause = false;
+var motionButton = document.getElementById("motion-toggle");
+var pendingFrames = new Map(), nextFrame = 0;
+// Keep one pending callback per loop, including while motion is paused.
+function requestAnimationFrame(fn){
+  var id = ++nextFrame, entry = {fn:fn, native:null};
+  pendingFrames.set(id, entry);
+  if (!motionPaused) scheduleFrame(id, entry);
+  return id;
+}
+function scheduleFrame(id, entry){
+  entry.native = window.requestAnimationFrame(function(t){
+    pendingFrames.delete(id); entry.fn(t);
   });
-
-  /* ── scroll ruler ───────────────────────────────────────── */
-  var ruler = document.getElementById("ruler"), ticking = false;
-  function paintRuler(){
-    var h = document.documentElement.scrollHeight - window.innerHeight;
-    var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
-    ruler.style.transform = "scaleX(" + p + ")";
-    ticking = false;
-  }
-  if (ruler && !reduce) {
-    window.addEventListener("scroll", function(){
-      if (!ticking) { ticking = true; requestAnimationFrame(paintRuler); }
-    }, {passive:true});
-    window.addEventListener("resize", paintRuler, {passive:true});
-    paintRuler();
-  }
-
-  /* ── line length for the draw-on animation ──────────────── */
-  var sline = document.getElementById("sline");
-  if (sline && sline.getTotalLength) {
-    try {
-      var len = Math.ceil(sline.getTotalLength());
-      sline.style.setProperty("--len", len);
-    } catch(e){}
-  }
-
-  /* ── count-up ───────────────────────────────────────────── */
-  function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
-  function fmt(n, dec, group){
-    var s = dec ? n.toFixed(dec) : String(Math.round(n));
-    if (group) s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return s;
-  }
-  // Every [data-count] element records its rendered final text up front, so a
-  // print can restore it synchronously no matter where the animation is.
-  var counters = [].slice.call(document.querySelectorAll("[data-count]"));
-  counters.forEach(function(el){
-    if (!el.hasAttribute("data-final")) el.setAttribute("data-final", el.textContent);
+}
+function cancelAnimationFrame(id){
+  var entry = pendingFrames.get(id);
+  if (entry){ window.cancelAnimationFrame(entry.native); pendingFrames.delete(id); }
+}
+function setMotionPaused(paused){
+  motionPaused = paused;
+  document.documentElement.classList.toggle("motion-paused", paused);
+  motionButton.textContent = paused ? "Resume motion" : "Pause motion";
+  motionButton.setAttribute("aria-pressed", String(paused));
+  pendingFrames.forEach(function(entry, id){
+    if (paused){ window.cancelAnimationFrame(entry.native); entry.native = null; }
+    else if (entry.native === null) scheduleFrame(id, entry);
   });
-  var rafs = [];
-  function settleCounters(){
-    rafs.forEach(function(h){ cancelAnimationFrame(h); });
-    rafs.length = 0;
-    counters.forEach(function(el){
-      var f = el.getAttribute("data-final");
-      if (f !== null && el.textContent !== f) el.textContent = f;
-    });
-  }
-  function countUp(el){
-    var target = parseFloat(el.getAttribute("data-count"));
-    // never animate in a hidden tab: rAF is paused there and the value
-    // would be left frozen at zero.
-    if (isNaN(target) || document.hidden) return;
-    var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
-    var group = el.hasAttribute("data-group");
-    var pre = el.getAttribute("data-prefix") || "";
-    var suf = el.getAttribute("data-suffix") || "";
-    var final = el.getAttribute("data-final");
-    if (final === null) final = el.textContent;
-    var t0 = null, dur = 1100, handle = null;
-    function step(ts){
-      if (t0 === null) t0 = ts;
-      var p = Math.min(1, (ts - t0) / dur);
-      el.textContent = pre + fmt(target * easeOut(p), dec, group) + suf;
-      if (p < 1) { handle = requestAnimationFrame(step); rafs.push(handle); }
-      else el.textContent = final;
-    }
-    handle = requestAnimationFrame(step);
-    rafs.push(handle);
-  }
+}
+motionButton.hidden = false;
+motionButton.addEventListener("click", function(){ manualPause = !motionPaused; setMotionPaused(manualPause); });
+motionQuery.addEventListener("change", function(e){ reduce = e.matches; setMotionPaused(reduce || manualPause); });
+setMotionPaused(reduce);
+document.documentElement.classList.add("js");
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+var C = {claude:"#e8674b", claudeSoft:"#f2a089", gpt:"#3a8fd6", gold:"#e9b872", fg:"#efe7da", muted:"#a89c8c", dim:"#6f6558", pre:"#8a7f70", bg:"#0f0c0a"};
+var fmt = function(n){ return n.toLocaleString("en-US"); };
+var NS = "http://www.w3.org/2000/svg";
 
-  // Covers the Print button, Cmd/Ctrl+P and the browser's own print menu:
-  // beforeprint fires for all three, and the paint happens after it returns.
-  if (window.addEventListener) window.addEventListener("beforeprint", settleCounters);
-  if (window.matchMedia) {
-    var pmq = window.matchMedia("print");
-    var onPrintMQ = function(e){ if (e.matches) settleCounters(); };
-    if (pmq.addEventListener) pmq.addEventListener("change", onPrintMQ);
-    else if (pmq.addListener) pmq.addListener(onPrintMQ);
-  }
+/* ── shared data ─────────────────────────────────────────── */
+var MONTHS = [
+  ["2025-01",0],["2025-02",0],["2025-03",27],["2025-04",0],["2025-05",0],["2025-06",0],
+  ["2025-07",46],["2025-08",1],["2025-09",31],["2025-10",6],["2025-11",10],["2025-12",8],
+  ["2026-01",34],["2026-02",230],["2026-03",578],["2026-04",460],["2026-05",633],
+  ["2026-06",1177],["2026-07",1338],["2026-08",1142],["2026-09",708]
+];
+var MN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function mlabel(k){ var p = k.split("-"); return MN[+p[1]-1] + " " + p[0]; }
 
-  /* ── reveal on scroll ───────────────────────────────────── */
-  var reveals = [].slice.call(document.querySelectorAll(".reveal"));
-  function activate(el){
-    el.classList.add("in");
-    if (!reduce) {
-      [].slice.call(el.querySelectorAll("[data-count]")).forEach(countUp);
-    }
+/* ── tooltip ─────────────────────────────────────────────── */
+var tip = $("#tip");
+function showTip(html, x, y){
+  tip.innerHTML = html;
+  var r = tip.getBoundingClientRect();
+  tip.style.left = Math.max(8, Math.min(innerWidth - r.width - 8, x - r.width / 2)) + "px";
+  tip.style.top = Math.max(8, Math.min(innerHeight - r.height - 8, y - r.height - 12)) + "px";
+  tip.style.opacity = 1;
+}
+function hideTip(){ tip.style.opacity = 0; }
+
+/* ── progress bar + nav highlight ────────────────────────── */
+var bar = $("#bar"), navLinks = $$("nav.top ul a");
+function onScroll(){
+  var h = document.documentElement.scrollHeight - innerHeight;
+  bar.style.transform = "scaleX(" + (h > 0 ? scrollY / h : 0) + ")";
+  var cur = null;
+  navLinks.forEach(function(a){ var s = $(a.getAttribute("href")); if (s && s.getBoundingClientRect().top < innerHeight * .4) cur = a; });
+  navLinks.forEach(function(a){ a.classList.toggle("on", a === cur); });
+}
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* ── count-up ────────────────────────────────────────────── */
+function countUp(el){
+  if (el.dataset.done) return; el.dataset.done = 1;
+  var to = parseFloat(el.dataset.count), dec = +(el.dataset.decimals||0), grp = el.dataset.group;
+  var out = function(v){ var s = v.toFixed(dec); return grp ? fmt(Math.round(v)) : s; };
+  if (motionPaused){ el.textContent = out(to); return; }
+  var t0 = performance.now(), dur = 1600 + Math.min(900, to / 8);
+  (function step(t){
+    var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 4);
+    el.textContent = out(to * e);
+    if (p < 1) requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ── reveal observer (also triggers counters + per-section hooks) ── */
+var hooks = {};
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if (!en.isIntersecting) return;
+    en.target.classList.add("in");
+    $$("[data-count]", en.target).forEach(countUp);
+    if (en.target.dataset.count) countUp(en.target);
+    var id = en.target.dataset.hook; if (id && hooks[id]) { hooks[id](); delete hooks[id]; }
+    io.unobserve(en.target);
+  });
+}, {threshold:.18, rootMargin:"0px 0px -6% 0px"});
+function watch(el){ io.observe(el); }
+
+/* ═══ HERO: flow field ═════════════════════════════════════ */
+(function hero(){
+  var cv = $("#flow"), ctx = cv.getContext("2d"), tags = $$("#flowtags span");
+  var w, h, dpr, parts = [], mouse = {x:-1e4, y:-1e4}, t = 0, running = true, raf;
+  var LANES = 9;
+  function place(){
+    tags.forEach(function(s){ s.style.left = (+s.dataset.x * 100) + "%"; s.style.top = "58%"; });
   }
-  if (reduce || !("IntersectionObserver" in window)) {
-    reveals.forEach(function(el){ el.classList.add("in"); });
-  } else {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if (en.isIntersecting){ activate(en.target); io.unobserve(en.target); }
-      });
-    }, {rootMargin:"0px 0px -8% 0px", threshold:0.12});
-    reveals.forEach(function(el, i){
-      el.style.transitionDelay = Math.min(i, 3) * 60 + "ms";
-      io.observe(el);
+  function spawn(p, initial){
+    p.x = initial ? Math.random() * w : -Math.random() * 60;
+    p.y = Math.random() * h;
+    p.v = .7 + Math.random() * .9;
+    var r = Math.random();
+    p.c = r < .1 ? 1 : r < .17 ? 2 : 0;          // 0 cream, 1 claude, 2 gpt
+    p.lane = Math.floor(Math.random() * LANES);
+    p.a = .25 + Math.random() * .5;
+    return p;
+  }
+  function resize(){
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, w, h);
+    var n = Math.round(Math.min(2200, w * h / 900));
+    parts = []; for (var i = 0; i < n; i++) parts.push(spawn({}, true));
+    place();
+  }
+  var gate = .64;
+  function frame(){
+    t += 1;
+    ctx.fillStyle = "rgba(15,12,10,.16)";
+    ctx.fillRect(0, 0, w, h);
+    var gx = w * gate, cy = h * .42, laneGap = Math.min(20, h * .028);
+    // the seam
+    var g = ctx.createLinearGradient(0, cy - h * .3, 0, cy + h * .3);
+    g.addColorStop(0, "rgba(233,184,114,0)"); g.addColorStop(.5, "rgba(233,184,114,.35)"); g.addColorStop(1, "rgba(233,184,114,0)");
+    ctx.fillStyle = g; ctx.fillRect(gx - .5, cy - h * .3, 1, h * .6);
+    for (var i = 0; i < parts.length; i++){
+      var p = parts[i], x = p.x, y = p.y;
+      if (x < gx){
+        // turbulent inflow, funneling toward the review seam
+        var f = x / gx;
+        var ang = Math.sin(x * .006 + t * .012) * .9 + Math.cos(y * .009 - t * .009) * .8 + Math.sin((x + y) * .003 + t * .004);
+        p.x += p.v * (1.1 + f * .6);
+        p.y += Math.sin(ang) * p.v * (1.2 - f * .8);
+        var half = h * (.48 - .40 * Math.pow(f, 1.6));
+        var dy = p.y - cy;
+        if (Math.abs(dy) > half) p.y -= dy * .06;
+        else p.y -= dy * .004 * f;
+      } else {
+        // after review: straight, fast, orderly lanes
+        var ly = cy + (p.lane - (LANES - 1) / 2) * laneGap;
+        p.y += (ly - p.y) * .12;
+        p.x += p.v * 2.6 + 1.2;
+      }
+      var mx = p.x - mouse.x, my = p.y - mouse.y, d2 = mx * mx + my * my;
+      if (d2 < 9000){ var k = (9000 - d2) / 9000 * 3; var d = Math.sqrt(d2) || 1; p.x += mx / d * k; p.y += my / d * k; }
+      if (p.x > w + 10) spawn(p, false);
+      var past = p.x >= gx;
+      var a = past ? Math.min(1, p.a + .35) : p.a;
+      ctx.fillStyle = p.c === 1 ? "rgba(232,103,75," + a + ")" : p.c === 2 ? "rgba(58,143,214," + a + ")" : past ? "rgba(233,184,114," + (a * .8) + ")" : "rgba(239,231,218," + (a * .55) + ")";
+      var s = past ? 1.8 : 1.4;
+      ctx.fillRect(p.x, p.y, s, s);
+    }
+    if (running) raf = requestAnimationFrame(frame);
+  }
+  resize();
+  addEventListener("resize", function(){ clearTimeout(resize.t); resize.t = setTimeout(resize, 150); });
+  cv.parentElement.addEventListener("pointermove", function(e){ var r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  cv.parentElement.addEventListener("pointerleave", function(){ mouse.x = mouse.y = -1e4; });
+  if (reduce){ running = false; for (var k = 0; k < 160; k++) frame(); running = true; }
+  new IntersectionObserver(function(en){
+    var vis = en[0].isIntersecting;
+    if (vis && !running){ running = true; raf = requestAnimationFrame(frame); }
+    if (!vis){ running = false; cancelAnimationFrame(raf); }
+  }).observe(cv);
+  raf = requestAnimationFrame(frame);
+})();
+
+/* ═══ HERO: ticker (illustrative loop) ════════════════════ */
+(function ticker(){
+  var ol = $("#ticker"); if (!ol) return;
+  var repos = ["murmur-app","agent-mesh","usher","hangar","ghosthands","fleetmap","gauge","agentos","fleet","family-host"];
+  var steps = [
+    function(r){ return '<span class="k">ask</span> '+r+' · issue opened'; },
+    function(r){ return '<span class="k">route</span> '+r+' → <span class="g">Sol</span> implement'; },
+    function(r){ return '<span class="k">fan-out</span> '+r+' → 3 subagents'; },
+    function(r){ return '<span class="k">review</span> '+r+' · <span class="g">Astra</span> reads <span class="c">Opus</span> diff'; },
+    function(r){ return '<span class="k">review</span> '+r+' · <span class="c">Opus</span> reads <span class="g">Sol</span> diff'; },
+    function(r){ return '<span class="k">verify</span> '+r+' · running build'; },
+    function(r){ return '<span class="k">ship</span> '+r+' · <span class="ok">PR ready ✓</span>'; }
+  ];
+  var i = 0;
+  function push(){
+    var r = repos[Math.floor(Math.random() * repos.length)];
+    var li = document.createElement("li");
+    li.innerHTML = steps[i++ % steps.length](r);
+    ol.insertBefore(li, ol.firstChild);
+    while (ol.children.length > 5) ol.removeChild(ol.lastChild);
+  }
+  for (var k = 0; k < 4; k++) push();
+  setInterval(function(){ if (!motionPaused && !document.hidden) push(); }, 1500);
+})();
+
+/* ═══ marquee ═════════════════════════════════════════════ */
+(function(){
+  var names = ["murmur-app","agent-mesh","usher","hangar","ghosthands","Fleet","Family Host","CPA gateway","agentos","fleetmap","Gauge","aperture","whoop-dashboard","burn log","ssh-tui","St. Basil's"];
+  var html = names.map(function(n){ return "<span>" + n + "</span>"; }).join("");
+  $("#marq").innerHTML = html + html;
+})();
+
+/* ═══ 01 bar chart ════════════════════════════════════════ */
+(function bars(){
+  var svg = $("#bars"), W = 900, H = 340, L = 50, R = 12, T = 34, B = 36;
+  var pw = W - L - R, ph = H - T - B, n = MONTHS.length, step = pw / n, bw = step - 8, max = 1500;
+  var y = function(v){ return T + ph - v / max * ph; };
+  var s = '<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="rgba(232,103,75,.28)"/><line x1="0" y1="0" x2="0" y2="6" stroke="#e8674b" stroke-width="3"/></pattern></defs>';
+  [0,500,1000,1500].forEach(function(v){
+    s += '<line class="' + (v ? "grid" : "base") + '" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>';
+    s += '<text class="ax" x="' + (L - 8) + '" y="' + (y(v) + 3.5) + '" text-anchor="end">' + fmt(v) + '</text>';
+  });
+  var cutX = L + step * 13;
+  s += '<line class="cut" x1="' + (cutX - 4) + '" x2="' + (cutX - 4) + '" y1="' + (T - 14) + '" y2="' + (T + ph) + '"/>';
+  s += '<text class="cutl" x="' + cutX + '" y="' + (T - 4) + '">FEB 2026 · AGENT WORKFLOWS ADOPTED</text>';
+  s += '<text class="era" x="' + (L + step * 6.5) + '" y="' + (y(0) - 60) + '" text-anchor="middle">MANUAL ERA · 129 COMMITS</text>';
+  MONTHS.forEach(function(m, i){
+    var v = m[1], x = L + i * step + 4, top = y(v), hgt = T + ph - top;
+    var cls = i === n - 1 ? "part" : i >= 13 ? "post" : "pre";
+    var r = Math.min(4, hgt);
+    var d = hgt <= 0 ? "M" + x + " " + (T + ph) + "h" + bw + "v-1h-" + bw + "z"
+      : "M" + x + " " + (T + ph) + "V" + (top + r) + "q0 -" + r + " " + r + " -" + r + "h" + (bw - 2 * r) + "q" + r + " 0 " + r + " " + r + "V" + (T + ph) + "z";
+    s += '<path class="b ' + cls + '" data-i="' + i + '" style="--d:' + (i * .045).toFixed(3) + 's" d="' + d + '"/>';
+    if ([13,18,20].indexOf(i) > -1) s += '<text class="val" x="' + (x + bw / 2) + '" y="' + (top - 7) + '" text-anchor="middle">' + fmt(v) + (i === 20 ? "*" : "") + '</text>';
+    var p = m[0].split("-");
+    if (p[1] === "01" || p[1] === "07" || i === n - 1) s += '<text class="ax" x="' + (x + bw / 2) + '" y="' + (H - 14) + '" text-anchor="middle">' + MN[+p[1] - 1] + (p[1] === "01" ? " " + p[0].slice(2) : "") + '</text>';
+  });
+  MONTHS.forEach(function(m, i){ s += '<rect class="hit" data-i="' + i + '" x="' + (L + i * step) + '" y="' + T + '" width="' + step + '" height="' + ph + '"/>'; });
+  svg.insertAdjacentHTML("beforeend", s);
+  var bs = $$(".b", svg);
+  $$(".hit", svg).forEach(function(r){
+    r.addEventListener("pointermove", function(e){
+      var i = +r.dataset.i, m = MONTHS[i];
+      svg.classList.add("hovering"); bs.forEach(function(b, j){ b.classList.toggle("hot", j === i); });
+      showTip("<b>" + mlabel(m[0]) + "</b> · " + fmt(m[1]) + " commits" + (i === MONTHS.length - 1 ? " (partial)" : ""), e.clientX, e.clientY);
     });
-    // anything already above the fold on load
-    setTimeout(function(){
-      reveals.forEach(function(el){
-        var r = el.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0 && !el.classList.contains("in")) {
-          activate(el); io.unobserve(el);
+    r.addEventListener("pointerleave", function(){ svg.classList.remove("hovering"); hideTip(); });
+  });
+})();
+
+/* ═══ 02 dot wall ═════════════════════════════════════════ */
+(function dots(){
+  var cv = $("#dots"), ctx = cv.getContext("2d"), dots = [], layout = null, shown = 0, started = false;
+  var y25 = MONTHS.slice(0, 12), y26 = MONTHS.slice(12);
+  function build(){
+    var w = cv.clientWidth, pitch = w < 520 ? 5 : w < 800 ? 6 : 8, size = pitch - 2;
+    var cols = Math.floor(w / pitch), rows25 = Math.ceil(129 / cols), rows26 = Math.ceil(6300 / cols);
+    var gapY = 34, top25 = 18, top26 = top25 + rows25 * pitch + gapY;
+    var h = top26 + rows26 * pitch + 6;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.style.height = h + "px"; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dots = [];
+    function lay(list, top, year){
+      var k = 0;
+      list.forEach(function(m, mi){
+        for (var j = 0; j < m[1]; j++, k++){
+          dots.push({x:(k % cols) * pitch, y:top + Math.floor(k / cols) * pitch, m:m[0], year:year, alt:mi % 2});
         }
       });
-    }, 60);
+    }
+    lay(y25, top25, 2025); lay(y26, top26, 2026);
+    layout = {w:w, h:h, pitch:pitch, size:size, cols:cols, top25:top25, top26:top26};
   }
+  function paintLabels(){
+    ctx.font = "500 10px 'JetBrains Mono', monospace"; ctx.fillStyle = C.muted;
+    ctx.fillText("2025 · 129", 0, layout.top25 - 6);
+    ctx.fillText("2026 · 6,300", 0, layout.top26 - 6);
+  }
+  function paint(upto){
+    var s = layout.size;
+    for (var i = shown; i < upto; i++){
+      var d = dots[i];
+      ctx.fillStyle = d.year === 2025 ? (d.alt ? "#6e6457" : C.pre) : (d.alt ? C.claudeSoft : C.claude);
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(d.x, d.y, s, s, 1.5); else ctx.rect(d.x, d.y, s, s); ctx.fill();
+    }
+    shown = upto;
+  }
+  function full(){ ctx.clearRect(0, 0, layout.w, layout.h); shown = 0; paintLabels(); paint(started ? dots.length : 0); }
+  build(); full();
+  function run(){
+    started = true;
+    if (motionPaused){ paint(dots.length); return; }
+    var t0 = performance.now(), dur = 2600;
+    (function step(t){
+      var p = Math.min(1, (t - t0) / dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      paint(Math.floor(e * dots.length));
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  var sec = $("#wall .panel"); sec.dataset.hook = "dots"; hooks.dots = run;
+  addEventListener("resize", function(){ clearTimeout(dots.t); dots.t = setTimeout(function(){ var was = started; build(); started = was; full(); }, 200); });
+  cv.addEventListener("pointermove", function(e){
+    var r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, L = layout;
+    var col = Math.floor(x / L.pitch), top = y >= L.top26 ? L.top26 : L.top25, row = Math.floor((y - top) / L.pitch);
+    var base = top === L.top26 ? 129 : 0, idx = base + row * L.cols + col, d = dots[idx];
+    if (row >= 0 && col < L.cols && d && d.year === (top === L.top26 ? 2026 : 2025)){
+      var m = MONTHS.filter(function(q){ return q[0] === d.m; })[0];
+      showTip("<b>" + mlabel(d.m) + "</b> · " + fmt(m[1]) + " commits" + (d.m === "2026-09" ? " (partial)" : ""), e.clientX, e.clientY);
+    } else hideTip();
+  });
+  cv.addEventListener("pointerleave", hideTip);
+})();
 
-  /* ── line-chart tooltip + crosshair ─────────────────────── */
-  var svg = document.getElementById("linechart");
-  var tip = document.getElementById("tip");
-  if (svg && tip) {
-    var PTS = [[56,268],[96,268],[136,263.6],[176,268],[216,268],[256,268],[296,260.5],
-      [336,267.8],[376,263],[416,267],[456,266.4],[496,266.7],[536,262.5],[576,230.6],
-      [616,174],[656,193.2],[696,165],[736,76.5],[776,50.4],[816,82.2],[856,100.6]];
-    var NS = "http://www.w3.org/2000/svg";
-    var ch = document.createElementNS(NS, "line");
-    ch.setAttribute("class","crosshair"); ch.setAttribute("y1","24"); ch.setAttribute("y2","268");
-    ch.style.display = "none"; ch.setAttribute("aria-hidden","true");
-    ch.style.pointerEvents = "none";
-    var cd = document.createElementNS(NS, "circle");
-    cd.setAttribute("class","dot hoverdot"); cd.setAttribute("r","5"); cd.style.display = "none";
-    cd.setAttribute("aria-hidden","true");
-    cd.style.pointerEvents = "none";
-    svg.insertBefore(ch, document.getElementById("hits"));
-    svg.appendChild(cd);
+/* ═══ 03 factory pipeline ═════════════════════════════════ */
+(function pipe(){
+  var svg = $("#pipe"), rulesEl = $("#rules");
+  var RULES = [
+    {k:"orch", ic:"i-orch", h:"The orchestrator never leaves the chat.", p:"The model I talk to plans, routes, and reviews. It doesn't disappear into a forty-minute solo implementation."},
+    {k:"fan", ic:"i-fan", h:"Research and implementation get fanned out.", p:"Wide reading goes to a subagent that returns a conclusion, not a file dump. Independent work runs in parallel."},
+    {k:"route", ic:"i-route", h:"Model choice is a routing decision.", p:"Hard architecture and reviews to the top tier, lead work to Sol, ordinary to Terra, mechanical to Luna."},
+    {k:"review", ic:"i-eye", h:"One independent review, other family.", p:"A model that didn't write it gets the intent, the diff, and the evidence. Read-only, fresh context, high effort."},
+    {k:"verify", ic:"i-verify", h:"Verify against the running build.", p:"Reproduce first. Exercise the real flow in a real browser or binary. Tests are evidence, not the whole case."},
+    {k:"ship", ic:"i-ship", h:"“Fix this” means finished.", p:"Implement, verify, review, push, CI green, PR ready. And the inverse: a question authorizes nothing."}
+  ];
+  var HNODES = {
+    ask:{x:78,y:220,w:128,l:"Ask",s:"issue or prompt",ic:"i-ask"},
+    orch:{x:250,y:220,w:136,l:"Orchestrator",s:"plans · routes",ic:"i-orch"},
+    astra:{x:520,y:62,w:180,l:"Astra / Opus",s:"hardest reasoning",ic:"i-astra"},
+    sol:{x:520,y:167,w:180,l:"Sol / Opus",s:"lead implementation",ic:"i-sun"},
+    terra:{x:520,y:272,w:180,l:"Terra / Sonnet",s:"ordinary parallel",ic:"i-globe"},
+    luna:{x:520,y:377,w:180,l:"Luna / Haiku",s:"mechanical volume",ic:"i-moon"},
+    review:{x:772,y:220,w:136,l:"Review",s:"other family",ic:"i-eye"},
+    verify:{x:944,y:220,w:136,l:"Verify",s:"running build",ic:"i-verify"},
+    ship:{x:1116,y:220,w:136,l:"Ship",s:"PR ready · CI ✓",ic:"i-ship"}
+  };
+  var VNODES = {
+    ask:{x:200,y:48,w:180,l:"Ask",s:"issue or prompt",ic:"i-ask"},
+    orch:{x:200,y:168,w:180,l:"Orchestrator",s:"plans · routes",ic:"i-orch"},
+    astra:{x:104,y:318,w:176,l:"Astra / Opus",s:"hardest reasoning",ic:"i-astra"},
+    sol:{x:296,y:318,w:176,l:"Sol / Opus",s:"lead implementation",ic:"i-sun"},
+    terra:{x:104,y:430,w:176,l:"Terra / Sonnet",s:"ordinary parallel",ic:"i-globe"},
+    luna:{x:296,y:430,w:176,l:"Luna / Haiku",s:"mechanical volume",ic:"i-moon"},
+    review:{x:200,y:580,w:180,l:"Review",s:"other family",ic:"i-eye"},
+    verify:{x:200,y:700,w:180,l:"Verify",s:"running build",ic:"i-verify"},
+    ship:{x:200,y:820,w:180,l:"Ship",s:"PR ready · CI ✓",ic:"i-ship"}
+  };
+  var LN = ["astra","sol","terra","luna"], NH = 74;
+  var EDGES = [["ask","orch"]].concat(LN.map(function(l){ return ["orch", l]; }), LN.map(function(l){ return [l, "review"]; }), [["review","verify"],["verify","ship"]]);
+  var STAGE_NODES = [["orch"], LN, LN, ["review"], ["verify"], ["ship"]];
+  var STAGE_EDGES = [["ask-orch"], LN.map(function(l){ return "orch-" + l; }), [], ["review-verify"].concat(LN.map(function(l){ return l + "-review"; })), ["verify-ship"], []];
+  var N, vertical, edgeEls = {}, nodeEls = {}, pkG, packets = [], active = 0;
 
-    var hits = [].slice.call(svg.querySelectorAll(".hit"));
-    hits.forEach(function(rect, i){
-      function show(ev){
-        var p = PTS[i];
-        ch.setAttribute("x1", p[0]); ch.setAttribute("x2", p[0]); ch.style.display = "";
-        cd.setAttribute("cx", p[0]); cd.setAttribute("cy", p[1]); cd.style.display = "";
-        var t = rect.querySelector("title");
-        tip.textContent = t ? t.textContent : "";
-        var box = rect.getBoundingClientRect();
-        var x = (ev && ev.clientX) ? ev.clientX : box.left + box.width / 2;
-        tip.style.left = x + "px";
-        tip.style.top = (box.top + box.height * 0.35) + "px";
-        tip.style.opacity = "1";
+  rulesEl.innerHTML = RULES.map(function(r, i){
+    return '<button type="button" class="rule" data-i="' + i + '"><div class="top"><span class="k">0' + (i + 1) + '</span><svg class="ico"><use href="#' + r.ic + '"/></svg></div><h3>' + r.h + '</h3><p>' + r.p + '</p></button>';
+  }).join("");
+  var ruleEls = $$(".rule", rulesEl);
+
+  function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function build(){
+    vertical = svg.parentElement.clientWidth < 720;
+    N = vertical ? VNODES : HNODES;
+    svg.setAttribute("viewBox", vertical ? "0 0 400 870" : "0 0 1200 440");
+    svg.innerHTML = ""; edgeEls = {}; nodeEls = {};
+    var gE = el("g", {}, svg); pkG = el("g", {}, svg); var gN = el("g", {}, svg);
+    EDGES.forEach(function(e){
+      var a = N[e[0]], b = N[e[1]], d;
+      if (!vertical){
+        var x1 = a.x + a.w / 2, x2 = b.x - b.w / 2, mx = (x1 + x2) / 2;
+        d = "M" + x1 + " " + a.y + "C" + mx + " " + a.y + " " + mx + " " + b.y + " " + x2 + " " + b.y;
+      } else {
+        var y1 = a.y + NH / 2, y2 = b.y - NH / 2, my = (y1 + y2) / 2;
+        d = "M" + a.x + " " + y1 + "C" + a.x + " " + my + " " + b.x + " " + my + " " + b.x + " " + y2;
       }
-      function hide(){ tip.style.opacity = "0"; ch.style.display="none"; cd.style.display="none"; }
-      rect.addEventListener("mousemove", show);
-      rect.addEventListener("mouseenter", show);
-      rect.addEventListener("mouseleave", hide);
-      rect.addEventListener("blur", hide);
+      var p = el("path", {"class":"edge", d:d}, gE);
+      edgeEls[e[0] + "-" + e[1]] = {el:p, len:p.getTotalLength()};
     });
-    svg.addEventListener("mouseleave", function(){
-      tip.style.opacity = "0"; ch.style.display="none"; cd.style.display="none";
+    Object.keys(N).forEach(function(k){
+      var n = N[k], g = el("g", {"class":"node"}, gN);
+      el("rect", {x:n.x - n.w / 2, y:n.y - NH / 2, width:n.w, height:NH, rx:12}, g);
+      var u = el("use", {href:"#" + n.ic, x:n.x - 10, y:n.y - 30, width:20, height:20, "class":"ni"}, g);
+      var t1 = el("text", {x:n.x, y:n.y + 10, "text-anchor":"middle", "class":"nl"}, g); t1.textContent = n.l;
+      var t2 = el("text", {x:n.x, y:n.y + 25, "text-anchor":"middle", "class":"ns"}, g); t2.textContent = n.s;
+      nodeEls[k] = g;
     });
+    packets.forEach(function(p){ p.g = null; });
+    packets = [];
+    setStage(active, true);
   }
+
+  function setStage(i, quiet){
+    active = i;
+    ruleEls.forEach(function(r, j){ r.classList.toggle("on", j === i); r.setAttribute("aria-pressed", String(j === i)); if (j === i && !quiet){ r.style.setProperty("--dur", DWELL + "ms"); } });
+    Object.keys(nodeEls).forEach(function(k){ nodeEls[k].classList.toggle("on", STAGE_NODES[i].indexOf(k) > -1); });
+    Object.keys(edgeEls).forEach(function(k){ edgeEls[k].el.classList.toggle("on", STAGE_EDGES[i].indexOf(k) > -1); });
+  }
+
+  // packets
+  var SPEED = .2, HOLD = 260;
+  function newPacket(){
+    var lane = LN[[0,1,1,2,2,2,3,3][Math.floor(Math.random() * 8)]];
+    var fam = Math.random() < .5 ? "claude" : "gpt";
+    var route = ["ask-orch", "orch-" + lane, lane + "-review", "review-verify", "verify-ship"];
+    var g = el("g", {"class":"pk"}, pkG);
+    var ring = el("circle", {r:8, fill:"none", stroke:fam === "claude" ? C.gpt : C.claude, "stroke-width":2, opacity:0}, g);
+    var core = el("circle", {r:4.5, fill:fam === "claude" ? C.claude : C.gpt}, g);
+    return {g:g, ring:ring, core:core, route:route, seg:0, dist:0, hold:0};
+  }
+  var last = 0, spawnAcc = 0, DWELL = 3400, stageAcc = 0, pausedUntil = 0, running = false, raf;
+  function tick(t){
+    var dt = last ? Math.min(60, t - last) : 16; last = t;
+    spawnAcc += dt;
+    if (spawnAcc > 420 && packets.length < 26){ spawnAcc = 0; packets.push(newPacket()); }
+    for (var i = packets.length - 1; i >= 0; i--){
+      var p = packets[i];
+      if (p.hold > 0){ p.hold -= dt; p.g.setAttribute("opacity", 0); continue; }
+      p.g.setAttribute("opacity", 1);
+      var e = edgeEls[p.route[p.seg]];
+      p.dist += SPEED * dt * (vertical ? .8 : 1);
+      if (p.dist >= e.len){
+        var node = p.route[p.seg].split("-")[1];
+        if (nodeEls[node]){ nodeEls[node].classList.add("flash"); (function(nn){ setTimeout(function(){ nn.classList.remove("flash"); }, 140); })(nodeEls[node]); }
+        p.seg++; p.dist = 0; p.hold = HOLD;
+        if (p.seg >= p.route.length){ p.g.remove(); packets.splice(i, 1); continue; }
+        if (p.seg >= 3) p.ring.setAttribute("opacity", 1);
+        continue;
+      }
+      var pt = e.el.getPointAtLength(p.dist);
+      p.g.setAttribute("transform", "translate(" + pt.x.toFixed(1) + " " + pt.y.toFixed(1) + ")");
+    }
+    if (t > pausedUntil){ stageAcc += dt; if (stageAcc > DWELL){ stageAcc = 0; setStage((active + 1) % RULES.length); } }
+    if (running) raf = requestAnimationFrame(tick);
+  }
+  ruleEls.forEach(function(r){
+    r.addEventListener("click", function(){ setStage(+r.dataset.i); stageAcc = 0; pausedUntil = performance.now() + 9000; });
+  });
+  build();
+  var rt; addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(function(){ var v = svg.parentElement.clientWidth < 720; if (v !== vertical) build(); }, 200); });
+  if (reduce){
+    // static: a few packets frozen mid-flight, first rule highlighted
+    for (var k = 0; k < 8; k++){ var p = newPacket(); p.seg = k % 5; var e = edgeEls[p.route[p.seg]], pt = e.el.getPointAtLength(e.len * .5); p.g.setAttribute("transform", "translate(" + pt.x + " " + pt.y + ")"); if (p.seg >= 3) p.ring.setAttribute("opacity", 1); }
+  }
+  new IntersectionObserver(function(en){
+    var vis = en[0].isIntersecting;
+    if (vis && !running){ running = true; last = 0; raf = requestAnimationFrame(tick); setStage(active); }
+    if (!vis){ running = false; cancelAnimationFrame(raf); }
+  }, {threshold:.1}).observe(svg);
+})();
+
+/* ═══ 04 tokens ═══════════════════════════════════════════ */
+(function tokens(){
+  var T = [["Opus 4.8",2510416238,"cl"],["Fable 5",1062481134,"cl"],["Sonnet 5",911112836,"cl"],["GPT-5.5",660827177,"gp"],["GPT-5.6 Sol",434067143,"gp"]];
+  var max = T[0][1];
+  var short = function(v){ return v >= 1e9 ? (v / 1e9).toFixed(2) + "B" : Math.round(v / 1e6) + "M"; };
+  $("#tokrows").innerHTML = T.map(function(r){
+    return '<div class="row tip" data-t="' + r[0] + ' · ' + fmt(r[1]) + ' tokens"><span class="nm">' + r[0] + '</span><span class="tr"><span class="fill ' + r[2] + '" data-w="' + (r[1] / max * 100).toFixed(1) + '"></span></span><span class="vl num">' + short(r[1]) + '</span></div>';
+  }).join("");
+  $$("#tokrows .row").forEach(function(r){
+    r.addEventListener("pointermove", function(e){ showTip(r.dataset.t, e.clientX, e.clientY); });
+    r.addEventListener("pointerleave", hideTip);
+  });
+  var fig = $("#tokrows").closest("figure");
+  fig.dataset.hook = "tok";
+  hooks.tok = function(){
+    setTimeout(function(){
+      $$("#tokrows .fill").forEach(function(f, i){ f.style.transitionDelay = (i * .08) + "s"; f.style.width = f.dataset.w + "%"; });
+      $$("#split div").forEach(function(d){ d.style.width = d.dataset.w + "%"; });
+    }, 150);
+  };
+})();
+
+/* ═══ 06 the stack ════════════════════════════════════════ */
+(function stack(){
+  var LAYERS = [
+    {name:"Machines & mesh", s:"where everything runs", tools:[
+      {n:"Fleet", ic:"i-net", tag:"Agent-native control plane for a personal Tailscale mesh", p:"One manifest resolves every box; Tailscale supplies live IPs, so no agent ever hardcodes an address. Discovery, remote exec, transfers, services, artifacts, skill distribution, token analytics.", m:["Python","~9.5k LOC · 28 subcommands"], st:"Private"},
+      {n:"ssh-tui", ic:"i-term", tag:"ssh ssh.georgenijo.com returns a terminal, not a banner", p:"A Wish + Bubbletea server serving a full TUI mirror of this site. Separate deploy path from the web build.", m:["Go","~2,000 LOC"], st:"Public endpoint"}
+    ]},
+    {name:"Gateway & platform", s:"one API, one host", tools:[
+      {n:"CPA gateway", ic:"i-gate", tag:"Every model provider behind one Anthropic-compatible API", p:"Fronts Claude and GPT behind a single endpoint with per-client metering, quotas, and dashboards. It's what makes routing mechanical.", m:["Python","~19k LOC · 77 commits"], st:"Private"},
+      {n:"Family Host", ic:"i-server", tag:"A personal Vercel, invite-only, on my own hardware", p:"Push a repo or image, get an isolated HTTPS app, workspaces, and Postgres. Guard/monitor/backup timers, deploy locks, rollback, restore checks.", m:["Python + Node CLI","~37k LOC · 169 commits"], st:"Private"}
+    ]},
+    {name:"Agent control", s:"supervision & coordination", tools:[
+      {n:"hangar", ic:"i-grid", tag:"Multi-session control plane for coding agents", p:"Runs and supervises many agent sessions from one place, so fan-out is an operation rather than a pile of terminal tabs.", m:["Rust","since 2026-04-17"], st:"Public", url:"https://github.com/georgenijo/hangar"},
+      {n:"agent-mesh", ic:"i-mesh", tag:"A shared nervous system for agents that would otherwise collide", p:"Claude Code, Codex, Cursor, and Aider discover each other, claim files, ask questions, and share a blackboard. Go stdlib only.", m:["Go","~58k lines · 209 commits"], st:"Public", url:"https://github.com/georgenijo/agent-mesh"},
+      {n:"usher", ic:"i-switch", tag:"The MCP broker, one front desk every agent talks to", p:"Routes, trims, arbitrates, and audits MCP traffic. Context trimming is load-bearing: tool sprawl is a context-budget problem.", m:["Go","since 2026-06-17"], st:"Public", url:"https://github.com/georgenijo/usher"},
+      {n:"agentos", ic:"i-os", tag:"Eleven scattered repos collapsed into one agent OS", p:"One backend, one secrets ledger, a just-driven dev loop across Claude Code, Discord, GitHub, mesh nodes, and Home Assistant. Runs offline.", m:["Python","~96k lines · 196 commits"], st:"Private"}
+    ]},
+    {name:"The loop", s:"how the agents work & get measured", tools:[
+      {n:"Skills & hooks", ic:"i-wand", tag:"The agent loop, customized until it fits the doctrine", p:"77 personal skills plus 5 hook events: vault sync, a Stop-hook chime, token-budget warnings, Fleet context on every prompt.", m:["Markdown · Python · shell","77 skills · 5 hooks"], st:"Private"},
+      {n:"Burn log", ic:"i-flame", tag:"What the agents cost against what they shipped", p:"Walks usage data and git history across every machine and publishes tokens spent vs commits landed. The accountability half.", m:["Python + static page","6.2B tokens recorded"], st:"Public", url:"./burn.html"},
+      {n:"ghosthands", ic:"i-hand", tag:"Free, local computer-use for macOS", p:"A small MLX model drives native apps through the Accessibility tree, then replays the flow with no model in the loop.", m:["Python","~32k lines"], st:"Public", url:"https://github.com/georgenijo/ghosthands"}
+    ]},
+    {name:"Products", s:"what comes out the other end", tools:[
+      {n:"murmur-app", ic:"i-mic", tag:"Local voice-to-text for macOS", p:"Tauri 2 with a Rust core: whisper-rs on Metal, cpal audio, global hotkey. 101 releases from v0.1.0 to v0.50.0.", m:["Rust + React","~222k LOC · 1,358 commits"], st:"Public", url:"https://github.com/georgenijo/murmur-app"},
+      {n:"aperture", ic:"i-cam", tag:"iOS film camera with a real emulation pipeline", p:"AVFoundation into Core Image + Metal, emulating film stocks rather than applying a filter.", m:["Swift"], st:"Public", url:"https://github.com/georgenijo/aperture"},
+      {n:"whoop-dashboard", ic:"i-heart", tag:"Health analytics with an AI coach", p:"Interprets months of WHOOP trends rather than just plotting them.", m:["TypeScript","~160k lines · 282 commits"], st:"Public", url:"https://github.com/georgenijo/whoop-dashboard"},
+      {n:"St. Basil's", ic:"i-church", tag:"Church site rebuilt as an agent ticket workflow", p:"Next.js, Sanity, Supabase, Resend. Tickets executed by agents against acceptance checks.", m:["Next.js","279 commits"], st:"Live site"},
+      {n:"fleetmap", ic:"i-map", tag:"Live map of what your Mac is running", p:"Processes sized by RAM, colored by CPU, wired by live sockets.", m:["Swift + Go"], st:"Public", url:"https://github.com/georgenijo/fleetmap"},
+      {n:"Gauge", ic:"i-gauge", tag:"Claude usage in the menu bar", p:"The right-now answer to the burn log's monthly question.", m:["Swift"], st:"Public", url:"https://github.com/georgenijo/Gauge"}
+    ]}
+  ];
+  var iso = $("#iso"), lay = $("#layers"), det = $("#detail"), stage = $("#stage"), cur = -1;
+  iso.innerHTML = LAYERS.map(function(L, i){
+    return '<div class="plate" style="--i:' + i + '"><span class="pl">L' + i + ' · ' + L.name + '</span>' +
+      L.tools.map(function(t){ return '<span class="chip"><svg class="ico"><use href="#' + t.ic + '"/></svg>' + t.n + '</span>'; }).join("") + '</div>';
+  }).join("");
+  // list top-down so it reads like the visual stack
+  lay.innerHTML = LAYERS.map(function(L, i){ return {L:L, i:i}; }).reverse().map(function(o){
+    return '<button type="button" class="layer" role="tab" id="layer-' + o.i + '" aria-controls="detail" data-i="' + o.i + '"><span class="ix">L' + o.i + '</span><span><b>' + o.L.name + '</b><span class="s">' + o.L.s + '</span></span><span class="cnt">' + o.L.tools.length + '</span></button>';
+  }).join("");
+  var plates = $$(".plate", iso), btns = $$(".layer", lay);
+  function select(i){
+    if (i === cur) return; cur = i;
+    det.setAttribute("aria-labelledby", "layer-" + i);
+    plates.forEach(function(p, j){ p.classList.toggle("on", j === i); p.classList.toggle("dim", j !== i); p.classList.toggle("above", j > i); });
+    btns.forEach(function(b){ var on = +b.dataset.i === i; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; });
+    det.innerHTML = LAYERS[i].tools.map(function(t, k){
+      var name = t.url ? '<a href="' + t.url + '" rel="noopener">' + t.n + '</a>' : t.n;
+      return '<article class="tool" style="animation-delay:' + (k * .05) + 's"><div class="hd"><span class="ib"><svg class="ico"><use href="#' + t.ic + '"/></svg></span><h3>' + name + '</h3></div><span class="tag">' + t.tag + '</span><p>' + t.p + '</p><div class="meta">' + t.m.map(function(x){ return "<span>" + x + "</span>"; }).join("") + '<span class="st">' + t.st + '</span></div></article>';
+    }).join("");
+  }
+  btns.forEach(function(b){
+    b.addEventListener("click", function(){ select(+b.dataset.i); });
+    b.addEventListener("mouseenter", function(){ stage.classList.add("spread"); });
+    b.addEventListener("keydown", function(e){
+      var index = btns.indexOf(b), next;
+      if (e.key === "ArrowDown") next = (index + 1) % btns.length;
+      else if (e.key === "ArrowUp") next = (index + btns.length - 1) % btns.length;
+      else if (e.key === "Home") next = 0;
+      else if (e.key === "End") next = btns.length - 1;
+      else return;
+      e.preventDefault(); select(+btns[next].dataset.i); btns[next].focus();
+    });
+    b.addEventListener("mouseleave", function(){ stage.classList.remove("spread"); });
+  });
+  select(2);
+})();
+
+/* ═══ 07 timeline ═════════════════════════════════════════ */
+(function timeline(){
+  var EV = [
+    ["2025-03","First commit on St. Basil's","27 commits in March, then nothing for three months. The old baseline: real projects, sporadic output.",27,1],
+    ["2025-07 – 12","Sparse and manual","46, 1, 31, 6, 10, 8 commits across six months. Two repos received any work in all of 2025.",46,1],
+    ["2026-01","murmur-app starts","34 commits. Still hand-written, still one project at a time.",34,1],
+    ["2026-02","The inflection","230 commits. Agent workflows adopted as a standing method: written agreements, fan-out, explicit routing.",230,0],
+    ["2026-03","Tooling for agents begins","aperture starts. 578 commits. The tools start being built for the agents.",578,0],
+    ["2026-04","Control planes","hangar and whoop-dashboard begin. 460 commits; the PR count starts climbing toward four figures.",460,0],
+    ["2026-06","Peak infrastructure month","agent-mesh, ghosthands, Gauge, usher, fleetmap, agentos, Fleet, and Family Host all start within four weeks.",1177,0],
+    ["2026-07","The factory measures itself","This site and the burn log go up; Fleet starts auto-publishing health snapshots. The highest month so far.",1338,0],
+    ["2026-09","Steady state","murmur-app reaches v0.50.0 on the 14th. 708 commits through the 16th, with half the month left.",708,0]
+  ];
+  var rail = $("#tlrail");
+  rail.innerHTML = EV.map(function(e){
+    return '<article class="ev' + (e[4] ? " pre" : "") + '"><span class="d num">' + e[0] + '</span><h3>' + e[1] + '</h3><p>' + e[2] + '</p><div class="meter"><div class="t"><i data-w="' + Math.max(1.2, e[3] / 1338 * 100).toFixed(1) + '"></i></div><span><span>' + (e[0].indexOf("–") > -1 ? "peak month" : "commits") + '</span><b class="num">' + fmt(e[3]) + '</b></span></div></article>';
+  }).join("");
+  var wrap = rail.parentElement; wrap.dataset.hook = "tl";
+  hooks.tl = function(){ $$(".meter i", rail).forEach(function(i, k){ i.style.transitionDelay = (k * .07) + "s"; i.style.width = i.dataset.w + "%"; }); };
+  // drag to scroll
+  var down = false, sx = 0, sl = 0, moved = false;
+  rail.addEventListener("pointerdown", function(e){ if (e.pointerType !== "mouse") return; down = true; moved = false; sx = e.clientX; sl = rail.scrollLeft; rail.classList.add("drag"); });
+  addEventListener("pointermove", function(e){ if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 3) moved = true; rail.scrollLeft = sl - dx; });
+  addEventListener("pointerup", function(){ down = false; rail.classList.remove("drag"); });
+})();
+
+/* ═══ ssh copy ════════════════════════════════════════════ */
+(function(){
+  var b = $("#sshcopy"); if (!b) return;
+  b.addEventListener("click", function(){
+    var hint = $(".hint", b);
+    var done = function(ok){ hint.textContent = ok ? "copied" : "copy failed"; setTimeout(function(){ hint.textContent = "copy"; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(b.dataset.ssh).then(function(){ done(true); }, function(){ done(false); });
+    else done(false);
+  });
+})();
+
+/* ── wire up reveals (after hooks registered) ────────────── */
+$$(".rv").forEach(watch);
+$$(".hero [data-count]").forEach(function(el){ setTimeout(function(){ countUp(el); }, 300); });
 })();
 </script>
 </body>

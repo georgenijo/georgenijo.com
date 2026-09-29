@@ -2,7 +2,7 @@
 
 > Software engineer in Boston building infrastructure for AI agents: coordination meshes, MCP brokers, and control planes. Currently building AgentOS, a personal + home agent operating system. Local-first, honesty-first.
 
-The home page is a one-page rendered-document resume: headline delivery metrics, a monthly ship-rate chart, the agent-orchestration doctrine behind it, the four-machine mesh that work runs on, tool and product cards, and a timeline. The older terminal-styled single-page app now lives at https://georgenijo.com/terminal.html.
+The home page is an animated tour of the software factory: delivery metrics, commit charts, the agent-orchestration workflow, model routing, an interactive tool stack, and a timeline. Its historical visual snapshot is dated 2026-09-16. The paper dossier (updated 2026-09-28) is preserved at https://georgenijo.com/dossier.html, with its readable Markdown at https://georgenijo.com/index.md. The older terminal-styled app lives at https://georgenijo.com/terminal.html.
 
 Every page below has a markdown variant served from the same path with a `.md` extension. Markdown is also available via content negotiation where the origin supports it (`Accept: text/markdown`, responses carry `Vary: Accept`).
 

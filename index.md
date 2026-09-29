@@ -9,7 +9,7 @@ I turned agent-orchestrated delivery into a repeatable system: explicit model ro
 - LinkedIn: [linkedin.com/in/georgenijo](https://www.linkedin.com/in/georgenijo)
 - Terminal: `ssh georgenijo.com` — a real endpoint, a Go Wish/Bubbletea TUI mirror of this site
 
-This is a snapshot document dated 2026-09-28. The terminal-styled version of this site lives at [/terminal.html](https://georgenijo.com/terminal.html).
+This is the paper dossier snapshot dated 2026-09-28, preserved at [/dossier.html](https://georgenijo.com/dossier.html). The [animated homepage](https://georgenijo.com/) presents the earlier 2026-09-16 visual snapshot. The terminal-styled version lives at [/terminal.html](https://georgenijo.com/terminal.html).
 
 ## By the numbers
 
