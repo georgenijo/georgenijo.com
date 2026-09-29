@@ -1,8 +1,7 @@
 name: Deploy Pages
 
-# Deploys the static site to GitHub Pages on every push to main, stamping the
-# "updated <month> <year>" text in index.html with the date of the commit
-# actually being deployed, so it never goes stale.
+# Deploy the static site on main. Only terminal.html carries a rolling date;
+# the homepage and archived dossier retain their historical snapshot dates.
 
 on:
   push:
@@ -56,7 +55,7 @@ jobs:
           mkdir -p _site
           # Explicit allowlist: only these files are published. Everything the
           # site links to (index.html, llms.txt, sitemap.xml) must appear here.
-          cp index.html terminal.html 404.html og.png CNAME concept-5-ssh.html lab-health.js _site/
+          cp index.html dossier.html terminal.html 404.html og.png CNAME concept-5-ssh.html lab-health.js _site/
           cp burn.html burn.json llms.txt robots.txt sitemap.xml _site/
           cp index.md about.md projects.md now.md contact.md burn.md _site/
           cp -R data docs about contact privacy _site/
