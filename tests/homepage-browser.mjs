@@ -96,6 +96,15 @@ try {
     const paused = await evaluate('[window.__frames, document.querySelector("#ticker").innerHTML, document.querySelector("#flow").toDataURL()]');
     await sleep(1700);
     assert.deepEqual(await evaluate('[window.__frames, document.querySelector("#ticker").innerHTML, document.querySelector("#flow").toDataURL()]'), paused, 'Pause stops frames, hero and ticker');
+    // Newly selected cards must remain readable when their entrance motion is paused.
+    for (const layer of [0, 1, 2, 3, 4]) {
+      await evaluate(`document.querySelector("#layer-${layer}").click()`);
+      assert.equal(await evaluate('document.querySelector("#detail").getAttribute("aria-labelledby")'), `layer-${layer}`);
+      const cards = await evaluate('[...document.querySelectorAll("#detail .tool")].map(card => ({opacity: getComputedStyle(card).opacity, transform: getComputedStyle(card).transform}))');
+      assert.ok(cards.length > 0, `Layer ${layer} has project cards`);
+      assert.ok(cards.every(card => card.opacity === '1' && card.transform === 'none'), `Paused layer ${layer} cards must be fully visible`);
+    }
+    assert.equal(await evaluate('window.__frames'), paused[0], 'Layer selection must keep motion paused');
     await evaluate('document.querySelector("#motion-toggle").click()');
     await sleep(200);
     assert.ok(await evaluate(`window.__frames > ${paused[0]}`), 'Resume restarts animation');

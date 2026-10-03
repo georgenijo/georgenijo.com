@@ -426,6 +426,8 @@ footer{margin-top:clamp(90px,12vw,150px);border-top:1px solid var(--line);backgr
 .motion-paused{scroll-behavior:auto}
 .motion-paused .rv{opacity:1!important;transform:none!important}
 .motion-paused #bars .b{transform:none!important}
+/* Entrance motion must not leave newly selected project cards invisible. */
+.motion-paused .tool{animation:none!important}
 #motion-toggle{font:inherit;font-size:.65rem;color:var(--fg);background:var(--panel);border:1px solid var(--line2);border-radius:99px;padding:7px 10px;cursor:pointer;white-space:nowrap}
 #motion-toggle[hidden]{display:none}
 .skip{position:fixed;top:-100px;left:18px;z-index:100;background:var(--bg);padding:8px 12px}
