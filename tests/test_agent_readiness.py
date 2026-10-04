@@ -112,6 +112,20 @@ def test_sitemap_xml_is_valid_and_urls_exist():
             assert (ROOT / path).is_file(), f"sitemap lists missing file {path}"
 
 
+def test_sitemap_includes_canonical_public_resume():
+    canonical = "https://georgenijo.com/dossier.html"
+    html = (ROOT / "dossier.html").read_text()
+    # The preserved resume is already public and indexable.
+    assert f'<link rel="canonical" href="{canonical}">' in html
+    assert '<meta name="robots" content="index,follow">' in html
+    root = ET.parse(ROOT / "sitemap.xml").getroot()
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    locs = [el.text for el in root.findall("s:url/s:loc", ns)]
+    assert locs.count(canonical) == 1, (
+        "sitemap must list the canonical public resume exactly once"
+    )
+
+
 def test_homepage_metadata_is_complete():
     html = (ROOT / "index.html").read_text()
     assert '<link rel="canonical" href="https://georgenijo.com/">' in html
