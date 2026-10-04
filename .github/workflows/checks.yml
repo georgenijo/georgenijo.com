@@ -25,7 +25,9 @@ jobs:
           python3 tests/test_release_contract.py
           python3 tests/test_refresh_lab.py
           node --test tests/lab-health.test.js
-      - name: Homepage browser checks
-        run: node tests/homepage-browser.mjs
+      - name: Browser checks
+        run: |
+          node tests/homepage-browser.mjs
+          node tests/burn-browser.mjs
         env:
           CHROME_BIN: /usr/bin/google-chrome

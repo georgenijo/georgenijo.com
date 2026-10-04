@@ -60,8 +60,14 @@ main.page{flex:1;min-width:0;padding:clamp(18px,3.5vw,44px) clamp(16px,4vw,56px)
 .spark-wrap .dot{fill:var(--accent);stroke:var(--bg);stroke-width:1.6;cursor:pointer;transition:r .12s ease;}
 .spark-wrap .dot:hover,.spark-wrap .dot.active{r:5.5;}
 .spark-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.68em;color:var(--faint);font-variant-numeric:tabular-nums;}
-.note{margin-top:10px;padding:10px 12px;border-left:2px solid var(--accent);background:var(--surface);font-size:12.5px;line-height:1.5;display:none;}
-.note.on{display:block;animation:ink .15s ease both;}
+.ship-heading{font:inherit;font-size:.76em;font-weight:400;color:var(--muted);margin:12px 0 6px;}
+.ship-controls{display:flex;flex-wrap:wrap;gap:6px;}
+.ship-day{font:inherit;font-size:12px;line-height:1.5;color:var(--muted);background:var(--surface);border:1px solid var(--hairline);border-radius:0;min-height:32px;padding:5px 8px;cursor:pointer;}
+.ship-day:hover,.ship-day[aria-expanded="true"]{color:var(--fg);border-color:var(--accent);}
+.ship-day[aria-expanded="true"]{background:var(--selbg);}
+.ship-day:focus-visible,.ship-heading:focus{outline:2px solid var(--accent);outline-offset:2px;}
+.note{font-size:12.5px;line-height:1.5;}
+.note.on{margin-top:10px;padding:10px 12px;border-left:2px solid var(--accent);background:var(--surface);}
 .note .ndate{color:var(--accent);font-weight:600;}
 .note .nmsg{display:block;margin-top:3px;color:var(--fg);}
 .note .nmsg.dim{color:var(--muted);}
@@ -92,7 +98,7 @@ footer.status kbd{font:inherit;color:var(--fg);border:1px solid var(--fg);paddin
   <span class="crumb"><a href="/">← back</a> ~ / <b>burn log</b></span>
   <span class="conn">tokens · models · commits</span>
 </header>
-<main class="page"><div class="sheet" id="sheet"></div></main>
+<main class="page"><div class="sheet" id="sheet"></div><noscript><div class="col"><h1 class="vtitle">agents at work</h1><p>The burn log and ship notes need JavaScript. <a href="burn.md">Read the burn log snapshot</a>.</p></div></noscript></main>
 <footer class="status" id="foot"></footer>
 </div>
 <script>
@@ -107,6 +113,8 @@ function esc(s){
   return d.innerHTML;
 }
 
+function attr(s){ return esc(s).replace(/"/g,'&quot;'); }
+
 function fmtTok(t){
   if(t>=1e9) return `${(t/1e9).toFixed(2)}B`;
   if(t>=1e6) return `${(t/1e6).toFixed(1)}M`;
@@ -115,27 +123,51 @@ function fmtTok(t){
 }
 
 let DATA = INLINE_FALLBACK;
-let activeNote=-1;
+let activeDate=null;
 
-function showNote(i){
-  var d=DATA.last30[i];
+function noteDays(){
+  var days=DATA.last30||[];
+  var peak=days.reduce(function(a,b){return !a || (b.tokens||0)>(a.tokens||0)?b:a;},null);
+  return days.filter(function(d){return (d.commits||0)>=20 || d===peak || d.date===activeDate;});
+}
+
+function updateNote(message){
+  var d=(DATA.last30||[]).find(function(day){return day.date===activeDate;});
   var el=document.getElementById('note');
   if(!el) return;
-  document.querySelectorAll('.dot').forEach(function(x){x.classList.remove('active');});
-  var dot=document.querySelector('.dot[data-idx="'+i+'"]');
-  if(dot) dot.classList.add('active');
-  if(activeNote===i && el.classList.contains('on')){ el.classList.remove('on'); activeNote=-1; return; }
-  activeNote=i;
-  if((d.commits||0)===0){
-    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · quiet day</span><span class="nmsg dim">no commits logged — background agents / codex</span>';
-  }else{
-    el.innerHTML='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · '+esc(String(d.commits))+' commits</span>'
-      +'<span class="nmsg dim">'+(d.topRepos||[]).map(esc).join(' · ')+'</span>'
-      +(d.topMsgs||[]).map(function(m){return '<span class="nmsg">· '+esc(m)+'</span>';}).join('');
-  }
-  el.classList.add('on');
+  document.querySelectorAll('.ship-day').forEach(function(button){
+    button.setAttribute('aria-expanded',String(button.dataset.date===activeDate));
+  });
+  document.querySelectorAll('.dot').forEach(function(dot){
+    dot.classList.toggle('active',dot.dataset.date===activeDate);
+  });
+  var content='';
+  if(d){
+    if((d.commits||0)===0){
+      content='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · quiet day</span><span class="nmsg dim">no commits logged — background agents / codex</span>';
+    }else{
+      content='<span class="ndate">'+esc(d.date)+' · '+fmtTok(d.tokens)+' · '+esc(String(d.commits))+' '+(d.commits===1?'commit':'commits')+'</span>'
+        +'<span class="nmsg dim">'+(d.topRepos||[]).map(esc).join(' · ')+'</span>'
+        +(d.topMsgs||[]).map(function(m){return '<span class="nmsg">· '+esc(m)+'</span>';}).join('');
+    }
+  }else if(message){ content=esc(message); }
+  // Keep the live region itself and unchanged content across refreshes.
+  if(el.innerHTML!==content) el.innerHTML=content;
+  el.classList.toggle('on',!!content);
 }
-window.showNote=showNote;
+
+function showNote(date){
+  if(!(DATA.last30||[]).some(function(d){return d.date===date;})) return;
+  activeDate=activeDate===date?null:date;
+  updateNote();
+}
+
+// Native date buttons provide keyboard and non-overlapping pointer targets.
+// The dots remain a pointer shortcut to the same dated note.
+document.getElementById('sheet').addEventListener('click',function(event){
+  var control=event.target.closest('[data-date]');
+  if(control) showNote(control.dataset.date);
+});
 
 function lineSVG(){
   var data=DATA.last30;
@@ -152,20 +184,24 @@ function lineSVG(){
   data.forEach(function(d,i){
     if((d.commits||0)>=20){
       var x=pad+i*step, yy=y(d.tokens||0);
-      dots+='<circle class="dot" cx="'+x+'" cy="'+yy+'" r="3.6" data-idx="'+i+'" onclick="showNote('+i+')"><title>'+esc(d.date)+'</title></circle>';
+      dots+='<circle class="dot" cx="'+x+'" cy="'+yy+'" r="3.6" data-date="'+attr(d.date)+'" aria-hidden="true"><title>'+esc(d.date)+'</title></circle>';
     }
   });
   var peakIdx=0; for(var k=1;k<data.length;k++) if((data[k].tokens||0)>(data[peakIdx].tokens||0)) peakIdx=k;
   if((data[peakIdx].commits||0)<20){
     var x2=pad+peakIdx*step, y2=y(data[peakIdx].tokens||0);
-    dots+='<circle class="dot" cx="'+x2+'" cy="'+y2+'" r="4.4" data-idx="'+peakIdx+'" onclick="showNote('+peakIdx+')"><title>'+esc(data[peakIdx].date)+' peak</title></circle>';
+    dots+='<circle class="dot" cx="'+x2+'" cy="'+y2+'" r="4.4" data-date="'+attr(data[peakIdx].date)+'" aria-hidden="true"><title>'+esc(data[peakIdx].date)+' peak</title></circle>';
   }
-  return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><path class="area" d="'+area+'"/><path class="line" d="'+path+'"/>'+dots+'</svg>';
+  return '<svg role="img" aria-label="30-day token burn. Select a date below to inspect ship notes." viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><path class="area" d="'+area+'"/><path class="line" d="'+path+'"/>'+dots+'</svg>';
 }
 
 function render(){
   var s=document.getElementById('sheet');
   if(!s) return;
+  var focusedDate=s.contains(document.activeElement)?document.activeElement.dataset.date:null;
+  var note=document.getElementById('note');
+  var removedDate=activeDate && !(DATA.last30||[]).some(function(d){return d.date===activeDate;})?activeDate:null;
+  if(removedDate) activeDate=null;
   var total=fmtTok(DATA.totalTokens||0);
   var last30Tok=(DATA.last30||[]).reduce(function(a,b){return a+(b.tokens||0);},0);
   var maxModelTok=Math.max.apply(null, (DATA.byModelTop||[]).map(function(m){return m.tokens||0;}).concat([1]));
@@ -174,7 +210,7 @@ function render(){
 
   s.innerHTML=
     '<p class="vkick stamp col">burn log · tokens · commits</p>'+
-    '<p class="vtitle stamp col">agents at work</p>'+
+    '<h1 class="vtitle stamp col">agents at work</h1>'+
 
     '<div class="slip ink col">'+
       '<div class="kv"><span class="k">total</span><span>'+total+' tokens<span class="dim">'+gen+'</span></span></div>'+
@@ -186,7 +222,12 @@ function render(){
       '<div class="spark-head"><span>30-day burn</span><span><b>'+fmtTok(peak.tokens||0)+' peak · '+esc(peak.date||'')+'</b> · dot = release day</span></div>'+
       lineSVG()+
       '<div class="spark-labels"><span>'+esc((DATA.last30[0]&&DATA.last30[0].date)||'')+'</span><span>'+esc((DATA.last30[15]&&DATA.last30[15].date)||'')+'</span><span>'+esc((DATA.last30[DATA.last30.length-1]&&DATA.last30[DATA.last30.length-1].date)||'')+'</span></div>'+
-      '<div id="note" class="note"></div>'+
+      '<h2 id="ship-heading" class="ship-heading" tabindex="-1">Inspect ship notes</h2>'+
+      '<div class="ship-controls" aria-labelledby="ship-heading">'+noteDays().map(function(d){
+        var commits=d.commits||0;
+        return '<button type="button" class="ship-day" data-date="'+attr(d.date)+'" aria-controls="note" aria-expanded="false" aria-label="'+attr(d.date)+' · '+commits+' '+(commits===1?'commit':'commits')+'">'+esc(d.date.slice(5))+'</button>';
+      }).join('')+'</div>'+
+      '<div id="note" class="note" role="status" aria-atomic="true"></div>'+
     '</div>'+
 
     '<div class="mbars ink col" style="animation-delay:60ms">'+
@@ -201,10 +242,17 @@ function render(){
       }).join('')+
     '</div>'+
 
-    '<div class="foot-rule col">click a dot → what shipped that day</div>';
+    '<div class="foot-rule col">select a date or dot → what shipped that day</div>';
+
+  if(note) document.getElementById('note').replaceWith(note);
+  updateNote(removedDate?'The note for '+removedDate+' is no longer available.':null);
+  if(focusedDate){
+    var button=Array.from(s.querySelectorAll('.ship-day')).find(function(b){return b.dataset.date===focusedDate;});
+    (button||document.getElementById('ship-heading')).focus({preventScroll:true});
+  }
 
   var foot=document.getElementById('foot');
-  if(foot) foot.innerHTML='<span><kbd>'+total+'</kbd> total · <kbd>30d</kbd> '+fmtTok(last30Tok)+' · click dot → ship note</span><span style="margin-left:auto">paper v2 · live via burn.json</span>';
+  if(foot) foot.innerHTML='<span><kbd>'+total+'</kbd> total · <kbd>30d</kbd> '+fmtTok(last30Tok)+' · select date → ship note</span><span style="margin-left:auto">paper v2 · live via burn.json</span>';
 }
 
 async function tryLoad(){
