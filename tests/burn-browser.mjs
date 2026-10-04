@@ -148,6 +148,8 @@ try {
     assert.deepEqual((await state()).expanded, []);
     assert.equal((await state()).note, 'The note for 2026-10-01 is no longer available.');
     assert.equal(await evaluate('document.activeElement.id'), 'ship-heading');
+    await refresh(removed);
+    assert.equal(await evaluate('document.activeElement.id'), 'ship-heading', 'Recovery heading keeps focus on a subsequent unchanged refresh');
     await key('Tab', 'Tab', 9);
     await key('Enter', 'Enter', 13);
     assert.ok((await state()).note.includes('Ship dated notes'), 'First activation after removal opens the remaining correct note');
@@ -174,9 +176,12 @@ try {
     await evaluate('document.querySelector(".ship-day").focus()');
     await key('Enter', 'Enter', 13);
     assert.ok((await state()).note.includes('quiet day'));
-    await refresh({...fixture,last30:[]});
+    const empty = {...fixture,last30:[]};
+    await refresh(empty);
     assert.deepEqual((await state()).expanded, []);
     assert.equal(await evaluate('document.activeElement.id'), 'ship-heading');
+    await refresh(empty);
+    assert.equal(await evaluate('document.activeElement.id'), 'ship-heading', 'Empty-data recovery focus survives another refresh');
     await sleep(300);
     assert.equal(await evaluate('window.__frames'), 0, 'No continuous repaint callbacks');
     assert.equal(await evaluate('document.getAnimations().some(a=>a.playState==="running")'), false, 'Only finite entrance animations');

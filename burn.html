@@ -198,7 +198,8 @@ function lineSVG(){
 function render(){
   var s=document.getElementById('sheet');
   if(!s) return;
-  var focusedDate=s.contains(document.activeElement)?document.activeElement.dataset.date:null;
+  var hadFocus=s.contains(document.activeElement);
+  var focusedDate=hadFocus?document.activeElement.dataset.date:null;
   var note=document.getElementById('note');
   var removedDate=activeDate && !(DATA.last30||[]).some(function(d){return d.date===activeDate;})?activeDate:null;
   if(removedDate) activeDate=null;
@@ -246,7 +247,7 @@ function render(){
 
   if(note) document.getElementById('note').replaceWith(note);
   updateNote(removedDate?'The note for '+removedDate+' is no longer available.':null);
-  if(focusedDate){
+  if(hadFocus){
     var button=Array.from(s.querySelectorAll('.ship-day')).find(function(b){return b.dataset.date===focusedDate;});
     (button||document.getElementById('ship-heading')).focus({preventScroll:true});
   }
