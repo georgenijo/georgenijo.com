@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-19T00:51:55Z",
+  "generated_at": "2026-10-19T01:02:06Z",
   "nodes": [
     {
       "name": "mac-mini",
@@ -23,6 +23,14 @@
       "online": true,
       "reachable": true,
       "role": "helper + workloads",
+      "load": "low",
+      "health": "healthy"
+    },
+    {
+      "name": "pi3",
+      "online": true,
+      "reachable": true,
+      "role": "management and monitoring",
       "load": "low",
       "health": "healthy"
     },
