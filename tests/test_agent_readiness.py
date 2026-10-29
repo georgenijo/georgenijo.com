@@ -12,6 +12,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+METRICS = json.loads((ROOT / "data/site-metrics.json").read_text())
 
 AGENT_UAS = [
     "GPTBot",
@@ -47,15 +48,48 @@ def test_homepage_has_static_nojs_content():
     assert main, "homepage must have a main landmark"
     assert len(visible_text(main.group(1))) >= 3000
     # Core prose, figures, workflow rules and exact tables survive without JS.
-    for fragment in ["6,300", "1,105", "independent review", "paper dossier"]:
+    for fragment in [f"{METRICS['github']['contributions']:,}",
+                     f"{METRICS['github']['pullRequestsOpened']:,}",
+                     "independent review", "paper dossier"]:
         assert fragment in visible_text(html)
-    for table_id, rows in [("bars-table", 21), ("tokens-table", 5)]:
+    for table_id, rows in [("bars-table", len(METRICS["github"]["monthlyContributions"])),
+                           ("tokens-table", 5)]:
         table = re.search(rf'<table id="{table_id}">(.*?)</table>', html, re.S)
         assert table, f"missing static {table_id}"
         assert table.group(1).count("<tr>") == rows + 1
     assert '<main id="main">' in html
     assert 'content="noindex"' not in html
     assert (ROOT / "dossier.html").is_file()
+
+
+def test_metric_snapshots_match_static_and_interactive_content():
+    html = (ROOT / "index.html").read_text()
+    markdown = (ROOT / "index.md").read_text()
+    burn = json.loads((ROOT / "burn.json").read_text())
+    github = METRICS["github"]
+    months = github["monthlyContributions"]
+    assert sum(n for month, n in months if month.startswith("2026-")) == github["contributions"]
+    assert github["rawContributions"] - github["automatedContributionsExcluded"] == github["contributions"]
+    chart = json.loads(re.search(r"var MONTHS = (\[.*?\]);", html).group(1))
+    assert chart == months, "interactive chart must use the published source counts"
+    table = re.search(r'<table id="bars-table">(.*?)</table>', html, re.S).group(1)
+    for month, n in months:
+        assert f"<td>{month}</td><td>{n:,}" in table
+        assert f"| {month} | {n:,}" in markdown
+    token_table = re.search(r'<table id="tokens-table">(.*?)</table>', html, re.S).group(1)
+    chart_models = json.loads(re.search(r"var T = (\[.*?\]);", html).group(1))
+    assert [row[1] for row in chart_models] == [model["tokens"] for model in burn["byModelTop"]]
+    for model in burn["byModelTop"]:
+        assert f"{model['tokens']:,}" in token_table
+        assert f"{model['tokens']:,}" in markdown
+    fallback = json.loads(re.search(r"const INLINE_FALLBACK = (.*?);\n", (ROOT / "burn.html").read_text()).group(1))
+    assert fallback == burn, "offline fallback must carry the same refreshed snapshot"
+    assert json.loads((ROOT / "ssh-tui/burn.json").read_text()) == burn
+    from datetime import date, timedelta
+    dates = [date.fromisoformat(day["date"]) for day in burn["last30"]]
+    assert len(dates) == 30
+    assert all(b - a == timedelta(days=1) for a, b in zip(dates, dates[1:]))
+    assert "GitHub contributions" in html and "retained logs" in html
 
 
 def test_robots_txt_allowlists_agent_user_agents():

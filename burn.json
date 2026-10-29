@@ -1,359 +1,328 @@
 {
-  "generatedAt": "2026-09-28T04:00:30.220721",
-  "totalTokens": 31255146323,
+  "generatedAt": "2026-10-28T22:15:42.203962-04:00",
+  "totalTokens": 28543540297,
+  "coverage": "retained-logs",
+  "nodesCollected": 4,
+  "nodesSkipped": 1,
   "byModelTop": [
     {
       "short": "5.6-sol",
       "model": "gpt-5.6-sol",
-      "tokens": 17982064924
-    },
-    {
-      "short": "6-astra",
-      "model": "gpt-6-astra",
-      "tokens": 2862660877
-    },
-    {
-      "short": "opus-4-8",
-      "model": "claude-opus-4-8",
-      "tokens": 2374383304
-    },
-    {
-      "short": "sonnet-5",
-      "model": "claude-sonnet-5",
-      "tokens": 1890829000
+      "tokens": 8998670238
     },
     {
       "short": "opus-5-5",
       "model": "claude-opus-5-5",
-      "tokens": 1348888042
+      "tokens": 5702650463
+    },
+    {
+      "short": "6-astra",
+      "model": "gpt-6-astra",
+      "tokens": 3584293131
+    },
+    {
+      "short": "opus-4-8",
+      "model": "claude-opus-4-8",
+      "tokens": 2375699238
+    },
+    {
+      "short": "6.1-sol",
+      "model": "gpt-6.1-sol",
+      "tokens": 1961920727
     }
   ],
   "last30": [
     {
-      "date": "2026-08-30",
-      "tokens": 200323810,
-      "commits": 14,
+      "date": "2026-09-29",
+      "tokens": 46879006,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-09-30",
+      "tokens": 495767766,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-01",
+      "tokens": 101368539,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-02",
+      "tokens": 241135561,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-03",
+      "tokens": 542194260,
+      "commits": 3,
       "topRepos": [
-        "whoop-dashboard (12)",
-        "murmur-app (2)"
+        "georgenijo.com (2)",
+        "murmur-app (1)"
       ],
       "topMsgs": [
-        "Merge PR #660 from georgenijo/feature/follow-system-default-",
-        "feat: clarify automatic microphone selection",
-        "feat(coach): restore exact MCP observability under Cursor ACP (#561)"
+        "Meetings: search active reviews and show matching fields (#784)",
+        "Merge PR #13 from georgenijo/v2-sprint/portfolio-reliability",
+        "fix: keep stack cards visible while motion is paused"
       ]
     },
     {
-      "date": "2026-08-31",
-      "tokens": 1213293952,
-      "commits": 27,
-      "topRepos": [
-        "murmur-app (20)",
-        "whoop-dashboard (7)"
-      ],
-      "topMsgs": [
-        "Pin the visual fixture clock",
-        "Pin the visual fixture clock",
-        "Report post-stop dictation latency by release"
-      ]
-    },
-    {
-      "date": "2026-09-01",
-      "tokens": 224830116,
+      "date": "2026-10-04",
+      "tokens": 311270719,
       "commits": 8,
       "topRepos": [
-        "whoop-dashboard (5)",
+        "georgenijo.com (5)",
         "murmur-app (3)"
       ],
       "topMsgs": [
-        "fix(overview): keep insight refresh active through regeneration (#569)",
-        "fix(ios): compile Steps KPI strip",
-        "fix(ios): wrap KPI cell conditional in Group"
+        "Merge PR #786 from georgenijo/v2-sprint/finalized-meeting-de",
+        "fix(burn): preserve accessible ship notes across refreshes",
+        "fix(burn): retain recovered heading focus on later refreshes"
       ]
     },
     {
-      "date": "2026-09-02",
-      "tokens": 26204719,
+      "date": "2026-10-05",
+      "tokens": 83624713,
       "commits": 0,
       "topRepos": [],
       "topMsgs": []
     },
     {
-      "date": "2026-09-03",
-      "tokens": 208333763,
+      "date": "2026-10-06",
+      "tokens": 27778319,
       "commits": 0,
       "topRepos": [],
       "topMsgs": []
     },
     {
-      "date": "2026-09-04",
-      "tokens": 596837377,
-      "commits": 50,
+      "date": "2026-10-07",
+      "tokens": 514696752,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-08",
+      "tokens": 587896785,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-09",
+      "tokens": 398555387,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-10",
+      "tokens": 263243495,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-11",
+      "tokens": 178935807,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-12",
+      "tokens": 177722607,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-13",
+      "tokens": 739120847,
+      "commits": 10,
       "topRepos": [
-        "murmur-app (48)",
-        "agentos (2)"
+        "murmur-app (10)"
       ],
       "topMsgs": [
-        "test: fix the calendar date for visual regression fixtures",
-        "chore: remove unused frontend code and add dead-code audit",
-        "chore: bump version to 0.41.0"
+        "Merge PR #789 from georgenijo/fix/smart-destination-fallback",
+        "fix: honor every refusal signal in the Smart destination fallback",
+        "fix: read delivery route codes before recovery takes ownership"
       ]
     },
     {
-      "date": "2026-09-05",
-      "tokens": 255331578,
-      "commits": 19,
+      "date": "2026-10-14",
+      "tokens": 745896805,
+      "commits": 75,
       "topRepos": [
-        "murmur-app (19)"
+        "murmur-app (75)"
       ],
       "topMsgs": [
-        "Merge PR #678 from georgenijo/fix/meeting-echo-recovery-read",
-        "Merge PR #677 from georgenijo/feat/quiet-branch-settings",
-        "test: pin the visual fixture date"
+        "chore: bump version to 0.51.12",
+        "fix(overlay): stabilize calibration and live preview (#801) [skip ci]",
+        "Merge current release baseline and preserve pending overlay notes"
       ]
     },
     {
-      "date": "2026-09-06",
-      "tokens": 48286698,
+      "date": "2026-10-15",
+      "tokens": 382988665,
+      "commits": 8,
+      "topRepos": [
+        "murmur-app (8)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.51.13",
+        "Merge PR #805 from georgenijo/fix/auto-paste-misses",
+        "Merge remote-tracking branch 'origin/main' into fix/auto-paste-misses"
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "tokens": 417515306,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-17",
+      "tokens": 531601228,
+      "commits": 44,
+      "topRepos": [
+        "murmur-app (31)",
+        "agentos (13)"
+      ],
+      "topMsgs": [
+        "docs(home): record live awareness display verification",
+        "feat(home): add live awareness display to round ESP32",
+        "chore: bump version to 0.51.16"
+      ]
+    },
+    {
+      "date": "2026-10-18",
+      "tokens": 132554068,
+      "commits": 17,
+      "topRepos": [
+        "murmur-app (14)",
+        "whoop-dashboard (3)"
+      ],
+      "topMsgs": [
+        "Merge PR #580 from georgenijo/feat/frame-morning-brief",
+        "Permit SQLite WAL sidecars in publisher sandbox",
+        "Publish account-bound Morning briefs to local Home Assistant"
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "tokens": 37692827,
+      "commits": 5,
+      "topRepos": [
+        "agentos (5)"
+      ],
+      "topMsgs": [
+        "Add an offline radio-pattern baseline trained on real ESP history",
+        "Sensor-fusion pilot: room-node firmware + HA state recorder (#351)",
+        "Order replayed removals by time_fired; check disk before compressing"
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "tokens": 126222998,
       "commits": 4,
       "topRepos": [
         "murmur-app (4)"
       ],
       "topMsgs": [
-        "Merge PR #679 from georgenijo/issue/676-correct-last-dictati",
-        "fix: allow chained correction during applied linger and skip identity ",
-        "fix: address review findings for correct-last-dictation"
+        "chore: bump version to 0.52.1",
+        "Merge PR #813 from georgenijo/fix/tray-icon-template",
+        "docs(tray): clarify template icon changelog and size comment"
       ]
     },
     {
-      "date": "2026-09-07",
-      "tokens": 534801434,
-      "commits": 24,
-      "topRepos": [
-        "murmur-app (24)"
-      ],
-      "topMsgs": [
-        "Merge PR #685 from georgenijo/issue/540-diarization-spike",
-        "Merge remote-tracking branch 'origin/main' into issue/540-diarization-",
-        "Merge PR #686 from georgenijo/issue/430-performance-diagnost"
-      ]
-    },
-    {
-      "date": "2026-09-08",
-      "tokens": 196585623,
-      "commits": 21,
-      "topRepos": [
-        "murmur-app (21)"
-      ],
-      "topMsgs": [
-        "test: update unified microphone picker visual contract",
-        "fix: preserve user focus during microphone teardown",
-        "fix: restore microphone picker focus after switching"
-      ]
-    },
-    {
-      "date": "2026-09-09",
-      "tokens": 667921150,
-      "commits": 93,
-      "topRepos": [
-        "murmur-app (93)"
-      ],
-      "topMsgs": [
-        "Merge PR #701 from georgenijo/issue/699-fix-microphone-picke",
-        "Merge remote-tracking branch 'origin/main' into issue/699-fix-micropho",
-        "Merge PR #702 from georgenijo/issue/698-make-the-update-dial"
-      ]
-    },
-    {
-      "date": "2026-09-10",
-      "tokens": 633535388,
-      "commits": 66,
-      "topRepos": [
-        "murmur-app (54)",
-        "agentos (9)",
-        "whoop-dashboard (3)"
-      ],
-      "topMsgs": [
-        "chore: bump version to 0.46.1",
-        "Merge PR #713 from georgenijo/fix/smart-auto-lid-status",
-        "fix: read Smart Auto lid state from the power-management service"
-      ]
-    },
-    {
-      "date": "2026-09-11",
-      "tokens": 915831810,
-      "commits": 98,
-      "topRepos": [
-        "murmur-app (98)"
-      ],
-      "topMsgs": [
-        "fix: remove idle shortcut hint from notch",
-        "Merge PR #761 from georgenijo/codex/issue-758-most-used-tran",
-        "Merge 'main' into codex/issue-758-most-used-transform"
-      ]
-    },
-    {
-      "date": "2026-09-12",
-      "tokens": 126166329,
-      "commits": 16,
-      "topRepos": [
-        "murmur-app (16)"
-      ],
-      "topMsgs": [
-        "chore: bump version to 0.48.0",
-        "Merge PR #771 from georgenijo/codex/product-ui-048",
-        "test: refresh settings visual fixtures"
-      ]
-    },
-    {
-      "date": "2026-09-13",
-      "tokens": 353358773,
-      "commits": 13,
-      "topRepos": [
-        "murmur-app (10)",
-        "agentos (3)"
-      ],
-      "topMsgs": [
-        "chore: bump version to 0.49.0",
-        "Polish Assistant UI and dictate editable drafts before sending (#773)",
-        "feat: dictate Assistant messages locally before sending"
-      ]
-    },
-    {
-      "date": "2026-09-14",
-      "tokens": 619710600,
-      "commits": 8,
-      "topRepos": [
-        "murmur-app (4)",
-        "agentos (4)"
-      ],
-      "topMsgs": [
-        "Polish Voice Query popover and simplify Assistant handoff (#776)",
-        "fix: wait for light action readback (#345)",
-        "fix: wait for light action readback"
-      ]
-    },
-    {
-      "date": "2026-09-15",
-      "tokens": 442324429,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-16",
-      "tokens": 340029406,
+      "date": "2026-10-21",
+      "tokens": 304759348,
       "commits": 3,
       "topRepos": [
-        "georgenijo.com (3)"
+        "murmur-app (3)"
       ],
       "topMsgs": [
-        "snapshot: frame the ship-rate story around the workflow build-out (#7)",
-        "feat: resume dossier landing page; terminal site moves to /terminal.ht",
-        "feat: resume dossier landing page; terminal site moves to /terminal.ht"
+        "test: remove redundant import flagged by strict Clippy",
+        "feat: export review documents with retained meeting WAVs (benchmark A)",
+        "feat: export retained meeting audio in review ZIPs (benchmark B)"
       ]
     },
     {
-      "date": "2026-09-17",
-      "tokens": 156355743,
+      "date": "2026-10-22",
+      "tokens": 213332399,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-23",
+      "tokens": 452123943,
+      "commits": 3,
+      "topRepos": [
+        "murmur-app (3)"
+      ],
+      "topMsgs": [
+        "chore: bump version to 0.52.2",
+        "Merge PR #816 from georgenijo/fix/overlay-click-through",
+        "Fix overlay shrink cancelled by brief hover re-entry"
+      ]
+    },
+    {
+      "date": "2026-10-24",
+      "tokens": 54560169,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-25",
+      "tokens": 286016534,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-26",
+      "tokens": 650749228,
+      "commits": 0,
+      "topRepos": [],
+      "topMsgs": []
+    },
+    {
+      "date": "2026-10-27",
+      "tokens": 162493819,
       "commits": 4,
       "topRepos": [
-        "georgenijo.com (4)"
+        "murmur-app (4)"
       ],
       "topMsgs": [
-        "snapshot: add the shop floor section (#10)",
-        "fix: remove unowned projects from portfolio (#8)",
-        "snapshot: refresh model mix and token totals from a fleet-wide burn co"
+        "fix: drain AppKit autoreleases on off-main idle queries",
+        "fix: arm modifier-only hold hotkeys before starting a recording",
+        "fix: never record typed-key identity in keyboard telemetry"
       ]
     },
     {
-      "date": "2026-09-18",
-      "tokens": 17316254,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-19",
-      "tokens": 47699943,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-20",
-      "tokens": 1700804,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-21",
-      "tokens": 150803006,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-22",
-      "tokens": 125508590,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-23",
-      "tokens": 231514737,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-24",
-      "tokens": 0,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-25",
-      "tokens": 0,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
-    },
-    {
-      "date": "2026-09-26",
-      "tokens": 1375385881,
-      "commits": 35,
+      "date": "2026-10-28",
+      "tokens": 372109222,
+      "commits": 29,
       "topRepos": [
-        "whoop-dashboard (27)",
-        "murmur-app (8)"
+        "murmur-app (29)"
       ],
       "topMsgs": [
-        "Merge PR #574 from georgenijo/ios/design-foundation",
-        "Merge PR #579 from georgenijo/ios/redesign-coach",
-        "Merge PR #577 from georgenijo/ios/redesign-stats"
+        "Merge PR #821 from georgenijo/fix/receiver-quota-rollover",
+        "Merge 'main' into fix/receiver-quota-rollover",
+        "Merge PR #818 from georgenijo/fix/telemetry-key-identity-red"
       ]
-    },
-    {
-      "date": "2026-09-27",
-      "tokens": 1310145694,
-      "commits": 2,
-      "topRepos": [
-        "murmur-app (2)"
-      ],
-      "topMsgs": [
-        "Merge PR #782 from georgenijo/fix/paste-denylist-finder-only",
-        "Scope the non-editable paste refusal to Finder targets"
-      ]
-    },
-    {
-      "date": "2026-09-28",
-      "tokens": 306859533,
-      "commits": 0,
-      "topRepos": [],
-      "topMsgs": []
     }
   ]
 }

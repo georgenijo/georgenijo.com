@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-24T20:06:27.790095Z",
+  "generatedAt": "2026-10-29T02:12:49.226388Z",
   "source": "github-api",
   "projects": [
     {
@@ -12,14 +12,14 @@
       "category": "macOS utility",
       "note": "Local, offline voice-to-text for macOS, built around a hold-to-talk workflow.",
       "latestRelease": {
-        "tag": "v0.21.2",
-        "name": "v0.21.2",
-        "url": "https://github.com/georgenijo/murmur-app/releases/tag/v0.21.2",
-        "publishedAt": "2026-07-24T19:00:13Z"
+        "tag": "v0.52.2",
+        "name": "v0.52.2",
+        "url": "https://github.com/georgenijo/murmur-app/releases/tag/v0.52.2",
+        "publishedAt": "2026-10-23T05:22:20Z"
       },
-      "openIssues": 3,
-      "openPullRequests": 0,
-      "lastActivityAt": "2026-07-24T19:44:08Z",
+      "openIssues": 5,
+      "openPullRequests": 4,
+      "lastActivityAt": "2026-10-29T01:23:46Z",
       "metadataAvailable": true
     },
     {
@@ -31,9 +31,9 @@
       "category": "agent platform",
       "note": "A personal and home agent operating system bringing long-running agents under one control plane.",
       "latestRelease": null,
-      "openIssues": 11,
-      "openPullRequests": 2,
-      "lastActivityAt": "2026-07-24T17:08:43Z",
+      "openIssues": 16,
+      "openPullRequests": 4,
+      "lastActivityAt": "2026-10-20T03:29:54Z",
       "metadataAvailable": true
     },
     {
@@ -58,10 +58,15 @@
       "status": "active",
       "category": "developer infrastructure",
       "note": "Tools for running commands and agent work across George's machines as a small fleet.",
-      "latestRelease": null,
-      "openIssues": 1,
-      "openPullRequests": 0,
-      "lastActivityAt": "2026-07-24T19:58:08Z",
+      "latestRelease": {
+        "tag": "v0.3.1",
+        "name": "Fleet 0.3.1",
+        "url": "https://github.com/georgenijo/fleet/releases/tag/v0.3.1",
+        "publishedAt": "2026-09-10T07:49:08Z"
+      },
+      "openIssues": 14,
+      "openPullRequests": 8,
+      "lastActivityAt": "2026-10-29T02:12:36Z",
       "metadataAvailable": true
     },
     {

@@ -395,7 +395,7 @@ func burnText(st *styles, cw int) string {
 		models = strings.Join(parts, ", ")
 	}
 	lines := []string{
-		kvLine(st, "total", total+" tokens"),
+		kvLine(st, "observed", total+" tokens"),
 		kvLine(st, "last 30d", fmtTokens(last30Tok)+" tokens"),
 		kvLine(st, "models", st.dim.Render(models)),
 	}
@@ -405,6 +405,7 @@ func burnText(st *styles, cw int) string {
 	if burnData.GeneratedAt != "" {
 		lines = append(lines, st.faint.Render("updated "+burnData.GeneratedAt))
 	}
+	lines = append(lines, st.faint.Render("retained logs; cleanup can reduce this floor"))
 	return strings.Join(lines, "\n")
 }
 

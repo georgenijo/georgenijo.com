@@ -8,7 +8,7 @@ Sources:
 
 Output: burn.json (minimal, public-safe):
   {
-    totalTokens: int,          # all-time (ccusage totals), same for local + fleet
+    totalTokens: int,          # retained ccusage history, same for local + fleet
     byModelTop: [{short, tokens}],
     last30: [{date, tokens, commits, topRepos, topMsgs}]  # calendar 30d
   }
@@ -42,7 +42,7 @@ PUBLIC_REPOS = frozenset({
 CLAUDE_DIRS = "$HOME/.claude,$HOME/.claude-cpa"
 
 
-def run(cmd, cwd=None, timeout=20):
+def run(cmd, cwd=None, timeout=20, allow_partial=False):
     env = dict(os.environ)
     env["CLAUDE_CONFIG_DIR"] = os.path.expandvars(CLAUDE_DIRS)
     try:
@@ -50,6 +50,10 @@ def run(cmd, cwd=None, timeout=20):
             cmd, cwd=cwd, text=True, stderr=subprocess.DEVNULL,
             timeout=timeout, shell=isinstance(cmd, str), env=env,
         )
+    except subprocess.CalledProcessError as error:
+        # Fleet exits nonzero when any node fails, but its JSON still contains
+        # the successful nodes. A monitor without npx must not discard them.
+        return error.output if allow_partial else ""
     except Exception:
         return ""
 
@@ -238,7 +242,7 @@ def collect_fleet_and_merge():
         'npx --yes ccusage@latest daily -j'
         '\''
     )
-    out = run(["fleet", "exec", "--all", "--json", fleet_cmd], timeout=120)
+    out = run(["fleet", "exec", "--all", "--json", fleet_cmd], timeout=120, allow_partial=True)
     if not out:
         print("fleet exec not available or timed out, skipping fleet aggregate", file=sys.stderr)
         return None
@@ -288,12 +292,15 @@ def collect_fleet_and_merge():
     ]
 
     for n in nodes:
-        status = "ok" if n.get("ok") else n.get("error", "fail")
+        status = "ok" if n.get("ok") else n.get("error") or f"exit {n.get('code', 'unknown')}"
         print(f"  fleet node: {n.get('node', '?')} → {status}", file=sys.stderr)
 
     return {
-        "generatedAt": datetime.now().isoformat(),
+        "generatedAt": datetime.now().astimezone().isoformat(),
         "totalTokens": int(total_tokens),
+        "coverage": "retained-logs",
+        "nodesCollected": nodes_ok,
+        "nodesSkipped": len(nodes) - nodes_ok,
         "byModelTop": by_model_top,
         "last30": calendar_last30(tokens_by_date, commits),
     }
@@ -316,8 +323,8 @@ def main():
         if merged:
             burn = merged
         else:
-            print("Fleet merge failed, falling back to local", file=sys.stderr)
-            burn = build_burn_from_local(commits)
+            print("Fleet collection failed; keeping the existing snapshots", file=sys.stderr)
+            return 1
     else:
         burn = build_burn_from_local(commits)
 

@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-29T02:14:09Z",
+  "source": "github-contribution-calendar, git-history, fleet-ccusage",
+  "github": {
+    "rawContributions": 20703,
+    "automatedContributionsExcluded": 13012,
+    "contributions": 7691,
+    "pullRequestsOpened": 1237,
+    "repositoriesWithCommits": 19,
+    "ownedRepositories": 85,
+    "monthlyContributions": [
+      [
+        "2025-01",
+        0
+      ],
+      [
+        "2025-02",
+        0
+      ],
+      [
+        "2025-03",
+        27
+      ],
+      [
+        "2025-04",
+        0
+      ],
+      [
+        "2025-05",
+        0
+      ],
+      [
+        "2025-06",
+        0
+      ],
+      [
+        "2025-07",
+        46
+      ],
+      [
+        "2025-08",
+        1
+      ],
+      [
+        "2025-09",
+        31
+      ],
+      [
+        "2025-10",
+        6
+      ],
+      [
+        "2025-11",
+        10
+      ],
+      [
+        "2025-12",
+        8
+      ],
+      [
+        "2026-01",
+        34
+      ],
+      [
+        "2026-02",
+        230
+      ],
+      [
+        "2026-03",
+        578
+      ],
+      [
+        "2026-04",
+        460
+      ],
+      [
+        "2026-05",
+        633
+      ],
+      [
+        "2026-06",
+        1177
+      ],
+      [
+        "2026-07",
+        1338
+      ],
+      [
+        "2026-08",
+        1143
+      ],
+      [
+        "2026-09",
+        1027
+      ],
+      [
+        "2026-10",
+        1071
+      ]
+    ],
+    "automatedByMonth": {
+      "2026-07": 1013,
+      "2026-08": 4415,
+      "2026-09": 3906,
+      "2026-10": 3678
+    },
+    "method": "GitHub contribution calendar (commits, PRs, reviews, issues; private activity included), minus automated lab commits authored by George on site main, grouped by author date. GitHub Actions commits do not count toward George and are not subtracted. Current month is partial.",
+    "siteHistoryHead": "bd47cb7a34ded4b8aa955fefa06d8143e73a02d8"
+  },
+  "linesChanged": {
+    "repositoryCount": 24,
+    "added": 2445445,
+    "deleted": 525688,
+    "since": "2025-10-29",
+    "skipped": 2,
+    "method": "Author-matched non-merge commits on locally available default branches of owned repositories; duplicate worktrees and automated lab snapshots excluded."
+  },
+  "murmur": {
+    "releases": 122,
+    "latestRelease": "v0.52.2",
+    "publishedAt": "2026-10-23T05:22:20Z"
+  },
+  "personalSkills": 75,
+  "hookEvents": 5,
+  "burnGeneratedAt": "2026-10-28T22:15:42.203962-04:00"
+}

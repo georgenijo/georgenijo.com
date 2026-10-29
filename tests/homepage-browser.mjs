@@ -11,6 +11,8 @@ const chrome = process.env.CHROME_BIN || (process.platform === 'darwin'
   ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome');
 const profile = await mkdtemp(join(tmpdir(), 'homepage-browser-'));
 const html = await readFile(new URL('../index.html', import.meta.url));
+const metrics = JSON.parse(await readFile(new URL('../data/site-metrics.json', import.meta.url), 'utf8'));
+const monthCount = metrics.github.monthlyContributions.length;
 const server = createServer((req, res) => {
   res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
   res.end(html);
@@ -76,7 +78,7 @@ try {
   `});
   for (const width of [1440, 390]) {
     await load(width, width < 500, false);
-    assert.equal(await evaluate('document.querySelectorAll("#bars .b").length'), 21);
+    assert.equal(await evaluate('document.querySelectorAll("#bars .b").length'), monthCount);
     assert.equal(await evaluate('document.querySelectorAll("#pipe .node").length'), 9);
     for (const section of ['top', 'inflection', 'wall', 'factory', 'routing', 'numbers', 'stack', 'timeline']) {
       await evaluate(`document.getElementById('${section}').scrollIntoView({behavior:'instant'})`);
@@ -121,11 +123,11 @@ try {
   await evaluate('document.getElementById("factory").scrollIntoView({behavior:"instant"})');
   await sleep(300);
   assert.equal(await evaluate('window.__frames'), 0);
-  assert.equal(await evaluate('document.querySelectorAll("#bars-table tbody tr").length'), 21);
+  assert.equal(await evaluate('document.querySelectorAll("#bars-table tbody tr").length'), monthCount);
   console.log('PASS reduced motion without native animation callbacks');
   await load(390, true, false, true);
-  assert.ok((await evaluate('document.body.innerText')).includes('6,300'));
-  assert.equal(await evaluate('document.querySelectorAll("#bars-table tbody tr").length'), 21);
+  assert.ok((await evaluate('document.body.innerText')).includes(metrics.github.contributions.toLocaleString('en-US')));
+  assert.equal(await evaluate('document.querySelectorAll("#bars-table tbody tr").length'), monthCount);
   assert.equal(await evaluate('document.querySelectorAll("#tokens-table tbody tr").length'), 5);
   assert.equal(await evaluate('document.querySelectorAll("#rules article").length'), 6);
   assert.equal(await evaluate('getComputedStyle(document.querySelector("#factory .shead")).opacity'), '1');
