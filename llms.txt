@@ -28,6 +28,6 @@ This is a personal portfolio, not a product API: there is nothing to call progra
 ## Machine-readable files
 
 - [Sitemap](https://georgenijo.com/sitemap.xml): XML sitemap of all pages.
-- [Lab events spec](https://georgenijo.com/docs/george-lab-events.md): repository-dispatch event contract driving George Lab.
+- [Lab update spec](https://georgenijo.com/docs/george-lab-events.md): how George Lab is refreshed by hand.
 - [Lab projects snapshot](https://georgenijo.com/data/lab-projects.json): project telemetry (schema version 1).
-- [Fleet health snapshot](https://georgenijo.com/data/fleet-health.json): short-lived privacy-safe collector snapshot.
+- [Fleet health snapshot](https://georgenijo.com/data/fleet-health.json): privacy-safe point-in-time snapshot, updated by hand.

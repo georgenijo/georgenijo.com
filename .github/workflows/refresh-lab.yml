@@ -1,8 +1,7 @@
 name: Refresh George Lab
 
+# Manual only: the site changes when George runs this or pushes to main himself.
 on:
-  repository_dispatch:
-    types: [george-lab-project-updated]
   workflow_dispatch:
     inputs:
       project:
@@ -27,17 +26,12 @@ jobs:
         with:
           ref: main
 
-      - name: Validate event and refresh snapshot
+      - name: Refresh snapshot
         env:
           GH_TOKEN: ${{ secrets.LAB_GITHUB_TOKEN }}
-          EVENT_NAME: ${{ github.event_name }}
-          EVENT_PROJECT: ${{ github.event.client_payload.project || inputs.project }}
+          EVENT_PROJECT: ${{ inputs.project }}
         run: |
           set -euo pipefail
-          if [[ "$EVENT_NAME" == "repository_dispatch" && -z "$EVENT_PROJECT" ]]; then
-            echo "repository_dispatch requires client_payload.project" >&2
-            exit 1
-          fi
           args=()
           if [[ -n "$EVENT_PROJECT" ]]; then args+=(--project "$EVENT_PROJECT"); fi
           python3 scripts/refresh-lab.py "${args[@]}"

@@ -159,7 +159,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--project",
-        help="Validate a repository_dispatch project id; the snapshot still refreshes all projects.",
+        help="Optional project id to validate; the snapshot still refreshes all projects.",
     )
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()

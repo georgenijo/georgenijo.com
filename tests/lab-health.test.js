@@ -2,7 +2,6 @@
 
 var assert = require("assert");
 var contract = require("../lab-health.js");
-var now = Date.parse("2026-07-24T20:10:00Z");
 
 function snapshot(overrides) {
   return Object.assign({
@@ -20,15 +19,15 @@ function snapshot(overrides) {
   }, overrides || {});
 }
 
-var current = contract.parse(snapshot(), now);
-assert.equal(current.state, "current");
+var current = contract.parse(snapshot());
+assert.equal(current.state, "snapshot");
 assert.deepEqual(Object.keys(current.nodes[0]).sort(),
   ["health","load","name","online","reachable","role"]);
 
-assert.equal(contract.parse(snapshot({schema_version:2}), now).state, "unsupported");
-assert.equal(contract.parse(snapshot({generated_at:"not-a-date"}), now).state, "malformed");
-assert.equal(contract.parse(snapshot({nodes:[{name:"partial"}]}), now).state, "malformed");
-assert.equal(contract.parse(snapshot(), Date.parse("2026-07-24T20:16:00Z")).state, "stale");
-assert.equal(contract.parse(snapshot(), Date.parse("2026-07-24T19:58:00Z")).state, "stale");
+assert.equal(contract.parse(snapshot({schema_version:2})).state, "unsupported");
+assert.equal(contract.parse(snapshot({generated_at:"not-a-date"})).state, "malformed");
+assert.equal(contract.parse(snapshot({nodes:[{name:"partial"}]})).state, "malformed");
+// Old snapshots stay visible: there is no automated publisher to keep them fresh.
+assert.equal(contract.parse(snapshot({generated_at:"2020-01-01T00:00:00Z"})).state, "snapshot");
 
 console.log("lab-health contract tests passed");

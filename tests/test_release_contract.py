@@ -13,19 +13,14 @@ def require(text, fragment, context):
         raise AssertionError(f"{context}: missing {fragment!r}")
 
 
-require(REFRESH, "types: [george-lab-project-updated]", "dispatch event")
-require(REFRESH, "workflow_dispatch:", "manual event")
-require(REFRESH, 'EVENT_NAME: ${{ github.event_name }}', "event mapping")
-require(
-    REFRESH,
-    'EVENT_PROJECT: ${{ github.event.client_payload.project || inputs.project }}',
-    "project mapping",
-)
-require(REFRESH, 'if [[ "$EVENT_NAME" == "repository_dispatch" && -z "$EVENT_PROJECT" ]]', "dispatch validation")
+require(REFRESH, "on:\n  workflow_dispatch:", "manual event")
+if "repository_dispatch" in REFRESH or "schedule:" in REFRESH:
+    raise AssertionError("refresh workflow must stay manual-only")
+require(REFRESH, "EVENT_PROJECT: ${{ inputs.project }}", "project mapping")
 require(REFRESH, "GH_TOKEN: ${{ secrets.LAB_GITHUB_TOKEN }}", "central secret")
 require(REFRESH, "permissions:\n  actions: write\n  contents: write", "refresh permissions")
 require(REFRESH, "git diff --quiet -- data/lab-projects.json", "commit scope")
-require(REFRESH, "gh workflow run pages.yml --ref main", "event-driven Pages deploy")
+require(REFRESH, "gh workflow run pages.yml --ref main", "manual-refresh Pages deploy")
 require(PAGES, "permissions:\n  contents: read\n  pages: write\n  id-token: write", "Pages permissions")
 require(PAGES, "uses: actions/configure-pages@v5", "Pages configuration")
 require(PAGES, "uses: actions/upload-pages-artifact@v3", "Pages artifact")
