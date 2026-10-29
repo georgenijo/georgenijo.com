@@ -480,7 +480,7 @@ var PROJECTS = [
 var MENU = [
   {id:"about",    t:"about",    d:"who's at the keyboard"},
   {id:"projects", t:"projects", d:"nine repos, five languages"},
-  {id:"lab",      t:"George Lab",d:"five projects · event-updated"},
+  {id:"lab",      t:"George Lab",d:"five projects · updated by hand"},
   {id:"now",      t:"now",      d:"what's cooking — AgentOS"},
   {id:"burn",     t:"burn log", d:"tokens · models · commits", href:"./burn.html"},
   {id:"guestbook",t:"guestbook",d:"leave a line over ssh", href:"./guestbook.html"},
@@ -729,8 +729,7 @@ function fmtDate(value){
 function metric(value){return value==null?"—":value;}
 function fleetStateCopy(state){
   return {
-    current:"current",
-    stale:"stale snapshot",
+    snapshot:"snapshot",
     unsupported:"unsupported snapshot",
     malformed:"invalid snapshot"
   }[state]||"snapshot unavailable";
@@ -740,12 +739,12 @@ function renderFleet(grid,data){
   var section=h("section","lab-card");
   var heading='<div><h2>fleet health</h2><div class="lab-kind"><span class="lab-status">'+
     esc(fleetStateCopy(parsed.state))+'</span> · privacy-safe</div></div>';
-  if(parsed.state!=="current"){
-    section.innerHTML=heading+'<div><p class="lab-note">Live fleet status is unavailable. No cached node details are shown.</p></div>';
+  if(parsed.state!=="snapshot"){
+    section.innerHTML=heading+'<div><p class="lab-note">Fleet snapshot is unavailable.</p></div>';
   }else{
     var healthy=parsed.nodes.filter(function(n){return n.health==="healthy";}).length;
     var reachable=parsed.nodes.filter(function(n){return n.reachable;}).length;
-    section.innerHTML=heading+'<div><p class="lab-note">Short-lived collector snapshot; no resident agent or listener.</p>'+
+    section.innerHTML=heading+'<div><p class="lab-note">Point-in-time snapshot, published by hand.</p>'+
       '<div class="lab-facts"><span>nodes <b>'+parsed.nodes.length+'</b></span>'+
       '<span>reachable <b>'+reachable+'</b></span><span>healthy <b>'+healthy+'</b></span>'+
       '<span>collected <b>'+fmtDate(parsed.generatedAt)+'</b></span></div></div>';
@@ -756,7 +755,7 @@ function vLab(){
   var w=frame([{t:"~",go:"menu"},{t:"lab"}]);
   w.appendChild(h("p","vkick","George Lab · project telemetry"));
   w.appendChild(h("p","vtitle stamp","five builds, one bench"));
-  var meta=h("div","lab-meta",'<span id="lab-state">loading snapshot…</span><span>event-driven · no resident agent</span>');
+  var meta=h("div","lab-meta",'<span id="lab-state">loading snapshot…</span><span>updated by hand</span>');
   var grid=h("div","lab-grid",'<p class="lab-empty">Reading the latest checked-in project snapshot…</p>');
   w.appendChild(meta);w.appendChild(grid);
   fetch("./data/lab-projects.json",{cache:"no-cache"}).then(function(res){

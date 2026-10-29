@@ -7,7 +7,6 @@
 
   var LOADS = {low:true, moderate:true, high:true, unknown:true};
   var HEALTH = {healthy:true, degraded:true, unknown:true, unreachable:true};
-  var MAX_AGE_MS = 15 * 60 * 1000;
 
   function text(value, field) {
     if (typeof value !== "string" || value.length < 1 || value.length > 80) {
@@ -16,7 +15,7 @@
     return value;
   }
 
-  function parse(snapshot, nowMs) {
+  function parse(snapshot) {
     if (!snapshot || typeof snapshot !== "object" || Array.isArray(snapshot)) {
       return {state:"malformed", nodes:[]};
     }
@@ -44,9 +43,10 @@
           health:node.health
         };
       });
-      var age = (nowMs == null ? Date.now() : nowMs) - generatedMs;
+      // Snapshots are published by hand, so there is no freshness window;
+      // the UI labels the data with its collection date instead.
       return {
-        state:age > MAX_AGE_MS || age < -60000 ? "stale" : "current",
+        state:"snapshot",
         generatedAt:snapshot.generated_at,
         nodes:nodes
       };
@@ -55,5 +55,5 @@
     }
   }
 
-  return {parse:parse, maxAgeMs:MAX_AGE_MS};
+  return {parse:parse};
 });
